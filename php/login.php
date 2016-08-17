@@ -16,6 +16,8 @@ if($x=mysqli_fetch_array($credenciales)){
   }else{
     echo "DNI incorrecto";
   }
+}else{
+echo "El usuario : ".$dni." no existe!";
 }
 }else {
   echo "Imposible establecer conexion";

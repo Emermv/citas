@@ -1,13 +1,18 @@
 (function(){
     var clave_ok=false;
     var dni_ok=false;
+    var email_ok=false;
     $(document).ready(function(){
       var form_login=$("#form_login");
       var dni=$("#dni");
       var clave=$("#password");
+    var email=$("#email");
       var estado_dni=$("#estado_dni");
         var estado_clave=$("#estado_password");
-        
+        var estado_email=$("#estado_email");
+        var btnRecuperarClave=$("#btnRecuperarClave");
+        var content_form_recuperacion=$("#content_form_recuperacion");
+        var btnCancelar=$("#btnCancelar");
         form_login.on("submit",function(event){
              login(event,dni,clave);
         });
@@ -25,6 +30,21 @@
         clave.on("blur",function(e){
            e.preventDefault();
             validar_clave(estado_clave,clave);
+        });
+        btnRecuperarClave.click(function(){
+            form_login.hide();
+            content_form_recuperacion.removeClass("hide");
+        });
+        btnCancelar.click(function(){
+           content_form_recuperacion.addClass("hide");
+            form_login.show();
+        });
+        email.on("blur",function(e){
+            e.preventDefault();
+            validar_email(estado_email,email);
+        });
+        email.on("focus",function(e){
+           estado_email.empty(); 
         });
     });
   function validar_dni(estado_dni,dni){
@@ -53,13 +73,26 @@
              estado.append('<i class="material-icons prefix deep-orange-text ">error</i>');
         }
     }
+    function validar_email(estado,email){
+          estado.empty();
+      if(email.val()!==""){
+            if(email.val().indexOf("@")!=-1){
+              estado.append('<i class="material-icons prefix green-text ">done</i>');
+                email_ok=true;
+        }else{
+             estado.append('<i class="material-icons prefix red-text ">error</i>');
+        }
+        }else{
+             estado.append('<i class="material-icons prefix deep-orange-text ">error</i>');
+        }
+    }
     function login(e,dni,clave){
         e.preventDefault();
              var formData=new FormData();
            if(dni_ok){
                if(clave_ok){
-                   formData.append("email",dni.val());
-                   formData.append("password",clave.val());
+                   formData.append("dni",dni.val());
+                   formData.append("clave",clave.val());
                 $.ajax({
                 async:true,
                 type:"post",
@@ -82,7 +115,9 @@
            }
     }
     function mensaje_error(mensaje){
+    
         var btn=$("#mensaje_error");
+        btn.empty();
         btn.append('<a class="waves-effect waves-light red-text" id="btn_error"><i class="material-icons left">warning</i>'+
         mensaje+'</a><br/>');
         btn.click(function(){
