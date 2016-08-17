@@ -5,72 +5,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="description" content="Centinelas. ">
-<head>
-   
-<title>Centinelas | Login</title>  
+<head> 
+<title>Atencion Cita</title>  
         <link rel="icon" type="image/png" href="files/LOGO.jpg">
          <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/materialize.min.css">
         <link rel="stylesheet" href="css/jquery-ui.min.css">
         <link rel="stylesheet" href="css/alertify.core.css">
         <link rel="stylesheet" href="css/alertify.default.css">
-<link rel="stylesheet" href="css/esitlo_login.css">
+        <link rel="stylesheet" href="css/esitlo_login.css">
 </head>
 <body>
 <header>
 </header>    
 <main> 
 <div class="row" id="login_content">
-<div class="col s12 m10 l4 offset-l4">
-<div class="row" >
-  
-    <form class="col s12 card-panel" id="login_form">
-         <div class="col s12 m12 l12 center">
-        <div id="ajax_loader">
-    <img src="files/ajax-loader-login.gif">
-    </div>
-    </div>
-        
-   <div id="inputs">
-            <div class="row">
-        <div class="col s12 m12 l12 center">
-        <h5>Iniciar Sesion</h5>
-        </div>    
-        </div>
-       <div class="row">
-           <div class="col s12 m12 l12  center" id="mensaje_error">
-            
-           </div>
+<div class="col s12 m8 offset-m2 l4 offset-l4 ">
+  <div class="row card-panel">
+       <div class="col s12 m12 l12 center">
+        <div id="ajax_loader" class="hide">
+       <img src="files/ajax-loader-login.gif">
        </div>
-      <div class="row">
-        <div class="input-field col s12">
+      </div><!--end div ajax login-->
+      <div id="content_form_login">
+        <div class="col s12 m12 l12 center">
+    <h1>Atenci&oacute;n Cita</h1>
+      </div>
+          <div class="col s12 m12 l12 center" id="mensaje_error">
+        </div><br/><br/>
+        <form id="form_login">
+          <div class="input-field col s11 m11 l11">
              <i class="material-icons prefix blue-text">account_circle</i>
-          <input id="email" type="email" class="validate">
-          <label for="email" data-error="Error" data-success="ok">Email</label>
+          <input id="dni" type="tel" class="validate" autocomplete="off" length="8">
+          <label for="dni"  data-error="Error" data-success="ok">DNI</label>
         </div>
-      </div>
-          <div class="row">
-        <div class="input-field col s12">
-            <i class="material-icons prefix red-text">lock</i>
-          <input id="password" type="password" class="validate">
-          <label for="password" data-error="Error" data-success="ok">Password</label>
+        <div class="input-field col s1 m1 l1" id="estado_dni">
         </div>
-      </div>
-        <div class="row center">
-       <div class="col s3 offset-s1 m3 offset-m3 l2 offset-l3">
-     <input class="ui-button ui-widget ui-corner-all blue black-text" type="submit" id="btnLogin" value="Entrar" required>
-    </div>
-     <div class="col s3 offset-s3  m2  l2 offset-l1">
-    <input class="ui-button ui-widget ui-corner-all blue black-text" type="reset" value="Cancelar" required>
-    </div> 
-    </div>
-    </div>
-    </form>
-  </div>
+        <div class="input-field col s11 m11 l11" >
+            <i class="material-icons prefix  blue-grey-text">lock</i>
+          <input id="password" type="password" class="validate" autocomplete="off" length="6">
+          <label for="password"  data-error="Error" data-success="ok">Clave</label>
+        </div>
+             <div class=" input-field col s1 m1 l1" id="estado_password">
+        </div>
+        <div class="col s6 m6 l5 offset-l2">
+            <button class="btn waves-effect waves-light" type="submit" name="action">Entrar
+            <i class="material-icons right">send</i>
+            </button>
+        </div>
+        <div class="col s6 m6 l4  center">
+        <a href="#" id="btnRecuperarClave">Olvidaste tu contraseña</a>
+        </div>
+      </form>
+      </div><!--end div form login-->
     
-    
-</div>
-</div>
+ </div><!--end div row form-->
+</div><!--end div col-->
+</div><!--end div row-->
 </main>
 <footer> 
 </footer>
@@ -78,5 +69,6 @@
   <script src="js/jquery-3.0.0.min.js"></script>
     <script src="js/materialize.min.js"></script>
     <script src="js/alertify.min.js"></script>
-      <script src="js/login_controller.js"></script>
+    <script src="js/base64.js"></script>
+      <script src="controller/login_controller.js"></script>
 </html>
