@@ -169,7 +169,16 @@ $('select').material_select();
     });
     /*************************/
     $( "#datepicker" ).datepicker({
-	inline: true
+	inline: true,
+    monthNames: ['Enero', 'Febrero', 'Marzo',
+'Abril', 'Mayo', 'Junio',
+'Julio', 'Agosto', 'Septiembre',
+'Octubre', 'Noviembre', 'Diciembre'],
+dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
+onSelect: function (date) {
+alertify.success(date);
+},
+firstDay: 1
 });
     var btn_guardar_paciente=$("#btn_guardar_paciente");
           btn_guardar_paciente.click(function(e){
