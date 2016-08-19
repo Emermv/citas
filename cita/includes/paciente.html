@@ -135,12 +135,18 @@ $('select').material_select();
       }
     });
     $( "#datepicker" ).datepicker({
-	inline: true,
-        monthNames: ['Enero', 'Febrero', 'Marzo',
+inline: true,
+    monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
 'Julio', 'Agosto', 'Septiembre',
 'Octubre', 'Noviembre', 'Diciembre'],
-dayNamesMin: ['Lun', 'Mar', 'Mier', 'Jue', 'Vier', 'Sab', 'Dom']
+dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
+onSelect: function (date) {
+alertify.success(date);
+},
+firstDay: 1,
+dateFormat: "yy-mm-dd"
+        
 });
     var btn_guardar_paciente=$("#btn_guardar_paciente");
           btn_guardar_paciente.click(function(e){

@@ -54,10 +54,25 @@
       <option value="">b</option>
     </select>
     <label>Especialidad</label>
-  </div>
-    <div class="col s12 m12 l9 offset-l2 center">
-        <p> Seleccione los d&iacute;as de atenci&oacute;n</p>
-      <div id="datepicker"></div>
+      </div>
+         <div class="col s12 m12 l12">
+        <ul class="collection with-header">
+        <li class="collection-header">
+            <label>
+               <a href="#" id="reset_fechas">
+                 <i class="material-icons left">refresh</i>
+                 <h6>Seleccione d&iacute;as de atenci&oacute;n</h6>
+                </a>
+            </label>
+        </li>
+      </ul>
+         </div>
+    <div class="col s12 m12 l9 offset-l1">
+         <div id="datepicker_m" ></div>
+    </div>
+    <div class="col s12 m12 l12 center">
+    <ul class="collection with-header" id="fechas_seleccionadas_m">
+         </ul>     
     </div>
     </div>
     </div>
@@ -144,11 +159,10 @@
   </form>  
 </div>
 </div>
-<script>
-$('select').material_select();
-
-   $('.tooltipped').tooltip({delay: 50});
-         $("#selectable" ).selectable({
+<script>  
+     $('select').material_select();
+     $('.tooltipped').tooltip({delay: 50});
+     $("#selectable" ).selectable({
       stop: function() {
         var result = $( "#select-result" ).empty();
         $( ".ui-selected", this ).each(function() {
@@ -158,7 +172,7 @@ $('select').material_select();
       }
     });
     /***********/
-         $("#selectable_mas" ).selectable({
+    $("#selectable_mas" ).selectable({
       stop: function() {
         var result = $( "#select-resultados" ).empty();
         $( ".ui-selected", this ).each(function() {
@@ -168,7 +182,7 @@ $('select').material_select();
       }
     });
     /*************************/
-    $( "#datepicker" ).datepicker({
+    $( "#datepicker_m" ).datepicker({
 	inline: true,
     monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
@@ -176,15 +190,32 @@ $('select').material_select();
 'Octubre', 'Noviembre', 'Diciembre'],
 dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
 onSelect: function (date) {
-alertify.success(date);
+fechas_selecionadas(date);
 },
-firstDay: 1
+firstDay: 1,
+dateFormat: "yy-mm-dd"
 });
-    var btn_guardar_paciente=$("#btn_guardar_paciente");
-          btn_guardar_paciente.click(function(e){
-              e.preventDefault();
-          alertify.success("siiii!!");
-          });
+var btn_guardar_paciente=$("#btn_guardar_paciente");
+btn_guardar_paciente.click(function(e){
+ e.preventDefault();
+ alertify.success("siiii!!");
+ });
+    var reset_fechas=$("#reset_fechas");
+    var fechas=$("#fechas_seleccionadas_m");
+    var num_fechas=0;
+    reset_fechas.click(function(){
+       fechas.empty(); 
+    });
+    function fechas_selecionadas(date){
+         fechas.append('<li class="collection-item" id="fecha'+num_fechas+'"><div>'+date+
+        '<a href="#" class="secondary-content" onclick="eliminar_fecha('+num_fechas+')" >'+
+        '<i class="material-icons">power_settings_new'+
+        '</i></a></div></li>');
+        num_fechas++;
+    }
+    function eliminar_fecha(num){
+        $("#fecha"+num).remove();
+    }
 </script>
   <style>
   #feedback { font-size: 14px; }
