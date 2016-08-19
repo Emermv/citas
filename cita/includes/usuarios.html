@@ -1,0 +1,142 @@
+
+<div class="row">
+<div class="col s12 m10 offset-m1 l10 offset-l1 card-panel">
+<div class="row" id="content_form_paciente">
+      <form id="form_pacientes">
+<div class="col s12 m10 l4 teal"><!--col datos -->
+    <h5>Datos del paciente:</h5>
+    <div class="row">
+             <div class="col s11 m11 l11 ">
+     <div class="file-field input-field">
+      <div class=" btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="Sube una foto">
+        <span><i class="large material-icons blue-text">perm_identity</i></span>
+        <input type="file" >
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="Subir foto">
+      </div>
+    </div>
+     </div>
+          <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">account_circle</i>
+          <input id="nombres_p" type="text" class="validate" autocomplete="off">
+          <label for="nombres_p"  data-error="Error" data-success="ok">Nombre</label>
+        </div>
+           <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">account_circle</i>
+          <input id="apellidos_p" type="text" class="validate" autocomplete="off">
+          <label for="apellidos_p"  data-error="Error" data-success="ok">Apellido</label>
+        </div>
+         <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">my_location</i>
+          <input id="direccion_p" type="text" class="validate" autocomplete="off">
+          <label for="direccion_p"  data-error="Error" data-success="ok">Direcci&oacute;n</label>
+        </div>
+         <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">phone</i>
+          <input id="telefono_p" type="tel" class="validate" autocomplete="off">
+          <label for="telefono_p"  data-error="Error" data-success="ok">Telefono</label>
+        </div>
+        <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">today</i>
+          <input id="edad_p" type="number" class="validate" autocomplete="off">
+          <label for="edad_p"  data-error="Error" data-success="ok">Edad</label>
+        </div>
+    <div class="input-field col s12 m12 l10 offset-l1">
+    <select class="icons">
+      <option value="" disabled selected>Seleccione tu genero</option>
+      <option value="" data-icon="../files/Male.png" class="circle">Hombre</option>
+      <option value="" data-icon="../files/Female.png" class="circle">Mujer</option>
+    </select>
+    <label>Genero</label>
+  </div>
+    </div>
+</div>
+
+<div class="col s12 m10 l5 yellow">
+     <div class="row">
+      <div class="input-field col s12 m12 l10 offset-l1">
+    <select>
+      <option value="" disabled selected>Seleccione</option>
+      <option value="">a</option>
+      <option value="">b</option>
+    </select>
+    <label>Especialidades</label>
+  </div>
+    <div class="input-field col s12 m12 l10 offset-l1">
+    <select>
+      <option value="" disabled selected>Seleccione</option>
+      <option value="">a</option>
+      <option value="">b</option>
+    </select>
+    <label>M&eacute;dicos</label>
+  </div>
+            <div class="col s12 m12 l9 offset-l2 center">
+              <div id="datepicker"></div>
+             </div>
+         </div>
+    </div>
+<div class="col s12 m10 l3 red center">
+    <div class="row">
+     <div class="col s12 m12 l12">
+        <p id="feedback">
+     <span>Horas :</span> <span id="select-result">none</span>.
+      </p>
+ 
+<ol id="selectable" >
+  <li class="ui-widget-content">8:00 </li>
+  <li class="ui-widget-content">8:30 </li>
+  <li class="ui-widget-content">9:00</li>
+  <li class="ui-widget-content">9:30</li>
+  <li class="ui-widget-content">10:00</li>
+  <li class="ui-widget-content">10:30</li>
+   <li class="ui-widget-content">11:00</li>
+    <li class="ui-widget-content">11:30</li>
+    <li class="ui-widget-content">12:00</li>
+    <li class="ui-widget-content">12:30</li>
+    <li class="ui-widget-content">01:00</li>
+    <li class="ui-widget-content">01:30</li>
+    <li class="ui-widget-content">02:00</li>
+    <li class="ui-widget-content">02:30</li>
+    <li class="ui-widget-content">03:00</li>
+    <li class="ui-widget-content">03:30</li>
+    <li class="ui-widget-content">04:00</li>
+    <li class="ui-widget-content">04:30</li>
+    <li class="ui-widget-content">05:00</li>
+    
+</ol>
+        
+    </div>
+    </div>
+</div>
+ </form>
+</div><!-- end div row content-->
+</div>
+</div>
+<script>
+$('select').material_select();
+$('.datepicker').pickadate({
+    selectMonths: true,
+    selectYears: 15 
+  });
+   $('.tooltipped').tooltip({delay: 50});
+         $("#selectable" ).selectable({
+      stop: function() {
+        var result = $( "#select-result" ).empty();
+        $( ".ui-selected", this ).each(function() {
+          var index = $( "#selectable li" ).index( this );
+          result.append( " #" + ( index + 1 ) );
+        });
+      }
+    });
+    $( "#datepicker" ).datepicker({
+	inline: true
+});
+</script>
+
+  <style>
+  #feedback { font-size: 1.4em; }
+  #selectable .ui-selecting { background: skyblue; }
+  #selectable .ui-selected { background:blue; color: white; }
+  #selectable { list-style-type: none; margin: 0; padding: 1px; width: 100%}
+  </style>

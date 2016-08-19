@@ -1,0 +1,28 @@
+
+/* label color */
+   .input-field label {
+     color: black;
+   }
+   /* label focus color */
+   .input-field input[type=number]:focus + label {
+     color:white;
+   }
+   /* label underline focus color */
+   .input-field input[type=number]:focus {
+     border-bottom: 1px solid white;
+     box-shadow: 0 1px 0 0 white;
+   }
+   /* valid color */
+   .input-field input[type=number].valid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* invalid color */
+   .input-field input[type=number].invalid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* icon prefix focus color */
+   .input-field .prefix.active {
+     color:black;
+   }
