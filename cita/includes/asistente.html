@@ -1,0 +1,170 @@
+
+<div class="row">
+<div class="col s12 m10 offset-m1 l10 offset-l1 card-panel blue-grey lighten-5">
+<form id="form_asistente">
+<div class="row" id="content_form_asistente">
+<div class="col s12 m10 l4"><!--col datos -->
+    <h5>Datos del Asistente :</h5>
+    <div class="row">
+             <div class="col s11 m11 l11 ">
+     <div class="file-field input-field">
+      <div class=" btn tooltipped red lighten-1" data-position="bottom" data-delay="50" data-tooltip="Sube una foto">
+        <span><i class="large material-icons blue-text">perm_identity</i></span>
+        <input type="file"  id="foto_a">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="Subir foto">
+      </div>
+    </div>
+     </div>
+          <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">account_circle</i>
+          <input id="nombres_a" type="text" class="validate" autocomplete="off">
+          <label for="nombres_a"  data-error="Error" data-success="ok">Nombre</label>
+        </div>
+           <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">account_circle</i>
+          <input id="apellidos_a" type="text" class="validate" autocomplete="off">
+          <label for="apellidos_a"  data-error="Error" data-success="ok">Apellido</label>
+        </div>
+         <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">my_location</i>
+          <input id="direccion_a" type="text" class="validate" autocomplete="off">
+          <label for="direccion_a"  data-error="Error" data-success="ok">Direcci&oacute;n</label>
+        </div>
+         <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">phone</i>
+          <input id="telefono_a" type="tel" class="validate" autocomplete="off">
+          <label for="telefono_a"  data-error="Error" data-success="ok">Telefono</label>
+        </div>
+        <div class="input-field col s11 m11 l11">
+           <i class="material-icons prefix blue-text">email</i>
+          <input id="email_a" type="email" class="validate" autocomplete="off">
+          <label for="email_a"  data-error="Error" data-success="ok">Correo</label>
+        </div>
+    <div class="input-field col s12 m12 l10 offset-l1">
+    <select class="icons" id="genero_a">
+      <option value="" disabled selected>Seleccione tu genero</option>
+      <option value="" data-icon="../files/Male.png" class="circle">Hombre</option>
+      <option value="" data-icon="../files/Female.png" class="circle">Mujer</option>
+    </select>
+    <label>Genero</label>
+  </div>
+    </div>
+</div>
+
+<div class="col s12 m10 l4">
+     <div class="row right">
+     <a class="waves-effect waves-light btn" id="btn_consultar"><i class="material-icons left">cloud</i>Consultar</a>
+    </div>
+    </div>
+<div class="col s12 m10 l4  center ">
+    <div class="row">
+        <div class="col s12 m12 l9 offset-l1">
+         <div id="datepicker_a" ></div>
+    </div>
+    </div>
+</div>
+    <div class="col s12 m12 l8">
+        <div class="row">
+       <div id="content_dinamico">
+        <h4>contenido dinamico</h4>
+        </div>
+         
+    </div>
+        <div class="row">
+         <div class="col s12 m12 l4">
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+            <input type="text" id="input_fecha_a" class="datepicker">
+            <label>Fecha</label>
+        </div>
+       
+         <div class="input-field col s12 m12 l12">
+            <label for="timepicker_ampm_dark">Hora</label>
+            <input id="timepicker_ampm_dark" class="timepicker" type="time">
+        </div>
+             <div class="input-field col s12 m12 l12 ">
+    <select id="observacion_a">
+      <option value="" disabled selected>Seleccione</option>
+      <option value="">Asistir</option>
+      <option value="">No asistir</option>
+    </select>
+    <label>Observaci&oacute;n</label>
+  </div>
+             </div>
+            </div>
+        </div>
+    </div>
+
+    </div><!-- end div row content-->
+ <div class="row ">
+    <div class="col s3 offset-s1 center m3 offset-m3 l2 offset-l3">
+    <input class="ui-button ui-widget ui-corner-all  black-text  red lighten-1" type="submit"  value="Guardar" id="btn_guardar_paciente">
+    </div>
+    <div class="col s3  m2  l2 center">
+ <input class="ui-button ui-widget ui-corner-all  red lighten-1 black-text" type="button" value="Reportar">
+</div> 
+  <div class="col s3 m2  l2 center">
+ <input class="ui-button ui-widget ui-corner-all  red lighten-1 black-text" type="button" value="Modificar">
+</div> 
+</div>
+  </form>  
+</div>
+</div>
+<script>  
+     $('select').material_select();
+     $('.tooltipped').tooltip({delay: 50});
+    /*************************/
+   
+    $( "#datepicker_a" ).datepicker({
+	inline: true,
+    monthNames: ['Enero', 'Febrero', 'Marzo',
+'Abril', 'Mayo', 'Junio',
+'Julio', 'Agosto', 'Septiembre',
+'Octubre', 'Noviembre', 'Diciembre'],
+dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
+onSelect: function (date) {
+},
+firstDay: 1,
+dateFormat: "yy-mm-dd"
+});
+     $( "#input_fecha_a" ).datepicker({
+    monthNames: ['Enero', 'Febrero', 'Marzo',
+'Abril', 'Mayo', 'Junio',
+'Julio', 'Agosto', 'Septiembre',
+'Octubre', 'Noviembre', 'Diciembre'],
+dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
+onSelect: function (date) {
+},
+firstDay: 1,
+dateFormat: "yy-mm-dd"
+});
+$('.timepicker').pickatime({
+    default: 'now',
+    twelvehour: true,
+    donetext: 'OK',
+  autoclose: false,
+    darktheme: true, 
+  vibrate: true
+});
+var btn_guardar_paciente=$("#btn_guardar_paciente");
+btn_guardar_paciente.click(function(e){
+ e.preventDefault();
+ alertify.success("siiii!!");
+ });
+    
+</script>
+  <style>
+  #feedback { font-size: 14px; }
+  #selectable .ui-selecting { background: skyblue; }
+  #selectable .ui-selected { background:blue; color: white; }
+  #selectable { list-style-type: none; margin: 0; padding: 1px; width: 100%}
+  #feedback_mas { font-size:14px; }
+  #selectable_mas .ui-selecting { background: skyblue; }
+  #selectable_mas .ui-selected { background:blue; color: white; }
+  #selectable_mas { list-style-type: none; margin: 0; padding: 1px; width: 100%}
+#datepicker_a{margin-top: 20%;}
+      #btn_consultar{margin-top: 30%;}
+      
+  </style>

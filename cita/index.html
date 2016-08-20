@@ -7,14 +7,18 @@
     <meta name="description" content="Atencion cita. ">
 <head>
 <title>Atenci&oacute;n Cita</title> 
-          <link rel="icon" type="image/jpg" href="../files/logo-temp.jpg">
+          <link rel="icon" type="image/jpg" href="../files/logo-temp.jpg" id="icon">
          <link rel="stylesheet" href="../css/base.css">
         <link rel="stylesheet" href="../css/materialize.min.css">
         <link rel="stylesheet" href="../css/jquery-ui.css">
         <link rel="stylesheet" href="../css/alertify.core.css">
         <link rel="stylesheet" href="../css/alertify.default.css">
+      <link rel="stylesheet" href="../css/materialize.clockpicker.css">
+        <link rel="stylesheet" href="../css/estilo_cita.css">
+    
+       
 </head>
-    <body>
+    <body class="  blue-grey darken-2 ">
         <header>
  <div class="navbar-fixed">
                 <nav>
@@ -25,17 +29,20 @@
        <ul class="right hide-on-med-and-down">
 
      <li class="active btn_inicio"><a href="../cita/" ><i class="material-icons left">home</i>Inicio</a></li>
-         <li class="btn_usuarios"><a href="#" ><i class="material-icons left">account_circle</i>Usuarios</a></li>
-         <li><a href="#" ><i class="material-icons left">note_add</i></a></li>
+         <li class="btn_paciente"><a href="#" ><i class="material-icons left">account_circle</i>Paciente</a></li>
+         <li class="btn_medico"><a href="#" ><i class="material-icons left">account_circle</i>M&eacute;dico</a></li>
+           <li class="btn_asistente"><a href="#" ><i class="material-icons left">account_circle</i>Asistente</a></li>
             <li><a href="#" ><i class="material-icons left">search</i>Buscar</a></li>
            <li><a href="#"><i class="material-icons left">settings</i>Configuraci&oacute;n</a></li>
             <li><a href="../cita/"><i class="material-icons left">refresh</i>Actualizar</a></li>
          <li><a href="../" id="btnSalir"><i class="material-icons left">exit_to_app</i>Salir</a></li>
        </ul>
+         
        <ul class="side-nav red lighten-2" id="mobile-demo">
            <li class="active btn_inicio"><a href="../cita/" class="white-text"><i class="material-icons left">home</i>Inicio</a></li>
-       <li class="btn_inicio"><a href="#" class="white-text"><i class="material-icons left ">account_circle</i>Usuarios</a></li>
-         <li class="btn_usuarios"><a href="#" class="white-text" ><i class="material-icons left ">note_add</i>Notas</a></li>
+       <li class="btn_paciente"><a href="#" class="white-text"><i class="material-icons left ">account_circle</i>Paciente</a></li>
+         <li class="btn_medico"><a href="#" class="white-text" ><i class="material-icons left ">account_circle</i>M&eacute;dico</a></li>
+           <li class="btn_asistente"><a href="#" class="white-text" ><i class="material-icons left ">account_circle</i>Asistente</a></li>
             <li><a href="#" class="white-text"><i class="material-icons left ">search</i>Buscar</a></li>
            <li><a href="#" class="white-text"><i class="material-icons left ">settings</i>Configuraci&oacute;n</a></li>
             <li><a href="../cita/" class="white-text"><i class="material-icons left ">refresh</i>Actualizar</a></li>
@@ -47,13 +54,16 @@
               </div>
         </header>
         <main>
-            <div id="users">
+            <div id="inicio"></div>
+            <div id="paciente">
                 
             </div>
             <div id="medico">
             
             </div>
-   
+            <div id="asistente">
+            
+            </div>
         </main>
         <footer>
         
@@ -64,5 +74,6 @@
     <script src="../js/alertify.min.js"></script>
     <script src="../js/base64.js"></script>
     <script src="../js/jquery-ui.js"></script>
+    <script src="../js/materialize.clockpicker.js"></script>
     <script src="../controller/cita_controller.js"></script>
 </html>

@@ -71,9 +71,32 @@
     </select>
     <label>M&eacute;dicos</label>
   </div>
-            <div class="col s12 m12 l9 offset-l2 center">
+           <div class="col s12 m12 l12">
+        <ul class="collection with-header">
+        <li class="collection-header teal">
+            <label>
+               <a href="#" id="reset_fechas_p" class="white-text">
+                 <i class="material-icons left">refresh</i>
+                 <h6>Seleccione d&iacute;as de atenci&oacute;n</h6>
+                </a>
+            </label>
+        </li>
+      </ul>
+         </div>
+            <div class="col s12 m12 l9 offset-l2">
               <div id="datepicker"></div>
              </div>
+             <div class="col s12 m12 l12 center">  
+  <ul class="collapsible" data-collapsible="accordion">
+    <li>
+      <div class="collapsible-header active"><i class="material-icons">open_with</i>Fechas</div>
+      <div class="collapsible-body">
+          <ul class="collection with-header" id="fechas_seleccionadas_p">
+         </ul>  
+        </div>
+    </li>
+  </ul>  
+    </div>
          </div>
     </div>
 <div class="col s12 m10 l3  center">
@@ -142,17 +165,35 @@ inline: true,
 'Octubre', 'Noviembre', 'Diciembre'],
 dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
 onSelect: function (date) {
-alertify.success(date);
+fechas_selecionadas_p(date);
 },
 firstDay: 1,
 dateFormat: "yy-mm-dd"
         
 });
+     $('.collapsible').collapsible({
+      accordion : false
+    });
     var btn_guardar_paciente=$("#btn_guardar_paciente");
           btn_guardar_paciente.click(function(e){
               e.preventDefault();
-          alertify.success("siiii!!");
           });
+    var reset_fechas_p=$("#reset_fechas_p");
+    var fechas_p=$("#fechas_seleccionadas_p");
+    var num_fechas_p=0;
+    reset_fechas_p.click(function(){
+       fechas_p.empty(); 
+    });
+    function fechas_selecionadas_p(date){
+         fechas_p.append('<li class="collection-item" id="fecha_p'+num_fechas_p+'"><div>'+date+
+        '<a href="#" class="secondary-content" onclick="eliminar_fecha_p('+num_fechas_p+')" >'+
+        '<i class="material-icons">power_settings_new'+
+        '</i></a></div></li>');
+        num_fechas_p++;
+    }
+    function eliminar_fecha_p(num){
+        $("#fecha_p"+num).remove();
+    }
 </script>
   <style>
   #feedback { font-size: 1.4em; }

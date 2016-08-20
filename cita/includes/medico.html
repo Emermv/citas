@@ -57,9 +57,9 @@
       </div>
          <div class="col s12 m12 l12">
         <ul class="collection with-header">
-        <li class="collection-header">
+        <li class="collection-header teal">
             <label>
-               <a href="#" id="reset_fechas">
+               <a href="#" id="reset_fechas" class="white-text">
                  <i class="material-icons left">refresh</i>
                  <h6>Seleccione d&iacute;as de atenci&oacute;n</h6>
                 </a>
@@ -71,8 +71,17 @@
          <div id="datepicker_m" ></div>
     </div>
     <div class="col s12 m12 l12 center">
-    <ul class="collection with-header" id="fechas_seleccionadas_m">
-         </ul>     
+        
+  <ul class="collapsible" data-collapsible="accordion">
+    <li>
+      <div class="collapsible-header active"><i class="material-icons">open_with</i>Fechas</div>
+      <div class="collapsible-body">
+          <ul class="collection with-header" id="fechas_seleccionadas_m">
+         </ul>  
+        </div>
+    </li>
+  </ul>
+          
     </div>
     </div>
     </div>
@@ -170,6 +179,9 @@
           result.append( " #" + ( index + 1 ) );
         });
       }
+    });
+    $('.collapsible').collapsible({
+      accordion : false
     });
     /***********/
     $("#selectable_mas" ).selectable({
