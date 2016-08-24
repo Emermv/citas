@@ -10,8 +10,8 @@ $clave=$_POST['clave'];
 $credenciales=mysqli_query($con,"call sp_login('".$dni."','".$clave."')");
 $datos =array();
 if($x=mysqli_fetch_array($credenciales)){
-  if($dni===$x['dni']){
-  if($clave===$x['password']){
+  if($dni===@$x['dni']){
+  if($clave===@$x['password']){
     $datos['status']="ok";
     $datos['code']="1";
      $datos['dni']=$x['dni'];

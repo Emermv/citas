@@ -95,7 +95,6 @@
                if(clave_ok){
                    formData.append("dni",dni);
                    formData.append("clave",clave);
-                   alertify.error("dni:"+dni+" clave:"+clave);
                 $.ajax({
                 async:true,
                 type:"post",
@@ -130,32 +129,55 @@
         });
     }
     function iniciandoLogin(){
-        //$("#content_form_login").hide();
-        //$("#ajax_loader").removeClass("hide");
+          $("#content_form_login").hide();
+          $("#ajax_loader").removeClass("hide");
         
     }
     function recibiendoDatos(data){
        setTimeout(function(){
            var credenciales=JSON.parse(data);
            var tipo="";
+           localStorage.setItem("status",Base64.encode("-1"));
            if(credenciales.code!=="-1" && credenciales.status===Base64.decode("b2s=")){
                localStorage.clear();
-               localStorage.setItem("dni",credenciales.dni);
-               localStorage.setItem("nombre",credenciales.nombre);
-               localStorage.setItem("apellidos",credenciales.apellidos);
-               localStorage.setItem("direccion",credenciales.direccion);
-               localStorage.setItem("telefono",credenciales.telefono);
-               localStorage.setItem("ruta_foto",credenciales.ruta_foto);
+               localStorage.setItem("dni",Base64.encode(credenciales.dni));
+               localStorage.setItem("nombre",Base64.encode(credenciales.nombre));
+               localStorage.setItem("apellidos",Base64.encode(credenciales.apellidos));
+               localStorage.setItem("direccion",Base64.encode(credenciales.direccion));
+               localStorage.setItem("telefono",Base64.encode(credenciales.telefono));
+               localStorage.setItem("ruta_foto",Base64.encode(credenciales.ruta_foto));
                tipo=credenciales.tipo;
-               localStorage.setItem("tipo",tipo);
+               localStorage.setItem("tipo",Base64.encode(tipo));
                if(tipo==="Asistente"){
-                   localStorage.setItem("edad",credenciales.edad);
-                   localStorage.setItem("correo",credenciales.correo);
-                   localStorage.setItem("genero",credenciales.genero);
+                   localStorage.setItem("edad",Base64.encode(credenciales.edad));
+                   localStorage.setItem("correo",Base64.encode(credenciales.correo));
+                   localStorage.setItem("genero",Base64.encode(credenciales.genero));
+               }else if(tipo==="Medico"){
+                   localStorage.setItem("correo",Base64.encode(credenciales.correo));
+               }else if(tipo==="Paciente"){
+                   localStorage.setItem("edad",Base64.encode(credenciales.edad));
+                   localStorage.setItem("genero",Base64.encode(credenciales.genero));
+               }else{
+                   localStorage.setItem("tipo",Base64.encode("undefined"));
                }
+               localStorage.setItem("status",Base64.encode("1"));
                 $(location).attr("href","cita/");
-           }else if(credenciales.status==="")
+           }else{
+                 $("#ajax_loader").addClass("hide");
+                $("#content_form_login").show();
+                if(credenciales.status==="clave"){
+               mensaje_error("Clave incorrecto");
+           }else if(credenciales.status==="dni"){
+               mensaje_error("DNI incorrecto");
+           }else if(credenciales.status==="user"){
+               mensaje_error("Este usuario no se encuentra registrado");
+           }else if(credenciales.status==="server"){
+               mensaje_error("No es posible establecer conexion");
+           }else{
+            mensaje_error("Error!");
+           }
       
+           }
        },2000);
         
     }
