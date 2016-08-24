@@ -4,6 +4,7 @@
     var email_ok=false;
     $(document).ready(function(){
       var form_login=$("#form_login");
+        var btn_login=$("#btn_login");
       var dni=$("#dni");
       var clave=$("#password");
     var email=$("#email");
@@ -13,10 +14,11 @@
         var btnRecuperarClave=$("#btnRecuperarClave");
         var content_form_recuperacion=$("#content_form_recuperacion");
         var btnCancelar=$("#btnCancelar");
-        form_login.on("submit",function(event){
-             login(event,dni,clave);
-        });
-       
+          form_login.on("submit",function(event){
+             event.preventDefault();
+             login(dni.val(),clave.val());
+           });
+   
         dni.on("blur",function(e){
          e.preventDefault();
             validar_dni(estado_dni,dni);
@@ -86,13 +88,14 @@
              estado.append('<i class="material-icons prefix deep-orange-text ">error</i>');
         }
     }
-    function login(e,dni,clave){
-        e.preventDefault();
-             var formData=new FormData();
+    function login(dni,clave){
+           var formData=new FormData();
+        
            if(dni_ok){
                if(clave_ok){
-                   formData.append("dni",dni.val());
-                   formData.append("clave",clave.val());
+                   formData.append("dni",dni);
+                   formData.append("clave",clave);
+                   alertify.error("dni:"+dni+" clave:"+clave);
                 $.ajax({
                 async:true,
                 type:"post",
@@ -107,12 +110,14 @@
                 timeout:5000,
               error:problemas
             });
+           
                }else{
                   mensaje_error("Ingrese tu contrase&ntilde;a"); 
                }
            }else{
                mensaje_error("Ingrese tu DNI");
            }
+        return false;
     }
     function mensaje_error(mensaje){
     
@@ -125,20 +130,34 @@
         });
     }
     function iniciandoLogin(){
-        $("#content_form_login").hide();
-        $("#ajax_loader").removeClass("hide");
+        //$("#content_form_login").hide();
+        //$("#ajax_loader").removeClass("hide");
         
     }
     function recibiendoDatos(data){
-          setTimeout(function(){
-           if(data===Base64.decode("b2s=")){
-            $(location).attr("href","cita/");
-        }else {
-            $("#ajax_loader").addClass("hide");
-           $("#content_form_login").show();
-          mensaje_error(data);
-        } 
+       setTimeout(function(){
+           var credenciales=JSON.parse(data);
+           var tipo="";
+           if(credenciales.code!=="-1" && credenciales.status===Base64.decode("b2s=")){
+               localStorage.clear();
+               localStorage.setItem("dni",credenciales.dni);
+               localStorage.setItem("nombre",credenciales.nombre);
+               localStorage.setItem("apellidos",credenciales.apellidos);
+               localStorage.setItem("direccion",credenciales.direccion);
+               localStorage.setItem("telefono",credenciales.telefono);
+               localStorage.setItem("ruta_foto",credenciales.ruta_foto);
+               tipo=credenciales.tipo;
+               localStorage.setItem("tipo",tipo);
+               if(tipo==="Asistente"){
+                   localStorage.setItem("edad",credenciales.edad);
+                   localStorage.setItem("correo",credenciales.correo);
+                   localStorage.setItem("genero",credenciales.genero);
+               }
+                $(location).attr("href","cita/");
+           }else if(credenciales.status==="")
+      
        },2000);
+        
     }
     function problemas(){
         mensaje_error("Problemas en el servidor");

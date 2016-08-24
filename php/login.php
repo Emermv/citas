@@ -3,18 +3,16 @@ require_once "server.php";
 $con=conectar();
 if($con){
 mysqli_select_db($con,db);
-/*
+
 $dni=$_POST['dni'];
 $clave=$_POST['clave'];
-*/
-$dni="87654321";
-$clave="claves";
 
 $credenciales=mysqli_query($con,"call sp_login('".$dni."','".$clave."')");
 $datos =array();
 if($x=mysqli_fetch_array($credenciales)){
   if($dni===$x['dni']){
   if($clave===$x['password']){
+    $datos['status']="ok";
     $datos['code']="1";
      $datos['dni']=$x['dni'];
      $datos['nombre']=$x['nombre'];
@@ -35,17 +33,17 @@ if($x=mysqli_fetch_array($credenciales)){
        $datos['code']="-1";
      }
      $datos['tipo']=$x['tipo'];
-     echo json_encode($datos);
   }else{
-    echo "Clave incorrecto";
+      $datos['status']="clave";
   }
   }else{
-    echo "DNI incorrecto";
+    $datos['status']="dni";
   }
 }else{
-echo "El usuario : ".$dni." no existe!";
+  $datos['status']="user";
 }
 }else {
-  echo "Imposible establecer conexion";
+  $datos['status']="server";
 }
+   echo json_encode($datos);
  ?>
