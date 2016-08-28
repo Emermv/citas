@@ -19,6 +19,7 @@ apellidos varchar(50) not null,
     codigo int not null primary key,
     id_usuario int not null,
     correo varchar(100) not null,
+    especialidad varchar(100) not null,
     foreign key (id_usuario) references usuarios(id)
   )
   create table asistentes(

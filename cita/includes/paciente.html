@@ -1,92 +1,81 @@
 
 <div class="row">
-<div class="col s12 m10 offset-m1 l10 offset-l1 card-panel blue-grey lighten-5">
+<div class="col s12 m12 l12 card-panel">
 <form id="form_pacientes">
 <div class="row" id="content_form_paciente">
-<div class="col s12 m10 l4 "><!--col datos -->
-    <h5>Datos del paciente:</h5>
+<div class="col s12 m10 offset-m1 l5"><!--col datos -->
     <div class="row">
-             <div class="col s11 m11 l11 ">
-     <div class="file-field input-field">
-      <div class=" btn tooltipped red lighten-1" data-position="bottom" data-delay="50" data-tooltip="Sube una foto">
-        <span><i class="large material-icons blue-text">perm_identity</i></span>
-        <input type="file" >
-      </div>
-      <div class="file-path-wrapper">
-        <input class="file-path validate" type="text" placeholder="Subir foto">
-      </div>
-    </div>
-     </div>
-          <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">account_circle</i>
-          <input id="nombres_p" type="text" class="validate" autocomplete="off">
-          <label for="nombres_p"  data-error="Error" data-success="ok">Nombre</label>
+        <div class="col s12 m12 l12">
+          <div class="card">
+            <div class="card-image" id="perfil">
+              
+            </div>
+              <div class="card-content">
+              <div class="row">
+                  <div class="col s5 m4 l2"><span >Nombre</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="nombre"></div>
+        
+       <div class="col s5 m4 l2 "><span >Apellidos</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="apellidos"></div>
+        
+           <div class="col s5 m4 l2"><span >Direcci&oacute;n</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="direccion"></div>
+        
+           <div class="col s5 m4 l2 "><span >Telefono</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="telefono"></div>
+        
+           <div class="col s5 m4 l2 "><span >Edad</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="edad"></div>
+        
+           <div class="col s5 m4 l2 "><span >Genero</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="genero"></div>
+                  </div>
+              </div>
+          </div>
         </div>
-           <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">account_circle</i>
-          <input id="apellidos_p" type="text" class="validate" autocomplete="off">
-          <label for="apellidos_p"  data-error="Error" data-success="ok">Apellido</label>
-        </div>
-         <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">my_location</i>
-          <input id="direccion_p" type="text" class="validate" autocomplete="off">
-          <label for="direccion_p"  data-error="Error" data-success="ok">Direcci&oacute;n</label>
-        </div>
-         <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">phone</i>
-          <input id="telefono_p" type="tel" class="validate" autocomplete="off">
-          <label for="telefono_p"  data-error="Error" data-success="ok">Telefono</label>
-        </div>
-        <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">today</i>
-          <input id="edad_p" type="number" class="validate" autocomplete="off">
-          <label for="edad_p"  data-error="Error" data-success="ok">Edad</label>
-        </div>
-    <div class="input-field col s12 m12 l10 offset-l1">
-    <select class="icons">
-      <option value="" disabled selected>Seleccione tu genero</option>
-      <option value="" data-icon="../files/Male.png" class="circle">Hombre</option>
-      <option value="" data-icon="../files/Female.png" class="circle">Mujer</option>
-    </select>
-    <label>Genero</label>
-  </div>
-    </div>
-</div>
+        
+      
+    </div> <!--end div row content datos del paciente-->
+</div> <!--end col datos-->
 
-<div class="col s12 m10 l5 ">
+<div class="col s12 m8 l4">
      <div class="row">
-      <div class="input-field col s12 m12 l10 offset-l1">
-    <select>
+      <div class="input-field col s12 m12 l8 offset-l2">
+    <select id="especialidades_p">
       <option value="" disabled selected>Seleccione</option>
-      <option value="">a</option>
-      <option value="">b</option>
+      <option value="Alergia">Alergia</option>
+      <option value="Dermatologia">Dermatología</option>
+        <option value="Endocrinologia">Endocrinología</option>
+        <option value="Genetica">Genética</option>
+        <option value="Neumologia">Neumología</option>
+        <option value="Reumatologia">Reumatología</option>
+        
     </select>
     <label>Especialidades</label>
   </div>
-    <div class="input-field col s12 m12 l10 offset-l1">
-    <select>
-      <option value="" disabled selected>Seleccione</option>
-      <option value="">a</option>
-      <option value="">b</option>
+    <div class="input-field col s12 m12 l8 offset-l2">
+    <select id="medicos_p">
     </select>
     <label>M&eacute;dicos</label>
   </div>
-           <div class="col s12 m12 l12">
-        <ul class="collection with-header">
-        <li class="collection-header teal">
+           <div class="col s12 m12 l8 offset-l2">
             <label>
-               <a href="#" id="reset_fechas_p" class="white-text">
+               <a href="#" id="reset_fechas_p">
                  <i class="material-icons left">refresh</i>
                  <h6>Seleccione d&iacute;as de atenci&oacute;n</h6>
                 </a>
             </label>
-        </li>
-      </ul>
          </div>
             <div class="col s12 m12 l9 offset-l2">
               <div id="datepicker"></div>
              </div>
-             <div class="col s12 m12 l12 center">  
+             <div class="col s12 m12 l8 offset-l2 center">  
   <ul class="collapsible" data-collapsible="accordion">
     <li>
       <div class="collapsible-header active"><i class="material-icons">open_with</i>Fechas</div>
@@ -99,9 +88,9 @@
     </div>
          </div>
     </div>
-<div class="col s12 m10 l3  center">
+<div class="col s12 m4 l3  center">
     <div class="row">
-     <div class="col s12 m12 l12">
+     <div class="col s12 m12 l8 offset-l2">
         <p id="feedback">
      <span>Horas :</span> <span id="select-result">none</span>.
       </p>
@@ -144,57 +133,6 @@
   </form>  
 </div>
 </div>
-<script>
-$('select').material_select();
-
-   $('.tooltipped').tooltip({delay: 50});
-         $("#selectable" ).selectable({
-      stop: function() {
-        var result = $( "#select-result" ).empty();
-        $( ".ui-selected", this ).each(function() {
-          var index = $( "#selectable li" ).index( this );
-          result.append( " #" + ( index + 1 ) );
-        });
-      }
-    });
-    $( "#datepicker" ).datepicker({
-inline: true,
-    monthNames: ['Enero', 'Febrero', 'Marzo',
-'Abril', 'Mayo', 'Junio',
-'Julio', 'Agosto', 'Septiembre',
-'Octubre', 'Noviembre', 'Diciembre'],
-dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
-onSelect: function (date) {
-fechas_selecionadas_p(date);
-},
-firstDay: 1,
-dateFormat: "yy-mm-dd"
-        
-});
-     $('.collapsible').collapsible({
-      accordion : false
-    });
-    var btn_guardar_paciente=$("#btn_guardar_paciente");
-          btn_guardar_paciente.click(function(e){
-              e.preventDefault();
-          });
-    var reset_fechas_p=$("#reset_fechas_p");
-    var fechas_p=$("#fechas_seleccionadas_p");
-    var num_fechas_p=0;
-    reset_fechas_p.click(function(){
-       fechas_p.empty(); 
-    });
-    function fechas_selecionadas_p(date){
-         fechas_p.append('<li class="collection-item" id="fecha_p'+num_fechas_p+'"><div>'+date+
-        '<a href="#" class="secondary-content" onclick="eliminar_fecha_p('+num_fechas_p+')" >'+
-        '<i class="material-icons">power_settings_new'+
-        '</i></a></div></li>');
-        num_fechas_p++;
-    }
-    function eliminar_fecha_p(num){
-        $("#fecha_p"+num).remove();
-    }
-</script>
   <style>
   #feedback { font-size: 1.4em; }
   #selectable .ui-selecting { background: skyblue; }
