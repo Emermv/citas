@@ -14,8 +14,9 @@
           $("#genero").append('<span>'+usuarios.genero+'</span>');
           $("#perfil").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del paciente : </span>');
           var paciente=new Paciente();
-           var object_filtrar=new Filtrar(1);
-            paciente.setOnSelectListener(paciente.especialidades_p,object_filtrar);
+           var object_filtrar=new Filtrar();
+            paciente.setOnSelectListener(paciente.especialidades_p,object_filtrar,1);
+             paciente.setOnSelectListener(paciente.medicos_p,object_filtrar,2);
              
       }else if(usuarios.tipo==="Medico"){
           usuario.append(file_get_contents("includes/medico.html"));
@@ -71,20 +72,13 @@ class Usuario{
         }catch(err){console.error(" Error:"+err.message);}
      
     }
-    getStatus(){return this.status;}
-    getTipo(){return this.tipo;}
-    getDni(){return this.dni;}
-    getNombre(){return this.nombre;}
-    getApellidos(){return this.apellidos;}
-    getDireccion(){return this.direccion;}
-    
 }
 
 class Paciente{
     constructor(){
         /*******************************************************************/
     this.especialidades_p=$("#especialidades_p");
-    
+    this.medicos_p=$("#medicos_p");
     this.btn_guardar_paciente=$("#btn_guardar_paciente");
     this.btn_guardar_paciente.click(function(e){
               e.preventDefault();
@@ -109,8 +103,8 @@ class Paciente{
         });
       }
     });
- //$.datepicker.setDefaults($.datepicker.regional["es"]);
- $( "#datepicker" ).datepicker({
+ 
+ $("#datepicker" ).datepicker({
 inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
@@ -125,6 +119,12 @@ firstDay: 1,
 dateFormat: "yy-mm-dd",
 showButtonPanel: true,
 minDate:new Date()
+}).click(function(){
+    var date=$("#datepicker" ).datepicker("getDate").toLocaleDateString();
+      var formatdate=date.split("/");
+      var fecha=formatdate[2]+"-"+formatdate[1]+"-"+formatdate[0];
+      
+   alertify.success(fecha);
 });
 $('.collapsible').collapsible({
       accordion : false
@@ -135,11 +135,9 @@ $('.collapsible').collapsible({
         image.height=50;
         image.width=50;
     }
-    setOnSelectListener(selectlist,object){
+    setOnSelectListener(selectlist,object,opcion){
         selectlist.on("change",function(){
-            alertify.success("select");
-            object.execute(selectlist.val());
-            
+            object.execute(selectlist.val(),opcion);
         });
     }
 }
@@ -153,38 +151,65 @@ function  eliminar_fecha_p(num){
         $("#fecha_p"+num).remove();
 }
 class Filtrar{
-    constructor(opcion){
-        this.opcion=opcion;
-        
+    constructor(){
+        this.formdata=new FormData();
     }
-    execute(val){
-       if(this.opcion==1){
-            alertify.success(val);
-           var formdata=new FormData();
-               formdata.append("especialidad",val);
+    execute(val,opcion){
+       if(opcion==1){
+               this.formdata.append("especialidad",val);
            $.ajax({
                async:true,
                  contentType:"application/x-www-form-urlencoded",
                 url: "../php/filtrar_especialidades.php",
                 type: "post",
                 dataType: "html",
-                data:formdata,
+                data:this.formdata,
+                cache: false,
+                contentType: false,
+	             processData: false,
+               beforeSend:iniciandoFiltrado,
+                success:SuccesFiltrado,
+                timeout:5000,
+              error:problemas
+            });
+        }else if(opcion==2){
+               this.formdata.append("medico",val);
+               this.formdata.append("fecha_inicio",this.getFecha(1));
+               this.formdata.append("fecha_fin",this.getFecha(2));
+               $.ajax({
+               async:true,
+                 contentType:"application/x-www-form-urlencoded",
+                url: "../php/listar_calendario_citas_medico.php",
+                type: "post",
+                dataType: "html",
+                data:this.formdata,
                 cache: false,
                 contentType: false,
 	             processData: false,
                beforeSend:iniciandoListado,
-                success:SuccesFiltrado,
+                success:SuccesListado,
                 timeout:5000,
               error:problemas
-
             });
+            
         }else{
-            alertify.success("opccion 2");
+            console.error("opcion incorrecto");
         }
     }
-    
+    getFecha(option){
+        var time=new Date();
+        if(option==1){
+             return time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDate();
+        }else{
+            var ultimoDia = new Date(time.getFullYear(), time.getMonth() + 1, 0);
+            return  time.getFullYear()+"-"+(time.getMonth()+1)+"-"+ultimoDia.getDate();
+        }
+    }
 }
 function iniciandoListado(){
+    
+}
+function iniciandoFiltrado(){
     
 }
 function SuccesFiltrado(data){
@@ -199,6 +224,32 @@ function SuccesFiltrado(data){
         $('select').material_select(); 
     }
 }
+function SuccesListado(data){
+    var json=JSON.parse(data);
+    if(json.status==1){
+        var hora_inicio="";
+        var hora_fin="";
+        for(var i=0;i<json.num;i++){
+            hora_inicio=json[i].hora_inicio.replace(":00","");
+            hora_fin=json[i].hora_fin.replace(":00","");
+            $("#h"+hora_inicio).remove();
+            $("#h"+hora_fin).remove();
+        }
+        
+    }else{
+        alertify.error(json.mensaje);
+    }
+}
 function problemas(){
     
+}
+function invertir(cadena) {
+  var x = cadena.length;
+  var cadenaInvertida = "";
+ 
+  while (x>=0) {
+    cadenaInvertida = cadenaInvertida + cadena.charAt(x);
+    x--;
+  }
+  return cadenaInvertida;
 }

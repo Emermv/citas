@@ -31,6 +31,18 @@ apellidos varchar(50) not null,
       foreign key (id_usuario) references usuarios(id)
   )
 
+  create table  citas_paciente_medico(
+      id_cita int not null PRIMARY key,
+      id_medico int not null REFERENCES medicos(codigo),
+      id_paciente int not null REFERENCES pacientes(codigo),
+       fecha date not null,
+      hora_inicio time not null,
+      hora_fin time not null,
+      especialidad varchar(100) not null,
+      descripcion varchar(500),
+      estado varchar(20) not null
+      )
+
   /*procedures*******************************************/
   DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
@@ -47,3 +59,10 @@ apellidos varchar(50) not null,
       ELSE
       SELECT 'Usuario no encontrado';
       end if;
+
+
+      DELIMITER //
+      CREATE PROCEDURE sp_buscar_disponibles(medico,paciente,fecha)
+      COMMENT 'SP QUE BUSCA FECHAS Y HORAS LIBRES DE DE  UN MEDICO';
+      IF EXISTS(SELECT p.id_usuario FROM pacientes AS p WHERE P.id_usuario=paciente) THEN
+      SELECT fecha,hora_inicio,hora_fin from citas_paciente_medico as c where c.estado='disponible'
