@@ -113,7 +113,8 @@ monthNames: ['Enero', 'Febrero', 'Marzo',
 dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
 onSelect: function (date) {
      fechas_seleccionadas_p(date,this.num_fechas_p);
-        this.num_fechas_p++;
+    this.num_fechas_p++;
+    listar_horas_disponibles_p(date);
 },
 firstDay: 1,
 dateFormat: "yy-mm-dd",
@@ -122,8 +123,7 @@ minDate:new Date()
 }).click(function(){
     var date=$("#datepicker" ).datepicker("getDate").toLocaleDateString();
       var formatdate=date.split("/");
-      var fecha=formatdate[2]+"-"+formatdate[1]+"-"+formatdate[0];
-      
+      var fecha=formatdate[2]+"-"+formatdate[1]+"-"+formatdate[0];  
    alertify.success(fecha);
 });
 $('.collapsible').collapsible({
@@ -173,30 +173,13 @@ class Filtrar{
               error:problemas
             });
         }else if(opcion==2){
-               this.formdata.append("medico",val);
-               this.formdata.append("fecha_inicio",this.getFecha(1));
-               this.formdata.append("fecha_fin",this.getFecha(2));
-               $.ajax({
-               async:true,
-                 contentType:"application/x-www-form-urlencoded",
-                url: "../php/listar_calendario_citas_medico.php",
-                type: "post",
-                dataType: "html",
-                data:this.formdata,
-                cache: false,
-                contentType: false,
-	             processData: false,
-               beforeSend:iniciandoListado,
-                success:SuccesListado,
-                timeout:5000,
-              error:problemas
-            });
-            
+           localStorage.setItem("medico_id",val); 
         }else{
             console.error("opcion incorrecto");
         }
     }
-    getFecha(option){
+}
+function getFecha(option){
         var time=new Date();
         if(option==1){
              return time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDate();
@@ -205,6 +188,28 @@ class Filtrar{
             return  time.getFullYear()+"-"+(time.getMonth()+1)+"-"+ultimoDia.getDate();
         }
     }
+function listar_horas_disponibles_p(date){
+    var formdata=new FormData();
+    var medico=localStorage.getItem("medico_id");
+    if(medico!==null){
+       formdata.append("medico",medico);
+        formdata.append("fecha",date);
+               $.ajax({
+               async:true,
+                 contentType:"application/x-www-form-urlencoded",
+                url: "../php/listar_calendario_citas_medico.php",
+                type: "post",
+                dataType: "html",
+                data:formdata,
+                cache: false,
+                contentType: false,
+	             processData: false,
+               beforeSend:iniciandoListado,
+                success:SuccesListado,
+                timeout:5000,
+              error:problemas
+            }); 
+    }else{console.error("medico no  selccionado!");}
 }
 function iniciandoListado(){
     
@@ -225,17 +230,17 @@ function SuccesFiltrado(data){
     }
 }
 function SuccesListado(data){
-    var json=JSON.parse(data);
+        var json=JSON.parse(data);
+         var selectable=$("#selectable").empty();
+        selectable.append(file_get_contents("includes/horas_item.html"));
     if(json.status==1){
-        var hora_inicio="";
-        var hora_fin="";
+        var hora_aux="";
         for(var i=0;i<json.num;i++){
-            hora_inicio=json[i].hora_inicio.replace(":00","");
-            hora_fin=json[i].hora_fin.replace(":00","");
-            $("#h"+hora_inicio).remove();
-            $("#h"+hora_fin).remove();
+              if(json[i].estado==="ocupado"){
+                  hora_aux=json[i].hora.split(":");
+                  $("#h"+hora_aux[0]+hora_aux[1]).remove();  
+              }
         }
-        
     }else{
         alertify.error(json.mensaje);
     }

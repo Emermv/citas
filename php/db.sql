@@ -36,13 +36,17 @@ apellidos varchar(50) not null,
       id_medico int not null REFERENCES medicos(codigo),
       id_paciente int not null REFERENCES pacientes(codigo),
        fecha date not null,
-      hora_inicio time not null,
-      hora_fin time not null,
       especialidad varchar(100) not null,
       descripcion varchar(500),
-      estado varchar(20) not null
+      estado varchar(20) not null,
+      num_f_horas int not null
       )
-
+      create table horas_citas_paciente_medico(
+          id_horas int not null PRIMARY key,
+          id_cita int not null,
+          hora time not null,
+          FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita)
+          )
   /*procedures*******************************************/
   DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))

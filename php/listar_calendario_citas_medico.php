@@ -1,13 +1,12 @@
 <?php
 require_once "server.php";
-/*
+
 $medico=$_POST['medico'];
-$fecha_inicio=$_POST['fecha_inicio'];
-$fecha_fin=$_POST['fecha_fin'];
-*/
+$fecha=$_POST['fecha'];
+
+/*
 $medico="2";
-$fecha_inicio="2016-08-28";
-$fecha_fin="2016-08-31";
+$fecha="2016-08-31";*/
   $response=array();
 $con=conectar();
 if($con){
@@ -17,16 +16,15 @@ if($selectdb){
   $response['mensaje']="";
   $existe=false;
   $num=0;
-  $sql="select fecha,hora_inicio,hora_fin,estado from citas_paciente_medico as c where c.id_medico="
-  .$medico." and c.fecha between '".$fecha_inicio."' and '".$fecha_fin."'";
-
+  $sql="select c.fecha,c.estado,c.num_f_horas,h.hora,h.id_cita from citas_paciente_medico as c".
+   " join horas_citas_paciente_medico as h on c.id_cita=h.id_cita  where c.id_medico="
+  .$medico." and c.fecha='".$fecha."'";
    $disponibles=mysqli_query($con,$sql);
 if($disponibles){
     while($data=mysqli_fetch_object($disponibles)){
       $existe=true;
-     $response[] = array('fecha' =>$data->fecha,
-     'hora_inicio'=>$data->hora_inicio,'hora_fin'=>$data->hora_fin,
-     'estado'=>$data->estado);
+     $response[] = array('id_cita'=>$data->id_cita,'num_f_horas'=>$data->num_f_horas,'fecha' =>$data->fecha,
+     'hora'=>$data->hora,'estado'=>$data->estado);
         $num++;
     }
     if($existe){
