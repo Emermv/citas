@@ -69,35 +69,20 @@
              <textarea id="descripcion_p" class="materialize-textarea" length="500"></textarea>
           <label for="descripcion_p"  data-error="Error" data-success="ok">Descripci&oacute;n</label>
          </div>
-           <div class="col s12 m12 l8 offset-l2">
-            <label>
-               <a href="#" id="reset_fechas_p">
-                 <i class="material-icons left">refresh</i>
-                 <h6>Seleccione una fecha</h6>
-                </a>
-            </label>
-         </div>
             <div class="col s12 m12 l9 offset-l2">
               <div id="datepicker"></div>
              </div>
-             <div class="col s12 m12 l8 offset-l2 center">  
-  <ul class="collapsible" data-collapsible="accordion">
-    <li>
-      <div class="collapsible-header active"><i class="material-icons">open_with</i>Fechas</div>
-      <div class="collapsible-body">
-          <ul class="collection with-header" id="fechas_seleccionadas_p">
-         </ul>  
-        </div>
-    </li>
-  </ul>  
-    </div>
          </div>
     </div>
 <div class="col s12 m4 l3  center">
     <div class="row">
+    <div class="col s12 m12 l8 offset-l2 teal">
+        <span>Disponible :</span>
+        <span id="status_disponibilidad">Todo</span>
+    </div>
      <div class="col s12 m12 l8 offset-l2">
-        <p id="feedback">
-     <span>Horas :</span> <span id="select-result">none</span>.
+     <p id="feedback">
+     <span>Horas :</span> <span id="select-result"></span>.
       </p>
  
 <ol id="selectable" >
@@ -121,7 +106,6 @@
     <li class="ui-widget-content" id="h1630">16:30 PM</li>
     <li class="ui-widget-content" id="h1700">17:00 PM</li>
 </ol>
-        
     </div>
     </div>
 </div>
@@ -139,7 +123,6 @@
 </div>
 </div>
   <style>
-  #feedback { font-size: 1.4em; }
   #selectable .ui-selecting { background: skyblue; }
   #selectable .ui-selected { background:blue; color: white; }
   #selectable { list-style-type: none; margin: 0; padding: 1px; width: 100%}

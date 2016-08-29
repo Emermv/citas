@@ -1,0 +1,19 @@
+function fechas_seleccionadas_p(date,num_fechas_p){
+    $("#fechas_seleccionadas_p").append('<li class="collection-item" id="fecha_p'+num_fechas_p+'"><div>'+date+
+        '<a href="#" class="secondary-content" onclick="eliminar_fecha_p('+num_fechas_p+')" >'+
+        '<i class="material-icons">delete'+
+        '</i></a></div></li>');
+}
+function  eliminar_fecha_p(num){
+        $("#fecha_p"+num).remove();
+}
+function invertir(cadena) {
+  var x = cadena.length;
+  var cadenaInvertida = "";
+ 
+  while (x>=0) {
+    cadenaInvertida = cadenaInvertida + cadena.charAt(x);
+    x--;
+  }
+  return cadenaInvertida;
+}

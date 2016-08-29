@@ -25,7 +25,8 @@
       } 
   });  
 }());
-
+/*************************************************************************************************************************/
+var horas_selecciondas=new Array();
 
 class Cita{
     constructor(){
@@ -82,15 +83,8 @@ class Paciente{
     this.btn_guardar_paciente=$("#btn_guardar_paciente");
     this.btn_guardar_paciente.click(function(e){
               e.preventDefault();
-             alertify.success("esotoy");
+             crear_cita_paciente();
           });  
-    this.reset_fechas_p=$("#reset_fechas_p");
-    this.fechas_p=$("#fechas_seleccionadas_p");
-    this.num_fechas_p=0;
-    this.reset_fechas_p.click(function(e){
-        e.preventDefault();
-    $("#fechas_seleccionadas_p").empty();
-    });
 /*******************************************************************/
        $('select').material_select(); 
       $('.tooltipped').tooltip({delay: 50});
@@ -99,7 +93,17 @@ class Paciente{
         var result = $( "#select-result" ).empty();
         $( ".ui-selected", this ).each(function() {
           var index = $( "#selectable li" ).index( this );
-          result.append( " #" + ( index + 1 ) );
+            var id=getItemSelected(index);
+            if(id!=-1){
+            horas_selecciondas.splice(0,horas_selecciondas.length);
+              horas_selecciondas.push(id);
+                console.log("desde aqui");
+                for(var i in horas_selecciondas){
+                    
+                    console.log(horas_selecciondas[i]);
+                }
+              result.append(id);
+            }
         });
       }
     });
@@ -112,28 +116,14 @@ monthNames: ['Enero', 'Febrero', 'Marzo',
 'Octubre', 'Noviembre', 'Diciembre'],
 dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
 onSelect: function (date) {
-     fechas_seleccionadas_p(date,this.num_fechas_p);
-    this.num_fechas_p++;
     listar_horas_disponibles_p(date);
 },
 firstDay: 1,
 dateFormat: "yy-mm-dd",
 showButtonPanel: true,
 minDate:new Date()
-}).click(function(){
-    var date=$("#datepicker" ).datepicker("getDate").toLocaleDateString();
-      var formatdate=date.split("/");
-      var fecha=formatdate[2]+"-"+formatdate[1]+"-"+formatdate[0];  
-   alertify.success(fecha);
 });
-$('.collapsible').collapsible({
-      accordion : false
-    });
 
-    }
-    setDimensions(image){
-        image.height=50;
-        image.width=50;
     }
     setOnSelectListener(selectlist,object,opcion){
         selectlist.on("change",function(){
@@ -141,15 +131,7 @@ $('.collapsible').collapsible({
         });
     }
 }
-function fechas_seleccionadas_p(date,num_fechas_p){
-    $("#fechas_seleccionadas_p").append('<li class="collection-item" id="fecha_p'+num_fechas_p+'"><div>'+date+
-        '<a href="#" class="secondary-content" onclick="eliminar_fecha_p('+num_fechas_p+')" >'+
-        '<i class="material-icons">delete'+
-        '</i></a></div></li>');
-}
-function  eliminar_fecha_p(num){
-        $("#fecha_p"+num).remove();
-}
+
 class Filtrar{
     constructor(){
         this.formdata=new FormData();
@@ -231,6 +213,7 @@ function SuccesFiltrado(data){
 }
 function SuccesListado(data){
         var json=JSON.parse(data);
+        var status_disponibilidad=$("#status_disponibilidad").empty();
          var selectable=$("#selectable").empty();
         selectable.append(file_get_contents("includes/horas_item.html"));
     if(json.status==1){
@@ -241,20 +224,79 @@ function SuccesListado(data){
                   $("#h"+hora_aux[0]+hora_aux[1]).remove();  
               }
         }
+        status_disponibilidad.append('Visibles');
     }else{
-        alertify.error(json.mensaje);
+        status_disponibilidad.append('Todo');
     }
 }
 function problemas(){
     
 }
-function invertir(cadena) {
-  var x = cadena.length;
-  var cadenaInvertida = "";
- 
-  while (x>=0) {
-    cadenaInvertida = cadenaInvertida + cadena.charAt(x);
-    x--;
-  }
-  return cadenaInvertida;
+/**************************CREACION  DE CITA ******************************************/
+function crear_cita_paciente(){
+    var especialidad=$("#especialidades_p").val();
+    var medico=localStorage.getItem("medico_id");
+    var descripcion=$("#descripcion_p").val();
+    var date=$("#datepicker").datepicker("getDate");
+    var fecha_arr=date.toLocaleDateString().split("/");
+    var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
+    var select=$("#h1230").css("backgroundColor");
+    alertify.success("color :"+select);
+    if(especialidad!==null){
+        if(medico!==null){
+           if(fecha.replace("-","").replace("-","")!==""){
+               alertify.success("ok");
+           }else{
+             alertify.success("no fecha");   
+           }
+        }else{
+             alertify.success("no medci");
+        }
+        
+    }else{
+        alertify.success("no");
+    }
+    
+}
+/**************************END CREACION  DE CITA ******************************************/
+function getItemSelected(index){
+    if(index==0){
+        return "08:00:00";
+    }else if(index==1){
+        return "08:30:00";
+    }else if(index==2){
+        return "09:00:00";
+    }else if(index==3){
+        return "09:30:00";
+    }else if(index==4){
+        return "10:00:00";
+    }else if(index==5){
+        return "10:30:00";
+    }else if(index==6){
+        return "11:00:00";
+    }else if(index==7){
+        return "11:30:00";
+    }else if(index==8){
+        return "12:00:00";
+    }else if(index==9){
+        return "12:30:00";
+    }else if(index==10){
+        return "13:00:00";
+    }else if(index==11){
+        return "13:30:00";
+    }else if(index==12){
+        return "14:00:00";
+    }else if(index==13){
+        return "14:30:00";
+    }else if(index==15){
+        return "15:00:00";
+    }else if(index==16){
+        return "15:30:00";
+    }else if(index==17){
+        return "16:00:00";
+    }else if(index==18){
+        return "16:30:00";
+    }else if(index==19){
+        return "17:00:00";
+    }else{return -1;}
 }
