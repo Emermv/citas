@@ -1,3 +1,4 @@
+
 (function(){
   $(document).ready(function(){
       var usuario=$("#usuario");
@@ -5,6 +6,7 @@
       var cita=new Cita();
       var usuarios=new Usuario();
       if(usuarios.tipo==="Paciente"){
+        // requirejs("paciente","../controller/includes-controller/paciente.js");
           usuario.append(file_get_contents("includes/paciente.html"));
           $("#nombre").append('<span>'+usuarios.nombre+'</span>');
           $("#apellidos").append('<span>'+usuarios.apellidos+'</span>');
@@ -13,6 +15,7 @@
           $("#edad").append('<span>'+usuarios.edad+'</span>');
           $("#genero").append('<span>'+usuarios.genero+'</span>');
           $("#perfil").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del paciente : </span>');
+         
           var paciente=new Paciente();
            var object_filtrar=new Filtrar();
             paciente.setOnSelectListener(paciente.especialidades_p,object_filtrar,1);
@@ -39,6 +42,12 @@
           $("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del asistente: </span>');
           var asistente=new Asistente();
       } 
+      
+      /********************************************************************************/
+      $("#btnSalir").click(function(){
+         localStorage.clear(); 
+      });
+      
   });  
 }());
 /*************************************************************************************************************************/
@@ -88,62 +97,6 @@ class Usuario{
             }
         }catch(err){console.error(" Error:"+err.message);}
      
-    }
-}
-class Paciente{
-    constructor(){
-        /*******************************************************************/
-    this.especialidades_p=$("#especialidades_p");
-    this.medicos_p=$("#medicos_p");
-    this.btn_guardar_paciente=$("#btn_guardar_paciente");
-    this.btn_guardar_paciente.click(function(e){
-              e.preventDefault();
-             crear_cita_paciente();
-          });  
-/*******************************************************************/
-       $('select').material_select(); 
-      $('.tooltipped').tooltip({delay: 50});
-         $("#selectable").selectable({
-      stop: function() {
-        var result = $( "#select-result" ).empty();
-        $( ".ui-selected", this ).each(function() {
-          var index = $( "#selectable li" ).index( this );
-            var id=getItemSelected(index);
-            if(id!=-1){
-            horas_selecciondas.splice(0,horas_selecciondas.length);
-              horas_selecciondas.push(id);
-                console.log("desde aqui");
-                for(var i in horas_selecciondas){
-                    
-                    console.log(horas_selecciondas[i]);
-                }
-              result.append(id);
-            }
-        });
-      }
-    });
- 
- $("#datepicker" ).datepicker({
-inline: true,
-monthNames: ['Enero', 'Febrero', 'Marzo',
-'Abril', 'Mayo', 'Junio',
-'Julio', 'Agosto', 'Septiembre',
-'Octubre', 'Noviembre', 'Diciembre'],
-dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
-onSelect: function (date) {
-    listar_horas_disponibles_p(date);
-},
-firstDay: 1,
-dateFormat: "yy-mm-dd",
-showButtonPanel: true,
-minDate:new Date()
-});
-
-    }
-    setOnSelectListener(selectlist,object,opcion){
-        selectlist.on("change",function(){
-            object.execute(selectlist.val(),opcion);
-        });
     }
 }
 
@@ -206,7 +159,7 @@ function listar_horas_disponibles_p(date){
                 timeout:5000,
               error:problemas
             }); 
-    }else{console.error("medico no  selccionado!");}
+    }else{console.error("medico no  seleccionado!");}
 }
 function iniciandoListado(){
     
@@ -236,7 +189,7 @@ function SuccesListado(data){
         for(var i=0;i<json.num;i++){
               if(json[i].estado==="ocupado"){
                   hora_aux=json[i].hora.split(":");
-                  $("#h"+hora_aux[0]+hora_aux[1]).remove();  
+                  $("#h"+hora_aux[0]+hora_aux[1]).attr("disabled","disabled");
               }
         }
         status_disponibilidad.append('Visibles');
@@ -314,4 +267,17 @@ function getItemSelected(index){
     }else if(index==19){
         return "17:00:00";
     }else{return -1;}
+}
+function include(js) {
+var script = document.createElement('script');
+script.setAttribute('type', 'text/javascript');
+script.setAttribute('src', js);
+document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+function requirejs(id, src) {
+    if (document.getElementById(id) != null) return;
+    var js = document.createElement('script'); 
+    js.id = id; js.async = false; js.src = src;
+    document.getElementById("scripts").appendChild(js);
 }
