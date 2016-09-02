@@ -1,20 +1,21 @@
-
+	var jq=jQuery.noConflict(false);
 (function(){
-  $(document).ready(function(){
-      var usuario=$("#usuario");
+
+  jq(document).ready(function(){
+      var usuario=jq("#usuario");
       usuario.empty();
       var cita=new Cita();
       var usuarios=new Usuario();
       if(usuarios.tipo==="Paciente"){
         // requirejs("paciente","../controller/includes-controller/paciente.js");
           usuario.append(file_get_contents("includes/paciente.html"));
-          $("#nombre").append('<span>'+usuarios.nombre+'</span>');
-          $("#apellidos").append('<span>'+usuarios.apellidos+'</span>');
-          $("#direccion").append('<span>'+usuarios.direccion+'</span>');
-          $("#telefono").append('<span>'+usuarios.telefono+'</span>');
-          $("#edad").append('<span>'+usuarios.edad+'</span>');
-          $("#genero").append('<span>'+usuarios.genero+'</span>');
-          $("#perfil").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del paciente : </span>');
+          jq("#nombre").append('<span>'+usuarios.nombre+'</span>');
+          jq("#apellidos").append('<span>'+usuarios.apellidos+'</span>');
+          jq("#direccion").append('<span>'+usuarios.direccion+'</span>');
+          jq("#telefono").append('<span>'+usuarios.telefono+'</span>');
+          jq("#edad").append('<span>'+usuarios.edad+'</span>');
+          jq("#genero").append('<span>'+usuarios.genero+'</span>');
+          jq("#perfil").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del paciente : </span>');
          
           var paciente=new Paciente();
            var object_filtrar=new Filtrar();
@@ -23,28 +24,28 @@
              
       }else if(usuarios.tipo==="Medico"){
           usuario.append(file_get_contents("includes/medico.html"));
-          $("#nombre_m").append('<span>'+usuarios.nombre+'</span>');
-          $("#apellidos_m").append('<span>'+usuarios.apellidos+'</span>');
-          $("#direccion_m").append('<span>'+usuarios.direccion+'</span>');
-          $("#telefono_m").append('<span>'+usuarios.telefono+'</span>');
-          $("#correo_m").append('<span>'+usuarios.correo+'</span>');
-          $("#perfil_m").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del m&eacute;dico: </span>');
+          jq("#nombre_m").append('<span>'+usuarios.nombre+'</span>');
+          jq("#apellidos_m").append('<span>'+usuarios.apellidos+'</span>');
+          jq("#direccion_m").append('<span>'+usuarios.direccion+'</span>');
+          jq("#telefono_m").append('<span>'+usuarios.telefono+'</span>');
+          jq("#correo_m").append('<span>'+usuarios.correo+'</span>');
+          jq("#perfil_m").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del m&eacute;dico: </span>');
           var medico=new Medico();
       }else if(usuarios.tipo==="Asistente"){
           usuario.append(file_get_contents("includes/asistente.html"));
-          $("#nombre_a").append('<span>'+usuarios.nombre+'</span>');
-          $("#apellidos_a").append('<span>'+usuarios.apellidos+'</span>');
-          $("#direccion_a").append('<span>'+usuarios.direccion+'</span>');
-          $("#telefono_a").append('<span>'+usuarios.telefono+'</span>');
-          $("#correo_a").append('<span>'+usuarios.correo+'</span>');
-          $("#genero_a").append('<span>'+usuarios.genero+'</span>');
-          $("#edad_a").append('<span>'+usuarios.edad+'</span>');
-          $("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del asistente: </span>');
+          jq("#nombre_a").append('<span>'+usuarios.nombre+'</span>');
+          jq("#apellidos_a").append('<span>'+usuarios.apellidos+'</span>');
+          jq("#direccion_a").append('<span>'+usuarios.direccion+'</span>');
+          jq("#telefono_a").append('<span>'+usuarios.telefono+'</span>');
+          jq("#correo_a").append('<span>'+usuarios.correo+'</span>');
+          jq("#genero_a").append('<span>'+usuarios.genero+'</span>');
+          jq("#edad_a").append('<span>'+usuarios.edad+'</span>');
+          jq("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del asistente: </span>');
           var asistente=new Asistente();
       } 
       
       /********************************************************************************/
-      $("#btnSalir").click(function(){
+      jq("#btnSalir").click(function(){
          localStorage.clear(); 
       });
       
@@ -55,7 +56,7 @@ var horas_selecciondas=new Array();
 
 class Cita{
     constructor(){
-        $(".button-collapse").sideNav();
+        jq(".button-collapse").sideNav();
     }
     controlar_active(btn1,btn2,btn3,btn4){
         btn1.addClass("active");
@@ -107,7 +108,7 @@ class Filtrar{
     execute(val,opcion){
        if(opcion==1){
                this.formdata.append("especialidad",val);
-           $.ajax({
+           jq.ajax({
                async:true,
                  contentType:"application/x-www-form-urlencoded",
                 url: "../php/filtrar_especialidades.php",
@@ -144,7 +145,7 @@ function listar_horas_disponibles_p(date){
     if(medico!==null){
        formdata.append("medico",medico);
         formdata.append("fecha",date);
-               $.ajax({
+               jq.ajax({
                async:true,
                  contentType:"application/x-www-form-urlencoded",
                 url: "../php/listar_calendario_citas_medico.php",
@@ -170,26 +171,26 @@ function iniciandoFiltrado(){
 function SuccesFiltrado(data){
     var aux=JSON.parse(data);
     if(aux.status==1){
-       var medicos_p=$("#medicos_p");
+       var medicos_p=jq("#medicos_p");
         medicos_p.empty();
         medicos_p.append('<option value="" disabled selected>Seleccione</option>');
         for(var i=0;i<aux.num;i++){
             medicos_p.append('<option value="'+aux[i].id+'">'+aux[i].nom_app+'</option>');
         }
-        $('select').material_select(); 
+        jq('select').material_select(); 
     }
 }
 function SuccesListado(data){
         var json=JSON.parse(data);
-        var status_disponibilidad=$("#status_disponibilidad").empty();
-         var selectable=$("#selectable").empty();
+        var status_disponibilidad=jq("#status_disponibilidad").empty();
+         var selectable=jq("#selectable").empty();
         selectable.append(file_get_contents("includes/horas_item.html"));
     if(json.status==1){
         var hora_aux="";
         for(var i=0;i<json.num;i++){
               if(json[i].estado==="ocupado"){
                   hora_aux=json[i].hora.split(":");
-                  $("#h"+hora_aux[0]+hora_aux[1]).attr("disabled","disabled");
+                  jq("#h"+hora_aux[0]+hora_aux[1]).attr("disabled","disabled");
               }
         }
         status_disponibilidad.append('Visibles');
@@ -202,13 +203,13 @@ function problemas(){
 }
 /**************************CREACION  DE CITA ******************************************/
 function crear_cita_paciente(){
-    var especialidad=$("#especialidades_p").val();
+    var especialidad=jq("#especialidades_p").val();
     var medico=localStorage.getItem("medico_id");
-    var descripcion=$("#descripcion_p").val();
-    var date=$("#datepicker").datepicker("getDate");
+    var descripcion=jq("#descripcion_p").val();
+    var date=jq("#datepicker").datepicker("getDate");
     var fecha_arr=date.toLocaleDateString().split("/");
     var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
-    var select=$("#h1230").css("backgroundColor");
+    var select=jq("#h1230").css("backgroundColor");
     alertify.success("color :"+select);
     if(especialidad!==null){
         if(medico!==null){

@@ -1,8 +1,8 @@
 class Asistente{
     constructor(){
-      $('select').material_select();
+      jq('select').material_select();
     /*************************/   
-      $( "#datepicker_a" ).datepicker({
+      jq( "#datepicker_a" ).datepicker({
 		inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
@@ -17,7 +17,7 @@ dateFormat: "yy-mm-dd",
 showButtonPanel: true,
 minDate:new Date()
 });
-$( "#input_fecha_a" ).datepicker({
+jq( "#input_fecha_a" ).datepicker({
     monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
 'Julio', 'Agosto', 'Septiembre',
@@ -28,7 +28,7 @@ onSelect: function (date) {
 firstDay: 1,
 dateFormat: "yy-mm-dd"
 });
-$('.timepicker').pickatime({
+jq('.timepicker').pickatime({
     default: 'now',
     twelvehour: true,
     donetext: 'OK',
@@ -36,7 +36,7 @@ $('.timepicker').pickatime({
     darktheme: true, 
   vibrate: true
 });
-var btn_guardar_paciente=$("#btn_guardar_paciente");
+var btn_guardar_paciente=jq("#btn_guardar_paciente");
 btn_guardar_paciente.click(function(e){
  e.preventDefault();
  alertify.success("siiii!!");

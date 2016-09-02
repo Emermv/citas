@@ -1,31 +1,31 @@
 
      class Medico{
 	  constructor(){
-	  $('select').material_select();
-      $("#selectable" ).selectable({
+	  jq('select').material_select();
+      jq("#selectable" ).selectable({
       stop: function() {
-        var result = $( "#select-result" ).empty();
-        $( ".ui-selected", this ).each(function() {
-          var index = $( "#selectable li" ).index( this );
+        var result = jq( "#select-result" ).empty();
+        jq( ".ui-selected", this ).each(function() {
+          var index = jq( "#selectable li" ).index( this );
           result.append( " #" + ( index + 1 ) );
         });
       }
     });
-    $('.collapsible').collapsible({
+    jq('.collapsible').collapsible({
       accordion : false
     });
     /***********************************/
-    $("#selectable_mas" ).selectable({
+    jq("#selectable_mas" ).selectable({
       stop: function() {
-        var result = $( "#select-resultados" ).empty();
-        $( ".ui-selected", this ).each(function() {
-          var index = $( "#selectable_mas li" ).index( this );
+        var result = jq( "#select-resultados" ).empty();
+        jq( ".ui-selected", this ).each(function() {
+          var index = jq( "#selectable_mas li" ).index( this );
           result.append( " #" + ( index + 1 ) );
         });
       }
     });
     /*************************/
-    $( "#datepicker_m" ).datepicker({
+    jq( "#datepicker_m" ).datepicker({
 	inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
@@ -40,7 +40,7 @@ dateFormat: "yy-mm-dd",
 showButtonPanel: true,
 minDate:new Date()
 });
-var btn_guardar_paciente=$("#btn_guardar_paciente");
+var btn_guardar_paciente=jq("#btn_guardar_paciente");
 btn_guardar_paciente.click(function(e){
  e.preventDefault();
  alertify.success("siiii!!");

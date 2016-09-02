@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" ng-app="app_cita">
      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,8 +15,6 @@
         <link rel="stylesheet" href="../css/alertify.default.css">
       <link rel="stylesheet" href="../css/materialize.clockpicker.css">
         <link rel="stylesheet" href="../css/estilo_cita.css">
-    
-       
 </head>
     <body>
         <header>
@@ -48,11 +46,14 @@
         </header>
         <main>
           <div id="usuario"></div>
+            <div id="paciente" ng-controller="paciente-controller">
+												{{"hola"+nombre}}
+												</div>
         </main>
         <footer>
-        
       </footer>
     </body>
+    <script src="../js/angular.min.js"></script>
     <script src="../js/jquery-3.0.0.min.js"></script>
     <script src="../js/materialize.min.js"></script>
     <script src="../js/alertify.min.js"></script>
@@ -63,6 +64,5 @@
     <script src="../controller/includes-controller/medico.js"></script>
     <script src="../controller/includes-controller/asistente.js"></script>
     <script src="../controller/includes-controller/paciente.js"></script>
-    <div id="scripts"></div>
     <script src="../controller/cita_controller.js"></script>
 </html>

@@ -1,21 +1,21 @@
 class Paciente{
     constructor(){
         /*******************************************************************/
-    this.especialidades_p=$("#especialidades_p");
-    this.medicos_p=$("#medicos_p");
-    this.btn_guardar_paciente=$("#btn_guardar_paciente");
+    this.especialidades_p=jq("#especialidades_p");
+    this.medicos_p=jq("#medicos_p");
+    this.btn_guardar_paciente=jq("#btn_guardar_paciente");
     this.btn_guardar_paciente.click(function(e){
               e.preventDefault();
              alertify.success("hola");
              crear_cita_paciente();
           });  
 /*******************************************************************/
-       $('select').material_select(); 
-       /*  $("#selectable").selectable({
+       jq('select').material_select(); 
+       /*  jq("#selectable").selectable({
       stop: function() {
-        var result = $( "#select-result" ).empty();
-        $( ".ui-selected", this ).each(function() {
-          var index = $( "#selectable li" ).index( this );
+        var result = jq( "#select-result" ).empty();
+        jq( ".ui-selected", this ).each(function() {
+          var index = jq( "#selectable li" ).index( this );
             var id=getItemSelected(index);
             if(id!=-1){
             horas_selecciondas.splice(0,horas_selecciondas.length);
@@ -31,7 +31,7 @@ class Paciente{
       }
     });*/
  
- $("#datepicker" ).datepicker({
+ jq("#datepicker" ).datepicker({
 inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
