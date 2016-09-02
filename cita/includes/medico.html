@@ -1,87 +1,64 @@
 
 <div class="row">
-<div class="col s12 m10 offset-m1 l10 offset-l1 card-panel blue-grey lighten-5">
-<form id="form_medicos">
+<div class="col s12 m12 l12 card-panel blue-grey lighten-5">
+<form id="form_medicos" >
 <div class="row" id="content_form_medicos">
 <div class="col s12 m10 l4"><!--col datos -->
-    <h5>Datos del M&eacute;dico:</h5>
     <div class="row">
-             <div class="col s11 m11 l11 ">
-     <div class="file-field input-field">
-      <div class=" btn tooltipped red lighten-1" data-position="bottom" data-delay="50" data-tooltip="Sube una foto">
-        <span><i class="large material-icons blue-text">perm_identity</i></span>
-        <input type="file"  id="foto_m">
-      </div>
-      <div class="file-path-wrapper">
-        <input class="file-path validate" type="text" placeholder="Subir foto">
-      </div>
-    </div>
-     </div>
-          <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">account_circle</i>
-          <input id="nombres_m" type="text" class="validate" autocomplete="off">
-          <label for="nombres_m"  data-error="Error" data-success="ok">Nombre</label>
+        <div class="col s12 m12 l12">
+          <div class="card">
+            <div class="card-image" id="perfil_m">
+              
+            </div>
+              <div class="card-content">
+              <div class="row">
+                  <div class="col s5 m4 l2"><span >Nombre</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="nombre_m"></div>
+        
+       <div class="col s5 m4 l2 "><span >Apellidos</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="apellidos_m"></div>
+        
+           <div class="col s5 m4 l2"><span >Direcci&oacute;n</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="direccion_m"></div>
+        
+           <div class="col s5 m4 l2 "><span >Telefono</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="telefono_m"></div>
+        
+           <div class="col s5 m4 l2 "><span >Correo</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " id="correo_m"></div>
+                  </div>
+              </div>
+          </div>
         </div>
-           <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">account_circle</i>
-          <input id="apellidos_m" type="text" class="validate" autocomplete="off">
-          <label for="apellidos_m"  data-error="Error" data-success="ok">Apellido</label>
-        </div>
-         <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">my_location</i>
-          <input id="direccion_m" type="text" class="validate" autocomplete="off">
-          <label for="direccion_m"  data-error="Error" data-success="ok">Direcci&oacute;n</label>
-        </div>
-         <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">phone</i>
-          <input id="telefono_m" type="tel" class="validate" autocomplete="off">
-          <label for="telefono_m"  data-error="Error" data-success="ok">Telefono</label>
-        </div>
-        <div class="input-field col s11 m11 l11">
-           <i class="material-icons prefix blue-text">email</i>
-          <input id="email_m" type="email" class="validate" autocomplete="off">
-          <label for="email_m"  data-error="Error" data-success="ok">Correo</label>
-        </div>
-    </div>
+     
+    </div> <!--end row datos-->
 </div>
 
 <div class="col s12 m10 l4">
      <div class="row">
-      <div class="input-field col s12 m12 l10 offset-l1">
-    <select>
-      <option value="" disabled selected>Seleccione su especialidad</option>
-      <option value="">a</option>
-      <option value="">b</option>
-    </select>
-    <label>Especialidad</label>
-      </div>
-         <div class="col s12 m12 l12">
-        <ul class="collection with-header">
-        <li class="collection-header teal">
-            <label>
-               <a href="#" id="reset_fechas" class="white-text">
-                 <i class="material-icons left">refresh</i>
-                 <h6>Seleccione d&iacute;as de atenci&oacute;n</h6>
-                </a>
-            </label>
-        </li>
-      </ul>
-         </div>
-    <div class="col s12 m12 l9 offset-l1">
-         <div id="datepicker_m" ></div>
-    </div>
-    <div class="col s12 m12 l12 center">
+      <div class="input-field col s12 m12 l7 offset-l3">
+    <select id="especialidades_p">
+      <option value="" disabled selected>Seleccione su especialidad:</option>
+      <option value="Alergia">Alergia</option>
+      <option value="Dermatologia">Dermatología</option>
+        <option value="Endocrinologia">Endocrinología</option>
+        <option value="Genetica">Genética</option>
+        <option value="Neumologia">Neumología</option>
+        <option value="Reumatologia">Reumatología</option>
         
-  <ul class="collapsible" data-collapsible="accordion">
-    <li>
-      <div class="collapsible-header active"><i class="material-icons">open_with</i>Fechas</div>
-      <div class="collapsible-body">
-          <ul class="collection with-header" id="fechas_seleccionadas_m">
-         </ul>  
-        </div>
-    </li>
-  </ul>
-          
+    </select>
+    <label>Especialidades</label>
+  </div>
+      <div class="col s12 m12 l8 offset-l2 center">
+      	<h6>Seleccione d&iacute;as de atenci&oacute;n:</h6>
+      </div>
+    <div class="col s12 m12 l7 offset-l3">
+         <div id="datepicker_m" ></div>
     </div>
     </div>
     </div>
@@ -168,67 +145,7 @@
   </form>  
 </div>
 </div>
-<script>  
-     $('select').material_select();
-     $('.tooltipped').tooltip({delay: 50});
-     $("#selectable" ).selectable({
-      stop: function() {
-        var result = $( "#select-result" ).empty();
-        $( ".ui-selected", this ).each(function() {
-          var index = $( "#selectable li" ).index( this );
-          result.append( " #" + ( index + 1 ) );
-        });
-      }
-    });
-    $('.collapsible').collapsible({
-      accordion : false
-    });
-    /***********/
-    $("#selectable_mas" ).selectable({
-      stop: function() {
-        var result = $( "#select-resultados" ).empty();
-        $( ".ui-selected", this ).each(function() {
-          var index = $( "#selectable_mas li" ).index( this );
-          result.append( " #" + ( index + 1 ) );
-        });
-      }
-    });
-    /*************************/
-    $( "#datepicker_m" ).datepicker({
-	inline: true,
-    monthNames: ['Enero', 'Febrero', 'Marzo',
-'Abril', 'Mayo', 'Junio',
-'Julio', 'Agosto', 'Septiembre',
-'Octubre', 'Noviembre', 'Diciembre'],
-dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
-onSelect: function (date) {
-fechas_selecionadas(date);
-},
-firstDay: 1,
-dateFormat: "yy-mm-dd"
-});
-var btn_guardar_paciente=$("#btn_guardar_paciente");
-btn_guardar_paciente.click(function(e){
- e.preventDefault();
- alertify.success("siiii!!");
- });
-    var reset_fechas=$("#reset_fechas");
-    var fechas=$("#fechas_seleccionadas_m");
-    var num_fechas=0;
-    reset_fechas.click(function(){
-       fechas.empty(); 
-    });
-    function fechas_selecionadas(date){
-         fechas.append('<li class="collection-item" id="fecha'+num_fechas+'"><div>'+date+
-        '<a href="#" class="secondary-content" onclick="eliminar_fecha('+num_fechas+')" >'+
-        '<i class="material-icons">power_settings_new'+
-        '</i></a></div></li>');
-        num_fechas++;
-    }
-    function eliminar_fecha(num){
-        $("#fecha"+num).remove();
-    }
-</script>
+
   <style>
   #feedback { font-size: 14px; }
   #selectable .ui-selecting { background: skyblue; }

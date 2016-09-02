@@ -137,6 +137,7 @@
        setTimeout(function(){
            var credenciales=JSON.parse(data);
            var tipo="";
+ 
            localStorage.setItem("status",Base64.encode("-1"));
            if(credenciales.code!=="-1" && credenciales.status===Base64.decode("b2s=")){
                localStorage.clear();

@@ -20,8 +20,24 @@
              
       }else if(usuarios.tipo==="Medico"){
           usuario.append(file_get_contents("includes/medico.html"));
+          $("#nombre_m").append('<span>'+usuarios.nombre+'</span>');
+          $("#apellidos_m").append('<span>'+usuarios.apellidos+'</span>');
+          $("#direccion_m").append('<span>'+usuarios.direccion+'</span>');
+          $("#telefono_m").append('<span>'+usuarios.telefono+'</span>');
+          $("#correo_m").append('<span>'+usuarios.correo+'</span>');
+          $("#perfil_m").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del m&eacute;dico: </span>');
+          var medico=new Medico();
       }else if(usuarios.tipo==="Asistente"){
           usuario.append(file_get_contents("includes/asistente.html"));
+          $("#nombre_a").append('<span>'+usuarios.nombre+'</span>');
+          $("#apellidos_a").append('<span>'+usuarios.apellidos+'</span>');
+          $("#direccion_a").append('<span>'+usuarios.direccion+'</span>');
+          $("#telefono_a").append('<span>'+usuarios.telefono+'</span>');
+          $("#correo_a").append('<span>'+usuarios.correo+'</span>');
+          $("#genero_a").append('<span>'+usuarios.genero+'</span>');
+          $("#edad_a").append('<span>'+usuarios.edad+'</span>');
+          $("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del asistente: </span>');
+          var asistente=new Asistente();
       } 
   });  
 }());
@@ -74,7 +90,6 @@ class Usuario{
      
     }
 }
-
 class Paciente{
     constructor(){
         /*******************************************************************/
