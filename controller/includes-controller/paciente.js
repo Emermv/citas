@@ -10,7 +10,6 @@ class Paciente{
 					 pacienteNewInstance=this;
     this.btn_guardar_paciente.click(function(e){
               e.preventDefault();
-             alertify.success("hola");
             pacienteNewInstance.crear_cita_paciente();
           });  
 /*******************************************************************/
@@ -39,28 +38,29 @@ minDate:new Date()
         });
     }
 	   initOnHorasChangeListener(){
-				 this.setCheckboxListener("h0800_0830",this);
-					this.setCheckboxListener("h0830_0900",this);
-					this.setCheckboxListener("h0900_0930",this);
-					this.setCheckboxListener("h0930_1000",this);
-					this.setCheckboxListener("h1000_1030",this);
-					this.setCheckboxListener("h1030_1100",this);
-					this.setCheckboxListener("h1100_1130",this);
-					this.setCheckboxListener("h1130_1200",this);
-					this.setCheckboxListener("h1200_1230",this);
-					this.setCheckboxListener("h1230_1300",this);
-					this.setCheckboxListener("h1300_1330",this);
-					this.setCheckboxListener("h1330_1400",this);
-					this.setCheckboxListener("h1400_1430",this);
-					this.setCheckboxListener("h1430_1500",this);
-					this.setCheckboxListener("h1500_1530",this);
-					this.setCheckboxListener("h1530_1600",this);
-					this.setCheckboxListener("h1600_1630",this);
-					this.setCheckboxListener("h1630_1700",this);
+				 this.setCheckboxListener("h0800_0830");
+					this.setCheckboxListener("h0830_0900");
+					this.setCheckboxListener("h0900_0930");
+					this.setCheckboxListener("h0930_1000");
+					this.setCheckboxListener("h1000_1030");
+					this.setCheckboxListener("h1030_1100");
+					this.setCheckboxListener("h1100_1130");
+					this.setCheckboxListener("h1130_1200");
+					this.setCheckboxListener("h1200_1230");
+					this.setCheckboxListener("h1230_1300");
+					this.setCheckboxListener("h1300_1330");
+					this.setCheckboxListener("h1330_1400");
+					this.setCheckboxListener("h1400_1430");
+					this.setCheckboxListener("h1430_1500");
+					this.setCheckboxListener("h1500_1530");
+					this.setCheckboxListener("h1530_1600");
+					this.setCheckboxListener("h1600_1630");
+					this.setCheckboxListener("h1630_1700");
 				}
-	  setCheckboxListener(id,instance){
+	  setCheckboxListener(id){
 				 var lobj=jq("#l"+id);
 		   var obj=jq("#"+id);
+				var instance=this;
 				obj.click(function(){
 						if(obj.is(":checked")){
 							if(instance.horas_seleccionadas<jsonData["tiempoMinutosMaximoCita"] && instance.horas_seleccionadas>=0){
@@ -141,9 +141,9 @@ minDate:new Date()
 															  pacienteNewInstance.resetHorasSeleccionadas();
               }
         }
-        status_disponibilidad.append('Visibles');
+        status_disponibilidad.append('las horas visibles');
     }else{
-        status_disponibilidad.append('Todo');
+        status_disponibilidad.append('todas las horas');
     }
 }
 	/*************************************************/
@@ -158,8 +158,8 @@ minDate:new Date()
     var date=jq("#datepicker").datepicker("getDate");
     var fecha_arr=date.toLocaleDateString().split("/");
     var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
-    var select=jq("#h1230").css("backgroundColor");
-    alertify.success("color :"+select);
+		  var horasArr=pacienteNewInstance.getHorasOnCheckbox();
+		 
     if(especialidad!==null){
         if(medico!==null){
            if(fecha.replace("-","").replace("-","")!==""){
@@ -177,6 +177,13 @@ minDate:new Date()
     
 }
 	/*************************************************/
+	getHorasOnCheckbox(){
+		var horas=new Array();
+		 jq(".filled-in:checked").each(function(){
+				horas.push(jq(this).attr("id"));
+			});
+		return horas;
+	}
 	/*************************************************/
 	/*************************************************/
 	/*************************************************/
