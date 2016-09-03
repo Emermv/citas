@@ -159,11 +159,46 @@ minDate:new Date()
     var fecha_arr=date.toLocaleDateString().split("/");
     var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
 		  var horasArr=pacienteNewInstance.getHorasOnCheckbox();
-		 
+		  var paciente=Base64.decode(localStorage.getItem("dni"));
     if(especialidad!==null){
         if(medico!==null){
            if(fecha.replace("-","").replace("-","")!==""){
-               alertify.success("ok");
+              if(horasArr.length>0){
+															if(paciente!==null){
+																var formData=new FormData();
+															var tamHoras=horasArr.length;
+															var x="";
+															for(var i=0;i<tamHoras;i++){
+																formData.append("hora_fila"+i,pacienteNewInstance.getFormatHora(horasArr[i]));
+															}
+															formData.append("descripcion",descripcion);
+															formData.append("medico",medico);
+															formData.append("especialidad",especialidad);
+															formData.append("fecha",fecha);
+															formData.append("tamHoras",tamHoras);
+															formData.append("horas_total",pacienteNewInstance.horas_seleccionadas);
+																formData.append("paciente",paciente);
+															jq.ajax({
+               async:true,
+                 contentType:"application/x-www-form-urlencoded",
+                url:jsonData["crearCitaPaciente"],
+                type: "post",
+                dataType: "html",
+                data:formData,
+                cache: false,
+                contentType: false,
+	             processData: false,
+               beforeSend:pacienteNewInstance.iniciandoCreacionCita,
+                success:pacienteNewInstance.succesCreacionCita,
+                timeout:5000,
+              error:pacienteNewInstance.problemasCreacionCita
+            }); 
+															}else{
+																alertify.success("Paciente no logueado");
+															}
+														}else{
+															alertify.success("no horas");   
+														}
            }else{
              alertify.success("no fecha");   
            }
@@ -183,6 +218,30 @@ minDate:new Date()
 				horas.push(jq(this).attr("id"));
 			});
 		return horas;
+	}
+	/*************************************************/
+	getFormatHora(id){
+		var matrix=id.replace("h","").split("_");
+		var hora1=matrix[0].substring(0,2);
+		var min1=matrix[0].substring(2,4);
+		var hora2=matrix[1].substring(0,2);
+		var min2=matrix[1].substring(2,4);
+		return hora1+":"+min1+"-"+hora2+":"+min2;
+	}
+	/*************************************************/
+	iniciandoCreacionCita(){}
+	/*************************************************/
+	succesCreacionCita(data){
+	var response=JSON.parse(data);
+		if(response.status===1){
+			alertify.log(response.mensaje);
+		}else{
+			alertify.error(response.mensaje);
+		}
+	}
+	/*************************************************/
+	problemasCreacionCita(){
+		
 	}
 	/*************************************************/
 	/*************************************************/

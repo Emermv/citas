@@ -1,5 +1,6 @@
 {
  "filtrarEspecialidad":"../php/filtrar_especialidades.php",
 	"listarHorasDisponibles":"../php/listar_calendario_citas_medico.php",
+	"crearCitaPaciente":"../php/crear_cita.php",
 	"tiempoMinutosMaximoCita":60
 }

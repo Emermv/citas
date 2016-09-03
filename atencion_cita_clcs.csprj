@@ -1,16 +1,16 @@
 <codestructure version="5.8">
 <phptree>
-<treenode node="db;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;4;10;4;;;;vpos;;v;;r&quot;citas&quot;;;d-1,-1;;b0,0;;m">
+<treenode node="db;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;10;10;10;;;;vpos;;v;;r&quot;u387583705_movil&quot;;;d-1,-1;;b0,0;;m">
 </treenode>
-<treenode node="host;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;1;12;1;;;;vpos;;v;;r&quot;localhost&quot;;;d-1,-1;;b0,0;;m">
+<treenode node="host;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;7;12;7;;;;vpos;;v;;r&quot;mysql.hostinger.es&quot;;;d-1,-1;;b0,0;;m">
 </treenode>
-<treenode node="password;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;3;16;3;;;;vpos;;v;;r&quot;teranova&quot;;;d-1,-1;;b0,0;;m">
+<treenode node="password;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;9;16;9;;;;vpos;;v;;r&quot;teranova&quot;;;d-1,-1;;b0,0;;m">
 </treenode>
-<treenode node="server.php;PHP:PHP Include;C:\xampp\htdocs\atencion_cita\php\login.php;f14;1;24;1;;C:\xampp\htdocs\atencion_cita\php\listar_calendario_citas_medico.php;f14;1;24;1;;C:\xampp\htdocs\atencion_cita\php\filtrar_especialidades.php;f14;1;24;1;;C:\xampp\htdocs\atencion_cita\php\crear_cita.php;f14;1;24;1;;;;vpos;;v;;r;;d-1,-1;;b0,0;;m">
+<treenode node="server.php;PHP:PHP Include;C:\xampp\htdocs\atencion_cita\php\filtrar_especialidades.php;f14;1;24;1;;C:\xampp\htdocs\atencion_cita\php\listar_calendario_citas_medico.php;f14;1;24;1;;C:\xampp\htdocs\atencion_cita\php\login.php;f14;1;24;1;;C:\xampp\htdocs\atencion_cita\php\crear_cita.php;f14;1;24;1;;;;vpos;;v;;r;;d-1,-1;;b0,0;;m">
 </treenode>
-<treenode node="user;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;2;12;2;;;;vpos;;v;;r&quot;emer_pc&quot;;;d-1,-1;;b0,0;;m">
+<treenode node="user;PHP:PHP Word;C:\xampp\htdocs\atencion_cita\php\server.php;f8;8;12;8;;;;vpos;;v;;r&quot;u387583705_emerm&quot;;;d-1,-1;;b0,0;;m">
 </treenode>
-<treenode node="conectar;PHP:Function Name;C:\xampp\htdocs\atencion_cita\php\server.php;f1;5;1;13;;;;vpos;;v;;r;;d20,5;;b0,0;;m">
+<treenode node="conectar;PHP:Function Name;C:\xampp\htdocs\atencion_cita\php\server.php;f1;11;1;19;;;;vpos;;v;;r;;d20,11;;b0,0;;m">
 </treenode>
 </phptree>
 </codestructure>
