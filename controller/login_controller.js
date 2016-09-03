@@ -1,3 +1,4 @@
+
 (function(){
     var clave_ok=false;
     var dni_ok=false;
@@ -18,7 +19,6 @@
              event.preventDefault();
              login(dni.val(),clave.val());
            });
-   
         dni.on("blur",function(e){
          e.preventDefault();
             validar_dni(estado_dni,dni);
@@ -140,7 +140,14 @@
  
            localStorage.setItem("status",Base64.encode("-1"));
            if(credenciales.code!=="-1" && credenciales.status===Base64.decode("b2s=")){
+												    
                localStorage.clear();
+												   $.getJSON("values/ui-config.json",function(datos){
+										        localStorage.setItem("cf",Base64.encode(datos["colorFondo"]));
+																  localStorage.setItem("cfp",Base64.encode(datos["colorFondoPaciente"]));
+																localStorage.setItem("bnc",Base64.encode(datos["barraNavegacionColor"]));
+																localStorage.setItem("tit",Base64.encode(datos["titulo"]));
+                   });
                localStorage.setItem("dni",Base64.encode(credenciales.dni));
                localStorage.setItem("nombre",Base64.encode(credenciales.nombre));
                localStorage.setItem("apellidos",Base64.encode(credenciales.apellidos));
@@ -179,7 +186,7 @@
            }
       
            }
-       },2000);
+       },1000);
         
     }
     function problemas(){

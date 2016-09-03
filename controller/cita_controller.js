@@ -1,19 +1,27 @@
 	var jq=jQuery.noConflict(false);
  var jsonData;
 (function(){
-
+           /*init ui*********************************/
+							   try{
+											 jq("#tit_logo").append(Base64.decode(localStorage.getItem("tit")));
+							    jq("#titulo").append(Base64.decode(localStorage.getItem("tit")));
+							    jq("#navbarCita").addClass(Base64.decode(localStorage.getItem("bnc")));
+										}catch(err){
+											console.error(err);
+											jq(location).attr("href","../");
+										}
   jq(document).ready(function(){
+			
       var usuario=jq("#usuario");
       usuario.empty();
       var cita=new Cita();
       var usuarios=new Usuario();
-			   var json=jq.getJSON("../values/default-values.json",function(datos){
-														jsonData=datos;
-             });
-			   
+			  jq.getJSON("../values/default-values.json",function(datos){
+						jsonData=datos;
+					});
       if(usuarios.tipo==="Paciente"){
-        // requirejs("paciente","../controller/includes-controller/paciente.js");
           usuario.append(file_get_contents("includes/paciente.html"));
+							  jq("#paciente").addClass(Base64.decode(localStorage.getItem("cfp")));
           jq("#nombre").append('<span>'+usuarios.nombre+'</span>');
           jq("#apellidos").append('<span>'+usuarios.apellidos+'</span>');
           jq("#direccion").append('<span>'+usuarios.direccion+'</span>');

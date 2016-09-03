@@ -44,7 +44,7 @@ apellidos varchar(50) not null,
       create table horas_citas_paciente_medico(
           id_horas int not null PRIMARY key,
           id_cita int not null,
-          hora time not null,
+          hora varchar(11) not null,
           FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita)
           )
   /*procedures*******************************************/

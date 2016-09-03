@@ -3,10 +3,9 @@ require_once "server.php";
 
 $medico=$_POST['medico'];
 $fecha=$_POST['fecha'];
-
 /*
 $medico="2";
-$fecha="2016-08-31";*/
+$fecha="2016-09-03";*/
   $response=array();
 $con=conectar();
 if($con){

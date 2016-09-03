@@ -39,30 +39,29 @@ minDate:new Date()
         });
     }
 	   initOnHorasChangeListener(){
-					var hora_total=jq("#hora_total");
-					 this.setCheckboxListener("h0800",this);
-					this.setCheckboxListener("h0830",this);
-					this.setCheckboxListener("h0900",this);
-					this.setCheckboxListener("h0930",this);
-					this.setCheckboxListener("h1000",this);
-					this.setCheckboxListener("h1030",this);
-					this.setCheckboxListener("h1100",this);
-					this.setCheckboxListener("h1130",this);
-					this.setCheckboxListener("h1200",this);
-					this.setCheckboxListener("h1230",this);
-					this.setCheckboxListener("h1300",this);
-					this.setCheckboxListener("h1330",this);
-					this.setCheckboxListener("h1400",this);
-					this.setCheckboxListener("h1430",this);
-					this.setCheckboxListener("h1500",this);
-					this.setCheckboxListener("h1530",this);
-					this.setCheckboxListener("h1600",this);
-					this.setCheckboxListener("h1630",this);
-					this.setCheckboxListener("h1700",this);
+				 this.setCheckboxListener("h0800_0830",this);
+					this.setCheckboxListener("h0830_0900",this);
+					this.setCheckboxListener("h0900_0930",this);
+					this.setCheckboxListener("h0930_1000",this);
+					this.setCheckboxListener("h1000_1030",this);
+					this.setCheckboxListener("h1030_1100",this);
+					this.setCheckboxListener("h1100_1130",this);
+					this.setCheckboxListener("h1130_1200",this);
+					this.setCheckboxListener("h1200_1230",this);
+					this.setCheckboxListener("h1230_1300",this);
+					this.setCheckboxListener("h1300_1330",this);
+					this.setCheckboxListener("h1330_1400",this);
+					this.setCheckboxListener("h1400_1430",this);
+					this.setCheckboxListener("h1430_1500",this);
+					this.setCheckboxListener("h1500_1530",this);
+					this.setCheckboxListener("h1530_1600",this);
+					this.setCheckboxListener("h1600_1630",this);
+					this.setCheckboxListener("h1630_1700",this);
 				}
 	  setCheckboxListener(id,instance){
 				 var lobj=jq("#l"+id);
-		   var obj=jq("#"+id).click(function(){
+		   var obj=jq("#"+id);
+				obj.click(function(){
 						if(obj.is(":checked")){
 							if(instance.horas_seleccionadas<jsonData["tiempoMinutosMaximoCita"] && instance.horas_seleccionadas>=0){
 										instance.horas_seleccionadas+=30;
@@ -70,10 +69,14 @@ minDate:new Date()
 								lobj.addClass("blue");
 							}else{
 							lobj.addClass("red");
-								alertify.alert("Lo sentimos, el tiempo maximo es de : "+jsonData["tiempoMinutosMaximoCita"]+" minutos");
+								alertify.alert("Lo sentimos, el tiempo maximo es de : "+jsonData["tiempoMinutosMaximoCita"]+" minutos",
+																								function(e){
+										obj.prop("checked",false);
+										lobj.removeClass("red");
+								
+								});
 							}
 						}else{
-							
 								instance.horas_seleccionadas-=30;
 							if(	instance.horas_seleccionadas<0){
 								instance.resetHorasSeleccionadas();
@@ -84,6 +87,7 @@ minDate:new Date()
 						}
 					});
 }
+	
 	setHoraTotal(){
 		 this.hora_total.empty().append('<img src="../files/clock.png" alt="horas">'+
 						 this.horas_seleccionadas+'.00 minutos');
@@ -132,8 +136,8 @@ minDate:new Date()
         var hora_aux="";
         for(var i=0;i<json.num;i++){
               if(json[i].estado==="ocupado"){
-                  hora_aux=json[i].hora.split(":");
-                  jq("#lh"+hora_aux[0]+hora_aux[1]).remove();
+                  hora_aux=json[i].hora.replace("-","_").split(":");
+                  jq("#lh"+hora_aux[0]+hora_aux[1]+hora_aux[2]).remove();
 															  pacienteNewInstance.resetHorasSeleccionadas();
               }
         }
@@ -186,7 +190,6 @@ class Filtrar{
     execute(val,opcion){
 					
        if(opcion==1){
-								alertify.success(jsonData["filtrarEspecialidad"]);
                this.formdata.append("especialidad",val);
            jq.ajax({
                async:true,
