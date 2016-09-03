@@ -1,3 +1,4 @@
+var pacienteNewInstance;
 class Paciente{
     constructor(){
         /*******************************************************************/
@@ -5,14 +6,16 @@ class Paciente{
     this.medicos_p=jq("#medicos_p");
     this.btn_guardar_paciente=jq("#btn_guardar_paciente");
 					this.horas_seleccionadas=0;
+					this.hora_total=jq("#hora_total");
+					 pacienteNewInstance=this;
     this.btn_guardar_paciente.click(function(e){
               e.preventDefault();
              alertify.success("hola");
-             crear_cita_paciente();
+            pacienteNewInstance.crear_cita_paciente();
           });  
 /*******************************************************************/
        jq('select').material_select(); 
- 
+    
  jq("#datepicker" ).datepicker({
 inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
@@ -21,7 +24,7 @@ monthNames: ['Enero', 'Febrero', 'Marzo',
 'Octubre', 'Noviembre', 'Diciembre'],
 dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
 onSelect: function (date) {
-    listar_horas_disponibles_p(date);
+   pacienteNewInstance.listar_horas_disponibles_p(date);
 },
 firstDay: 1,
 dateFormat: "yy-mm-dd",
@@ -36,49 +39,64 @@ minDate:new Date()
         });
     }
 	   initOnHorasChangeListener(){
-					 this.setCheckboxListener(jq("#h0800"),this,jq("#hora_total"));
-					this.setCheckboxListener(jq("#h0830"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h0900"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h0930"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1000"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1030"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1100"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1130"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1200"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1230"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1300"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1330"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1400"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1430"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1500"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1530"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1600"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1630"),this,	jq("#hora_total"));
-					this.setCheckboxListener(jq("#h1700"),this,	jq("#hora_total"));
+					var hora_total=jq("#hora_total");
+					 this.setCheckboxListener("h0800",this);
+					this.setCheckboxListener("h0830",this);
+					this.setCheckboxListener("h0900",this);
+					this.setCheckboxListener("h0930",this);
+					this.setCheckboxListener("h1000",this);
+					this.setCheckboxListener("h1030",this);
+					this.setCheckboxListener("h1100",this);
+					this.setCheckboxListener("h1130",this);
+					this.setCheckboxListener("h1200",this);
+					this.setCheckboxListener("h1230",this);
+					this.setCheckboxListener("h1300",this);
+					this.setCheckboxListener("h1330",this);
+					this.setCheckboxListener("h1400",this);
+					this.setCheckboxListener("h1430",this);
+					this.setCheckboxListener("h1500",this);
+					this.setCheckboxListener("h1530",this);
+					this.setCheckboxListener("h1600",this);
+					this.setCheckboxListener("h1630",this);
+					this.setCheckboxListener("h1700",this);
 				}
-	  setCheckboxListener(id,instance,hora_total){
-		  id.click(function(){
-						if(id.is(":checked")){
-							if(instance.horas_seleccionadas<jsonData["tiempoMinutosMaximoCita"]){
+	  setCheckboxListener(id,instance){
+				 var lobj=jq("#l"+id);
+		   var obj=jq("#"+id).click(function(){
+						if(obj.is(":checked")){
+							if(instance.horas_seleccionadas<jsonData["tiempoMinutosMaximoCita"] && instance.horas_seleccionadas>=0){
 										instance.horas_seleccionadas+=30;
-								hora_total.empty().append('<img src="../files/clock.png" alt="horas">'+
-																											             instance.horas_seleccionadas+'.00 minutos');
-								
+								  	instance.setHoraTotal();
+								lobj.addClass("blue");
 							}else{
+							lobj.addClass("red");
 								alertify.alert("Lo sentimos, el tiempo maximo es de : "+jsonData["tiempoMinutosMaximoCita"]+" minutos");
 							}
 						}else{
+							
 								instance.horas_seleccionadas-=30;
-								hora_total.empty().append('<img src="../files/clock.png" alt="horas">'+
-																											             instance.horas_seleccionadas+'.00 minutos');
+							if(	instance.horas_seleccionadas<0){
+								instance.resetHorasSeleccionadas();
+							}
+							instance.setHoraTotal();
+							lobj.removeClass("blue");
+							lobj.removeClass("red");
 						}
 					});
 }
-}
-/*end class */
-function listar_horas_disponibles_p(date){
+	setHoraTotal(){
+		 this.hora_total.empty().append('<img src="../files/clock.png" alt="horas">'+
+						 this.horas_seleccionadas+'.00 minutos');
+	}
+	resetHorasSeleccionadas(){
+		this.horas_seleccionadas=0;
+		this.setHoraTotal();
+	}
+	/*functions  ********************************************/
+	listar_horas_disponibles_p(date){
     var formdata=new FormData();
     var medico=localStorage.getItem("medico_id");
+		  var instance=this;
     if(medico!==null){
        formdata.append("medico",medico);
         formdata.append("fecha",date);
@@ -92,30 +110,31 @@ function listar_horas_disponibles_p(date){
                 cache: false,
                 contentType: false,
 	             processData: false,
-               beforeSend:iniciandoListado,
-                success:SuccesListado,
+               beforeSend:instance.iniciandoListado,
+                success:instance.SuccesListado,
                 timeout:5000,
-              error:problemas
+              error:instance.problemas
             }); 
     }else{console.error("medico no  seleccionado!");}
 }
-
-
-function iniciandoListado(){
+	/*************************************************/
+	iniciandoListado(){
     
 }
-
-function SuccesListado(data){
+	/*************************************************/
+	SuccesListado(data){
         var json=JSON.parse(data);
         var status_disponibilidad=jq("#status_disponibilidad").empty();
          var selectable=jq("#selectable").empty();
         selectable.append(file_get_contents("includes/horas_item.html"));
+	     pacienteNewInstance.initOnHorasChangeListener();
     if(json.status==1){
         var hora_aux="";
         for(var i=0;i<json.num;i++){
               if(json[i].estado==="ocupado"){
                   hora_aux=json[i].hora.split(":");
                   jq("#lh"+hora_aux[0]+hora_aux[1]).remove();
+															  pacienteNewInstance.resetHorasSeleccionadas();
               }
         }
         status_disponibilidad.append('Visibles');
@@ -123,11 +142,12 @@ function SuccesListado(data){
         status_disponibilidad.append('Todo');
     }
 }
-function problemas(){
+	/*************************************************/
+	 problemas(){
     
 }
-/**************************CREACION  DE CITA ******************************************/
-function crear_cita_paciente(){
+	/*************************************************/
+	crear_cita_paciente(){
     var especialidad=jq("#especialidades_p").val();
     var medico=localStorage.getItem("medico_id");
     var descripcion=jq("#descripcion_p").val();
@@ -152,8 +172,12 @@ function crear_cita_paciente(){
     }
     
 }
-
-/**************************END CREACION  DE CITA ******************************************/
+	/*************************************************/
+	/*************************************************/
+	/*************************************************/
+	/*************************************************/
+}
+/*end class */
 
 class Filtrar{
     constructor(){
@@ -185,7 +209,7 @@ class Filtrar{
             console.error("opcion incorrecto");
         }
     }
-}
+}/*end class Filtrar*/
 
 function iniciandoFiltrado(){
     
@@ -204,3 +228,6 @@ function SuccesFiltrado(data){
 	   
 }
 
+function problemas(){
+	
+}
