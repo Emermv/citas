@@ -1,4 +1,7 @@
-var app_cita=angular.module("app_cita",["ngResource"]);
-app_cita.controller("paciente-controller",function($scope){
+var app_cita=angular.module("appCita",[]);
+app_cita.controller("pacienteController",function($scope){
 	$scope.nombre="emer ";
+});
+app_cita.controller("medicoController",function($scope){
+	$scope.texto="hola angular";
 });

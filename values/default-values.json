@@ -1,3 +1,5 @@
 {
-    prueba:"hola mundo  desde json"
+ "filtrarEspecialidad":"../php/filtrar_especialidades.php",
+	"listarHorasDisponibles":"../php/listar_calendario_citas_medico.php",
+	"tiempoMinutosMaximoCita":60
 }

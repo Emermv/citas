@@ -1,6 +1,6 @@
 
 <div class="row">
-<div class="col s12 m12 l12 card-panel">
+<div class="col s12 m12 l12 card-panel blue-grey lighten-5" >
 <form id="form_pacientes">
 <div class="row" id="content_form_paciente">
 <div class="col s12 m10 offset-m1 l5"><!--col datos -->
@@ -80,13 +80,14 @@
         <span id="status_disponibilidad">Todo</span>
     </div>
      <div class="col s12 m12 l8 offset-l2">
-     <p id="feedback">
-     <span>Horas :</span> <span id="select-result"></span>.
-      </p>
+      <div class="chip blue" id="hora_total">
+							<img src="../files/clock.png" alt="Contact Person">
+							0.00 minutos
+     </div>
  
     <ul class="collection" id="selectable">
       <li class="collection-item">
-        8:30 AM
+         8:00 AM
       <input type="checkbox" class="filled-in" id="h0800"  />
       <label for="h0800" style="color:transparent" class="right">.</label>
         </li>
@@ -198,7 +199,6 @@
     </div>
     </div>
 </div>
- 
 </div><!-- end div row content-->
  <div class="row center">
     <div class="col s3 offset-s2 m3 offset-m3 l2 offset-l4 center">
@@ -211,8 +211,3 @@
   </form>  
 </div>
 </div>
-  <style>
-  #selectable .ui-selecting { background: skyblue; }
-  #selectable .ui-selected { background:blue; color: white; }
-  #selectable { list-style-type: none; margin: 0; padding: 1px; width: 100%}
-  </style>
