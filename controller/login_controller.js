@@ -134,20 +134,20 @@
         
     }
     function recibiendoDatos(data){
-       setTimeout(function(){
-           var credenciales=JSON.parse(data);
-           var tipo="";
- 
-           localStorage.setItem("status",Base64.encode("-1"));
-           if(credenciales.code!=="-1" && credenciales.status===Base64.decode("b2s=")){
-												    
-               localStorage.clear();
+					         localStorage.clear();
 												   $.getJSON("values/ui-config.json",function(datos){
 										        localStorage.setItem("cf",Base64.encode(datos["colorFondo"]));
 																  localStorage.setItem("cfp",Base64.encode(datos["colorFondoPaciente"]));
 																localStorage.setItem("bnc",Base64.encode(datos["barraNavegacionColor"]));
 																localStorage.setItem("tit",Base64.encode(datos["titulo"]));
                    });
+       setTimeout(function(){
+           var credenciales=JSON.parse(data);
+           var tipo="";
+              
+           localStorage.setItem("status",Base64.encode("-1"));
+           if(credenciales.code!=="-1" && credenciales.status===Base64.decode("b2s=")){
+												    
                localStorage.setItem("dni",Base64.encode(credenciales.dni));
                localStorage.setItem("nombre",Base64.encode(credenciales.nombre));
                localStorage.setItem("apellidos",Base64.encode(credenciales.apellidos));

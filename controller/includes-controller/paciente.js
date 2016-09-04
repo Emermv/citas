@@ -4,11 +4,11 @@ class Paciente{
         /*******************************************************************/
     this.especialidades_p=jq("#especialidades_p");
     this.medicos_p=jq("#medicos_p");
-    this.btn_guardar_paciente=jq("#btn_guardar_paciente");
+    this.btn_crear_cita=jq("#btn_crear_cita");
 					this.horas_seleccionadas=0;
 					this.hora_total=jq("#hora_total");
 					 pacienteNewInstance=this;
-    this.btn_guardar_paciente.click(function(e){
+    this.btn_crear_cita.click(function(e){
               e.preventDefault();
             pacienteNewInstance.crear_cita_paciente();
           });  
@@ -119,7 +119,7 @@ minDate:new Date()
                 timeout:5000,
               error:instance.problemas
             }); 
-    }else{console.error("medico no  seleccionado!");}
+    }else{$.notify("Medico no seleccionado");}
 }
 	/*************************************************/
 	iniciandoListado(){
@@ -194,20 +194,20 @@ minDate:new Date()
               error:pacienteNewInstance.problemasCreacionCita
             }); 
 															}else{
-																alertify.success("Paciente no logueado");
+															pacienteNewInstance.alertar(jq("#perfil"),"Paciente no logueado","right","warn");
 															}
 														}else{
-															alertify.success("no horas");   
+															pacienteNewInstance.alertar(jq("#selectable"),"Selecciona las horas por favor!","left","warn");
 														}
            }else{
-             alertify.success("no fecha");   
+             	pacienteNewInstance.alertar(jq("#datepicker"),"Selecciona la fecha por favor!","top","warn");
            }
         }else{
-             alertify.success("no medci");
+          	pacienteNewInstance.alertar(pacienteNewInstance.medicos_p,"Seleccione un medico por favor!","top","warn");
         }
         
     }else{
-        alertify.success("no");
+     pacienteNewInstance.alertar(pacienteNewInstance.especialidades_p,"Seleccione una especialidad por favor!","left","success");
     }
     
 }
@@ -234,9 +234,9 @@ minDate:new Date()
 	succesCreacionCita(data){
 	var response=JSON.parse(data);
 		if(response.status===1){
-			alertify.log(response.mensaje);
+			pacienteNewInstance.alertar(pacienteNewInstance.btn_crear_cita,response.mensaje,"top","success");
 		}else{
-			alertify.error(response.mensaje);
+				pacienteNewInstance.alertar(pacienteNewInstance.btn_crear_cita,response.mensaje,"top","error");
 		}
 	}
 	/*************************************************/
@@ -244,6 +244,9 @@ minDate:new Date()
 		
 	}
 	/*************************************************/
+	alertar(obj,msj,pos,type){
+		obj.notify( msj, { position:pos },{className:type});
+	}
 	/*************************************************/
 	/*************************************************/
 }
