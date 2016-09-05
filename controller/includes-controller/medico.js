@@ -1,29 +1,16 @@
-
+   var mediconewInstance;
      class Medico{
 	  constructor(){
-	  jq('select').material_select();
-      jq("#selectable" ).selectable({
-      stop: function() {
-        var result = jq( "#select-result" ).empty();
-        jq( ".ui-selected", this ).each(function() {
-          var index = jq( "#selectable li" ).index( this );
-          result.append( " #" + ( index + 1 ) );
-        });
-      }
-    });
-    jq('.collapsible').collapsible({
+				this.horasA_m=jq("#horasA_m");
+				this.horasB_min_m=jq("#horasB_min_m");
+				this.especialidades_m=jq("#especialidades_m");
+				mediconewInstance=this;
+   jq('select').material_select();
+				jq('.collapsible').collapsible({
       accordion : false
     });
     /***********************************/
-    jq("#selectable_mas" ).selectable({
-      stop: function() {
-        var result = jq( "#select-resultados" ).empty();
-        jq( ".ui-selected", this ).each(function() {
-          var index = jq( "#selectable_mas li" ).index( this );
-          result.append( " #" + ( index + 1 ) );
-        });
-      }
-    });
+ 
     /*************************/
     jq( "#datepicker_m" ).datepicker({
 	inline: true,
@@ -47,5 +34,49 @@ btn_guardar_paciente.click(function(e){
  });
 	
 	  }
+		/********************************************************************************/
+						initHorasA(){
+							this.horasA_m.empty().append(file_get_contents("includes/horas_item.html"));
+						}
+						initHorasBmin(){
+							this.horasB_min_m.empty().append(file_get_contents("includes/horas_min_item.html"));
+						}
+		/********************************************************************************/
+						initEspecialidades(){
+							 jq.ajax({
+               async:true,
+                 contentType:"application/x-www-form-urlencoded",
+                url:"../php/listar_especialidades.php",
+                type: "post",
+                dataType: "html",
+                data:null,
+                cache: false,
+                contentType: false,
+	               processData: false,
+                success:mediconewInstance.SuccesListadoEspceialidades,
+                timeout:5000,
+                error:mediconewInstance.problemasEspecialidades
+            });
+						}
+						problemasEspecialidades(){
+								jq.notify("Problemas con la conexion!", "error");
+						}
+						SuccesListadoEspceialidades(data){
+							var response=JSON.parse(data);
+			if(response.status==1){
+				mediconewInstance.especialidades_m.empty().append('<option value="" disabled selected>Seleccione</option>');
+				for(var i=0;i<response.num;i++){
+			mediconewInstance.especialidades_m.append('<option value="'+response[i].id_esp+'">'+response[i].especialidad+'</option>');
+					jq('select').material_select();
+				}
+			}else{
+			jq.notify(response.mensaje, "error");
+			}
+						}
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
 	  
-	 }
+	 }//end  class Medico

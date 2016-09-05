@@ -46,6 +46,9 @@
           jq("#correo_m").append('<span>'+usuarios.correo+'</span>');
           jq("#perfil_m").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del m&eacute;dico: </span>');
           var medico=new Medico();
+							     medico.initHorasA();
+						      medico.initHorasBmin();
+							      medico.initEspecialidades();
       }else if(usuarios.tipo==="Asistente"){
           usuario.append(file_get_contents("includes/asistente.html"));
           jq("#nombre_a").append('<span>'+usuarios.nombre+'</span>');
