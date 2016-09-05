@@ -1,6 +1,6 @@
 <?php
 require_once "server.php";
-$especialidad=$_POST['especialidad'];
+$id_esp=$_POST['id_esp'];
   $response=array();
 $con=conectar();
 if($con){
@@ -10,12 +10,12 @@ if($selectdb){
   $response['mensaje']="";
   $existe=false;
   $num=0;
-  $sql="select u.nombre,u.apellidos,u.id from usuarios as u join medicos as m on u.id=m.id_usuario where m.especialidad='".$especialidad."'";
+  $sql="select u.id,u.nombre,u.apellidos,e.id_esp from medicos as m JOIN especialidades as e on m.id_esp=e.id_esp join usuarios as u on u.id=m.id_usuario WHERE e.id_esp=".$id_esp;
    $especialidades=mysqli_query($con,$sql);
 if($especialidades){
     while($data=mysqli_fetch_object($especialidades)){
       $existe=true;
-     $response[] = array('nom_app' =>$data->nombre." ".$data->apellidos,'id'=>$data->id);
+     $response[] = array('nom_app' =>$data->nombre." ".$data->apellidos,'id'=>$data->id,'id_esp'=>$data->id_esp);
         $num++;
     }
     if($existe){

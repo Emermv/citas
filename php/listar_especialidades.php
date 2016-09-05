@@ -1,5 +1,4 @@
 <?php
-
 require_once "server.php";
 $con=conectar();
 $response=array();
@@ -12,7 +11,7 @@ if($selectdb){
         $hay=false;
 	$especialidades=mysqli_query($con,"select * from especialidades ");
 	while (@$esp=mysqli_fetch_object($especialidades)) {
-		$response[]=array('id'=>$esp->id_esp,'especialidad'=>$esp->especialidad);
+		$response[]=array('id_esp'=>$esp->id_esp,'especialidad'=>$esp->especialidad);
 		  $num++;
           $hay=true;
 	}

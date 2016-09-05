@@ -1,5 +1,8 @@
 	var jq=jQuery.noConflict(false);
  var jsonData;
+	   var json=jQuery.getJSON("../values/defaultvalues.json",function(datos){
+						jsonData=datos;
+					});
 (function(){
            /*init ui*********************************/
 							   try{
@@ -10,15 +13,13 @@
 											console.error(err);
 											jq(location).attr("href","../");
 										}
+
   jq(document).ready(function(){
 			
       var usuario=jq("#usuario");
       usuario.empty();
       var cita=new Cita();
       var usuarios=new Usuario();
-			  jq.getJSON("../values/default-values.json",function(datos){
-						jsonData=datos;
-					});
       if(usuarios.tipo==="Paciente"){
           usuario.append(file_get_contents("includes/paciente.html"));
 							  jq("#paciente").addClass(Base64.decode(localStorage.getItem("cfp")));
@@ -115,8 +116,6 @@ class Usuario{
      
     }
 }
-
-
 function getFecha(option){
         var time=new Date();
         if(option==1){

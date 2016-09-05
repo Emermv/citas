@@ -126,6 +126,13 @@ minDate:new Date()
     
 }
 	/*************************************************/
+	getFormatFecha(){
+		    var date=jq("#datepicker").datepicker("getDate");
+    var fecha_arr=date.toLocaleDateString().split("/");
+    var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
+		return fecha;
+	}
+	/*************************************************/
 	SuccesListado(data){
         var json=JSON.parse(data);
         var status_disponibilidad=jq("#status_disponibilidad").empty();
@@ -155,9 +162,7 @@ minDate:new Date()
     var especialidad=jq("#especialidades_p").val();
     var medico=localStorage.getItem("medico_id");
     var descripcion=jq("#descripcion_p").val();
-    var date=jq("#datepicker").datepicker("getDate");
-    var fecha_arr=date.toLocaleDateString().split("/");
-    var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
+    var fecha=pacienteNewInstance.getFormatFecha();
 		  var horasArr=pacienteNewInstance.getHorasOnCheckbox();
 		  var paciente=Base64.decode(localStorage.getItem("dni"));
     if(especialidad!==null){
@@ -267,7 +272,7 @@ minDate:new Date()
 			if(response.status==1){
 				pacienteNewInstance.especialidades_p.empty().append('<option value="" disabled selected>Seleccione</option>');
 				for(var i=0;i<response.num;i++){
-			pacienteNewInstance.especialidades_p.append('<option value="'+response[i].especialidad+'">'+response[i].especialidad+'</option>');
+			pacienteNewInstance.especialidades_p.append('<option value="'+response[i].id_esp+'">'+response[i].especialidad+'</option>');
 					jq('select').material_select();
 				}
 			}else{
@@ -291,7 +296,7 @@ class Filtrar{
     execute(val,opcion){
 					
        if(opcion==1){
-               this.formdata.append("especialidad",val);
+               this.formdata.append("id_esp",val);
            jq.ajax({
                async:true,
                  contentType:"application/x-www-form-urlencoded",
@@ -325,7 +330,7 @@ function SuccesFiltrado(data){
         medicos_p.empty();
         medicos_p.append('<option value="" disabled selected>Seleccione</option>');
         for(var i=0;i<aux.num;i++){
-            medicos_p.append('<option value="'+aux[i].id+'">'+aux[i].nom_app+'</option>');
+            medicos_p.append('<option value="'+aux[i].id_esp+'">'+aux[i].nom_app+'</option>');
         }
         jq('select').material_select(); 
     }
