@@ -249,7 +249,7 @@ minDate:new Date()
                jq.ajax({
                async:true,
                  contentType:"application/x-www-form-urlencoded",
-                url:jsonData["listarEspecialidadesDisponibles"] ,
+                url:"../php/listar_especialidades.php",
                 type: "post",
                 dataType: "html",
                 data:null,
@@ -267,7 +267,8 @@ minDate:new Date()
 			if(response.status==1){
 				pacienteNewInstance.especialidades_p.empty().append('<option value="" disabled selected>Seleccione</option>');
 				for(var i=0;i<response.num;i++){
-			pacienteNewInstance.especialidades_p.append('<option value="'+response.especialidad+'">'+response.especialidad+'</option>');
+			pacienteNewInstance.especialidades_p.append('<option value="'+response[i].especialidad+'">'+response[i].especialidad+'</option>');
+					jq('select').material_select();
 				}
 			}else{
 			jq.notify(response.mensaje, "error");

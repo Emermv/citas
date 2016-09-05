@@ -35,7 +35,7 @@
             paciente.setOnSelectListener(paciente.especialidades_p,object_filtrar,1);
              paciente.setOnSelectListener(paciente.medicos_p,object_filtrar,2);
             paciente.initOnHorasChangeListener();
-							 //   paciente.setEspecialidades();
+							   paciente.setEspecialidades();
       }else if(usuarios.tipo==="Medico"){
           usuario.append(file_get_contents("includes/medico.html"));
           jq("#nombre_m").append('<span>'+usuarios.nombre+'</span>');

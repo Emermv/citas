@@ -4,5 +4,4 @@
 	"crearCitaPaciente":"../php/crear_cita.php",
 	"listarEspecialidadesDisponibles":"../php/listar_especialidades.php",
 	"tiempoMinutosMaximoCita":60,
-	"especialidades_medicos_p":["Alergia","Dermatología","Endocrinología","Genética","Neumología","Reumatología"]
 }
