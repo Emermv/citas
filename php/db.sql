@@ -47,6 +47,10 @@ apellidos varchar(50) not null,
           hora varchar(11) not null,
           FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita)
           )
+										create table especialidades(
+										id_esp int not null primary key,
+										especialidad varchar(100) not null 
+										)
   /*procedures*******************************************/
   DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))

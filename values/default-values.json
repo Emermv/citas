@@ -2,5 +2,7 @@
  "filtrarEspecialidad":"../php/filtrar_especialidades.php",
 	"listarHorasDisponibles":"../php/listar_calendario_citas_medico.php",
 	"crearCitaPaciente":"../php/crear_cita.php",
-	"tiempoMinutosMaximoCita":60
+	"listarEspecialidadesDisponibles":"../php/listar_especialidades.php",
+	"tiempoMinutosMaximoCita":60,
+	"especialidades_medicos_p":["Alergia","Dermatología","Endocrinología","Genética","Neumología","Reumatología"]
 }

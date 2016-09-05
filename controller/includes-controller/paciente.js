@@ -248,6 +248,40 @@ minDate:new Date()
 		obj.notify( msj, { position:pos },{className:type});
 	}
 	/*************************************************/
+	setEspecialidades(){
+               jq.ajax({
+               async:true,
+                 contentType:"application/x-www-form-urlencoded",
+                url:jsonData["listarEspecialidadesDisponibles"] ,
+                type: "post",
+                dataType: "html",
+                data:null,
+                cache: false,
+                contentType: false,
+	               processData: false,
+                success:pacienteNewInstance.SuccesListadoEspceialidades,
+                timeout:5000,
+                error:pacienteNewInstance.problemasEspecialides
+            });
+	}
+	/*************************************************/
+		SuccesListadoEspceialidades(data){
+			var response=JSON.parse(data);
+			if(response.status==1){
+				pacienteNewInstance.especialidades_p.empty().append('<option value="" disabled selected>Seleccione</option>');
+				for(var i=0;i<response.num;i++){
+			pacienteNewInstance.especialidades_p.append('<option value="'+response.especialidad+'">'+response.especialidad+'</option>');
+				}
+			}else{
+			$.notify(response.mensaje, "error");
+			}
+		}
+	/*************************************************/
+		problemasEspecialides(){
+			$.notify(response.mensaje, "Problemas en el servidor");
+		}
+	/*************************************************/
+	/*************************************************/
 	/*************************************************/
 }
 /*end class */
