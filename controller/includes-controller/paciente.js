@@ -119,7 +119,7 @@ minDate:new Date()
                 timeout:5000,
               error:instance.problemas
             }); 
-    }else{$.notify("Medico no seleccionado");}
+    }else{jq.notify("Medico no seleccionado");}
 }
 	/*************************************************/
 	iniciandoListado(){
@@ -194,20 +194,21 @@ minDate:new Date()
               error:pacienteNewInstance.problemasCreacionCita
             }); 
 															}else{
-															pacienteNewInstance.alertar(jq("#perfil"),"Paciente no logueado","right","warn");
+															jq.notify("Paciente no logueado","warn");
 															}
 														}else{
-															pacienteNewInstance.alertar(jq("#selectable"),"Selecciona las horas por favor!","left","warn");
+																jq.notify("Selecciona las horas por favor!","warn");
 														}
            }else{
-             	pacienteNewInstance.alertar(jq("#datepicker"),"Selecciona la fecha por favor!","top","warn");
+             	jq.notify("Selecciona la fecha por favor!","warn");
            }
         }else{
-          	pacienteNewInstance.alertar(pacienteNewInstance.medicos_p,"Seleccione un medico por favor!","top","warn");
+          	jq.notify("Seleccione un medico por favor!","warn");
         }
         
     }else{
-     pacienteNewInstance.alertar(pacienteNewInstance.especialidades_p,"Seleccione una especialidad por favor!","left","success");
+    	jq.notify("Seleccione una especialidad por favor!","warn");
+				
     }
     
 }
@@ -234,18 +235,14 @@ minDate:new Date()
 	succesCreacionCita(data){
 	var response=JSON.parse(data);
 		if(response.status===1){
-			pacienteNewInstance.alertar(pacienteNewInstance.btn_crear_cita,response.mensaje,"top","success");
+			jq.notify(response.mensaje,"success");
 		}else{
-				pacienteNewInstance.alertar(pacienteNewInstance.btn_crear_cita,response.mensaje,"top","error");
+				jq.notify(response.mensaje,"error");
 		}
 	}
 	/*************************************************/
 	problemasCreacionCita(){
-		
-	}
-	/*************************************************/
-	alertar(obj,msj,pos,type){
-		obj.notify( msj, { position:pos },{className:type});
+		jq.notify("Problemas con la conexion!","error");
 	}
 	/*************************************************/
 	setEspecialidades(){
@@ -273,12 +270,12 @@ minDate:new Date()
 			pacienteNewInstance.especialidades_p.append('<option value="'+response.especialidad+'">'+response.especialidad+'</option>');
 				}
 			}else{
-			$.notify(response.mensaje, "error");
+			jq.notify(response.mensaje, "error");
 			}
 		}
 	/*************************************************/
 		problemasEspecialides(){
-			$.notify(response.mensaje, "Problemas en el servidor");
+			jq.notify("Problemas con la conexion!", "error");
 		}
 	/*************************************************/
 	/*************************************************/

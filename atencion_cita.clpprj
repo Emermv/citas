@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="C:\xampp\htdocs\atencion_cita\atencion_cita.clpprj">
 	<settings><PM_URL><![CDATA[http://localhost/atencion_cita/]]></PM_URL><PM_HOME_URL><![CDATA[http://localhost/atencion_cita/]]></PM_HOME_URL><PM_LIBS><![CDATA[]]></PM_LIBS><PM_FTP_CONNECTION><![CDATA[]]></PM_FTP_CONNECTION><PM_FTP_DIR><![CDATA[]]></PM_FTP_DIR><PM_FTP_UPLOAD_ON_SAVE><![CDATA[INT:0]]></PM_FTP_UPLOAD_ON_SAVE></settings><removed value=";C:\xampp\htdocs\atencion_cita\php\Codelobster0.php;"/><added value=""/><lastopfiles>
-		<file name="C:\xampp\htdocs\atencion_cita\php\server.php"/>
+		<file name="C:\xampp\htdocs\atencion_cita\php\filtrar_especialidades.php"/>
+		<file name="C:\xampp\htdocs\atencion_cita\php\listar_especialidades.php"/>
 	</lastopfiles>
+	<errors version="5.3">
+	</errors>
 	<cakedata>
 	</cakedata>
 	<dplmenupath>
@@ -15,13 +18,15 @@
 	</todoblock>
 	<filescache>
 		<file name="C:\xampp\htdocs\atencion_cita\php\values.php" crc="1472787700"/>
-		<file name="C:\xampp\htdocs\atencion_cita\php\server.php" crc="1472946397"/>
+		<file name="C:\xampp\htdocs\atencion_cita\php\server.php" crc="1473026120"/>
 		<file name="C:\xampp\htdocs\atencion_cita\php\login.php" crc="1472010714"/>
-		<file name="C:\xampp\htdocs\atencion_cita\php\listar_calendario_citas_medico.php" crc="1472927096"/>
+		<file name="C:\xampp\htdocs\atencion_cita\php\listar_especialidades.php" crc="1473037794"/>
+		<file name="C:\xampp\htdocs\atencion_cita\php\listar_calendario_citas_medico.php" crc="1472946945"/>
 		<file name="C:\xampp\htdocs\atencion_cita\php\filtrar_especialidades.php" crc="1472348390"/>
-		<file name="C:\xampp\htdocs\atencion_cita\php\db.sql" crc="1472941315"/>
-		<file name="C:\xampp\htdocs\atencion_cita\php\crear_cita.php" crc="1472945028"/>
+		<file name="C:\xampp\htdocs\atencion_cita\php\db.sql" crc="1473034113"/>
+		<file name="C:\xampp\htdocs\atencion_cita\php\crear_cita.php" crc="1472946945"/>
 		<file name="C:\xampp\htdocs\atencion_cita\js\php.js" crc="1472794741"/>
+		<file name="C:\xampp\htdocs\atencion_cita\js\notify.min.js" crc="1473026767"/>
 		<file name="C:\xampp\htdocs\atencion_cita\js\materialize.min.js" crc="1471581600"/>
 		<file name="C:\xampp\htdocs\atencion_cita\js\materialize.clockpicker.js" crc="1471670224"/>
 		<file name="C:\xampp\htdocs\atencion_cita\js\jquery-ui.min.js" crc="1471065316"/>
@@ -42,20 +47,20 @@
 		<file name="C:\xampp\htdocs\atencion_cita\css\base.css" crc="1471581600"/>
 		<file name="C:\xampp\htdocs\atencion_cita\css\alertify.default.css" crc="1381314058"/>
 		<file name="C:\xampp\htdocs\atencion_cita\css\alertify.core.css" crc="1381314058"/>
-		<file name="C:\xampp\htdocs\atencion_cita\controller\includes-controller\paciente.js" crc="1472943750"/>
+		<file name="C:\xampp\htdocs\atencion_cita\controller\includes-controller\paciente.js" crc="1473037857"/>
 		<file name="C:\xampp\htdocs\atencion_cita\controller\includes-controller\medico.js" crc="1472855304"/>
 		<file name="C:\xampp\htdocs\atencion_cita\controller\includes-controller\asistente.js" crc="1472855322"/>
-		<file name="C:\xampp\htdocs\atencion_cita\controller\login_controller.js" crc="1472909718"/>
-		<file name="C:\xampp\htdocs\atencion_cita\controller\controller.js" crc="1472886888"/>
-		<file name="C:\xampp\htdocs\atencion_cita\controller\cita_controller.js" crc="1472910462"/>
-		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\paciente.html" crc="1472924098"/>
+		<file name="C:\xampp\htdocs\atencion_cita\controller\login_controller.js" crc="1473026308"/>
+		<file name="C:\xampp\htdocs\atencion_cita\controller\cita_controller.js" crc="1473038355"/>
+		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\paciente.html" crc="1473032658"/>
 		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\medico.html" crc="1472594129"/>
-		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\horas_item.html" crc="1472924039"/>
+		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\horas_item.html" crc="1472946945"/>
 		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\funciones.txt" crc="1472567403"/>
 		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\form-paciente.html" crc="1472348390"/>
 		<file name="C:\xampp\htdocs\atencion_cita\cita\includes\asistente.html" crc="1472618290"/>
 		<file name="C:\xampp\htdocs\atencion_cita\cita\controller\.controller.js" crc="1472886888"/>
-		<file name="C:\xampp\htdocs\atencion_cita\cita\index.html" crc="1472908175"/>
+		<file name="C:\xampp\htdocs\atencion_cita\cita\index.html" crc="1473028278"/>
 		<file name="C:\xampp\htdocs\atencion_cita\index.html" crc="1471999900"/>
+		<file name="C:\xampp\htdocs\atencion_cita\estilo_centinelas.css" crc="1473021999"/>
 	</filescache>
 </project>
