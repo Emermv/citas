@@ -8,9 +8,19 @@ class Paciente{
 					this.horas_seleccionadas=0;
 					this.hora_total=jq("#hora_total");
 					 pacienteNewInstance=this;
+					jq('.collapsible').collapsible({
+      accordion : false
+    });
     this.btn_crear_cita.click(function(e){
               e.preventDefault();
-            pacienteNewInstance.crear_cita_paciente();
+            alertify.confirm("¿Desea guadar la cita?",function(e){
+													if(e){
+														jq.notify("Creando...","success");
+														pacienteNewInstance.crear_cita_paciente();
+													}else{
+														jq.notify("Cancelado","success");
+													}
+												});
           });  
 /*******************************************************************/
        jq('select').material_select(); 

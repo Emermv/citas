@@ -49,6 +49,7 @@
 							     medico.initHorasA();
 						      medico.initHorasBmin();
 							      medico.initEspecialidades();
+							     medico.initComponents();
       }else if(usuarios.tipo==="Asistente"){
           usuario.append(file_get_contents("includes/asistente.html"));
           jq("#nombre_a").append('<span>'+usuarios.nombre+'</span>');
