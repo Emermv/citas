@@ -39,7 +39,7 @@ btn_guardar_paciente.click(function(e){
 	  }
 		/********************************************************************************/
 						initHorasA(){
-							this.horasA_m.empty().append(file_get_contents("includes/horas_item.html"));
+							this.horasA_m.empty().append(file_get_contents("includes/horas_item_medico.html"));
 						}
 						initHorasBmin(){
 							this.horasB_min_m.empty().append(file_get_contents("includes/horas_min_item.html"));
@@ -164,6 +164,7 @@ btn_guardar_paciente.click(function(e){
 		/********************************************************************************/
 					setOnChangeListener_A(id){
 					var listItem=jq("#l"+id);
+						var btnAdd=jq("#b"+id);
 					var item=jq("#"+id).click(function(){
 						  if(item.is(":checked")){
 							     if(mediconewInstance.horas_seleccionadas_A<jsonData["tiempoMinutosMaximoCita"] && 
@@ -185,7 +186,10 @@ btn_guardar_paciente.click(function(e){
 										mediconewInstance.sethora_total(mediconewInstance.hora_total,mediconewInstance.horas_seleccionadas_A);
 								}
 					});
-					/* end  click*/
+					/* end  click checkbox*/
+					btnAdd.click(function(){
+						jq.notify("OK","success");
+					});
 				}
 		/********************************************************************************/
 		/********************************************************************************/
