@@ -2,6 +2,9 @@ class Asistente{
     constructor(){
       jq('select').material_select();
     /*************************/   
+					 jq('.collapsible').collapsible({
+      accordion : false
+    });
       jq( "#datepicker_a" ).datepicker({
 		inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
