@@ -61,6 +61,7 @@
           jq("#edad_a").append('<span>'+usuarios.edad+'</span>');
           jq("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del asistente: </span>');
           var asistente=new Asistente();
+							asistente. initComponents();
       } 
       
       /********************************************************************************/

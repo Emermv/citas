@@ -61,13 +61,13 @@ apellidos varchar(50) not null,
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
       COMMENT 'sp login'
       if EXISTS(SELECT u.id from usuarios as u JOIN pacientes as p on u.id=p.id_usuario WHERE u.dni=dni) THEN
-      SELECT u.id,'Paciente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,p.edad,p.genero
+      SELECT p.codigo,'Paciente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,p.edad,p.genero
       from usuarios as u JOIN pacientes as p on u.id=p.id_usuario WHERE u.dni=dni;
       ELSEIF EXISTS(SELECT u.id from usuarios as u JOIN medicos as m on u.id=m.id_usuario WHERE u.dni=dni) THEN
-         SELECT u.id,'Medico' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,m.correo
+         SELECT m.codigo,'Medico' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,m.correo
       from usuarios as u JOIN medicos as m on u.id=m.id_usuario WHERE u.dni=dni;
         ELSEIF EXISTS(SELECT u.id from usuarios as u JOIN asistentes as a on u.id=a.id_usuario WHERE u.dni=dni) THEN
-         SELECT  u.id,'Asistente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,a.edad,a.correo,a.genero
+         SELECT  a.codigo,'Asistente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,a.edad,a.correo,a.genero
       from usuarios as u JOIN asistentes as a on u.id=a.id_usuario WHERE u.dni=dni;
       ELSE
       SELECT 'Usuario no encontrado';
@@ -81,7 +81,15 @@ apellidos varchar(50) not null,
       SELECT fecha,hora_inicio,hora_fin from citas_paciente_medico as c where c.estado='disponible'
 
 
-
-
-create procedure  sp_listar_horas(id int)
-SELECT hora from horas_citas_paciente_medico as cpm where cpm.id_cita=id
+create procedure sp_listar_citas(fecha date)
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,
+hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
+u.apellidos as 'papellidos',u.telefono as 'ptelefono',
+um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
+from horas_citas_paciente_medico as hcpm 
+join citas_paciente_medico as cpm 
+on hcpm.id_cita=cpm.id_cita join especialidades as e
+on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
+on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
+on m.codigo=cpm.id_medico where cpm.fecha=fecha
+ 

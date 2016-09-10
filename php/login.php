@@ -14,7 +14,7 @@ if($x=mysqli_fetch_array($credenciales)){
   if($clave===@$x['password']){
     $datos['status']="ok";
     $datos['code']="1";
-    $datos['id']=$x['id'];
+    $datos['id']=$x['codigo'];
      $datos['dni']=$x['dni'];
      $datos['nombre']=$x['nombre'];
      $datos['apellidos']=$x['apellidos'];

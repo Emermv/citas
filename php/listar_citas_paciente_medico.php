@@ -8,20 +8,50 @@ $response["mensaje"]="";
 if($con){
 $db=mysqli_select_db($con,db);
 if($db){
-//$fecha=$_POST["fecha"];
-$fecha="2016-09-05";
+$fecha=$_POST["fecha"];
+
 $peticion=mysqli_query($con,"call sp_listar_citas('".$fecha."')");
 $num=0;
-if($peticion){
 
-while($data=mysqli_fetch_object($peticion)){
-	$response[]=array('id_cita'=>$data->id_cita,'fecha'=>$data->fecha);
+if($peticion){
+$entro=false;
+$anterior=0;
+$siguiente=0;
+
+while(true){
+	if($data=mysqli_fetch_object($peticion)){
+
+       for($i=0;$i<$data->num_f_horas;$i++){
+       	if(!$entro){
+			$response[$num]=array('id_cita'=>$data->id_cita,'fecha'=>$data->fecha,'num_f_horas'=>$data->num_f_horas,
+		'especialidad'=>$data->especialidad,'pnombre'=>$data->pnombre,
+		'papellidos'=>$data->papellidos,'ptelefono'=>$data->ptelefono,'mnombre'=>$data->mnombre,
+		'mapellidos'=>$data->mapellidos,'mtelefono'=>$data->mtelefono);
+			$response[$num][$i]=array('id_horas'=>$data->id_horas,'hora'=>$data->hora);
+			$entro=true;
+			}else{
+		    $horas=mysqli_fetch_object($peticion);
+			$response[$num][$i]=array('id_horas'=>$horas->id_horas,'hora'=>$horas->hora);
+			}
+       }
+	 
 	$num++;
+	$entro=false;
+}else{
+	break;
+}
 }
 
+
+if($num>0){
 $response["status"]=1;
 $response["mensaje"]="Ok";
 $response["num"]=$num;
+
+}else{
+$response["status"]=-1;
+$response["mensaje"]="Sin resultados para ".$fecha;
+}
 }else{
 $response["status"]=-1;
 $response["mensaje"]="Sin resultados para ".$fecha;

@@ -54,8 +54,8 @@ $response["mensaje"]="No se pudo crear las horas para la cita";
   }
 }else{
 $response["status"]=-1;
-$response["mensaje"]="La cita no pudo ser creada";
-
+//$response["mensaje"]="La cita no pudo ser creada";
+$response["mensaje"]=$sql_cita;
 }
   
 /* ********************************* end  operacion*************/
