@@ -147,7 +147,7 @@
               
            localStorage.setItem("status",Base64.encode("-1"));
            if(credenciales.code!=="-1" && credenciales.status===Base64.decode("b2s=")){
-												    
+												    localStorage.setItem("id",Base64.encode(credenciales.id));
                localStorage.setItem("dni",Base64.encode(credenciales.dni));
                localStorage.setItem("nombre",Base64.encode(credenciales.nombre));
                localStorage.setItem("apellidos",Base64.encode(credenciales.apellidos));

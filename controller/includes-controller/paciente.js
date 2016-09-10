@@ -161,6 +161,7 @@ minDate:new Date()
         status_disponibilidad.append('las horas visibles');
     }else{
         status_disponibilidad.append('todas las horas');
+					pacienteNewInstance.	resetHorasSeleccionadas();
     }
 }
 	/*************************************************/
@@ -174,7 +175,7 @@ minDate:new Date()
     var descripcion=jq("#descripcion_p").val();
     var fecha=pacienteNewInstance.getFormatFecha();
 		  var horasArr=pacienteNewInstance.getHorasOnCheckbox();
-		  var paciente=Base64.decode(localStorage.getItem("dni"));
+		  var paciente=Base64.decode(localStorage.getItem("id"));
     if(especialidad!==null){
         if(medico!==null){
            if(fecha.replace("-","").replace("-","")!==""){
@@ -245,7 +246,9 @@ minDate:new Date()
 		return hora1+":"+min1+"-"+hora2+":"+min2;
 	}
 	/*************************************************/
-	iniciandoCreacionCita(){}
+	iniciandoCreacionCita(){
+	
+	}
 	/*************************************************/
 	succesCreacionCita(data){
 	var response=JSON.parse(data);
@@ -254,6 +257,9 @@ minDate:new Date()
 		}else{
 				jq.notify(response.mensaje,"error");
 		}
+		var date=pacienteNewInstance.getFormatFecha();
+		
+		pacienteNewInstance.listar_horas_disponibles_p(date);
 	}
 	/*************************************************/
 	problemasCreacionCita(){
@@ -340,7 +346,7 @@ function SuccesFiltrado(data){
         medicos_p.empty();
         medicos_p.append('<option value="" disabled selected>Seleccione</option>');
         for(var i=0;i<aux.num;i++){
-            medicos_p.append('<option value="'+aux[i].id_esp+'">'+aux[i].nom_app+'</option>');
+            medicos_p.append('<option value="'+aux[i].id+'">'+aux[i].nom_app+'</option>');
         }
         jq('select').material_select(); 
     }

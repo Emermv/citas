@@ -35,14 +35,17 @@ apellidos varchar(50) not null,
 
   create table  citas_paciente_medico(
       id_cita int not null PRIMARY key,
-      id_medico int not null REFERENCES medicos(codigo),
-      id_paciente int not null REFERENCES pacientes(codigo),
+      id_medico int not null,
+      id_paciente int not null,
        fecha date not null,
-      especialidad varchar(100) not null,
+      especialidad int not null,
       descripcion varchar(500),
       estado varchar(20) not null,
-      num_f_horas int not null
-      )
+      num_f_horas int not null,
+      foreign key(especialidad) references especialidades(id_esp),
+     FOREIGN key(id_medico) REFERENCES medicos(codigo),
+    FOREIGN key(id_paciente) REFERENCES pacientes(codigo)
+      );
       create table horas_citas_paciente_medico(
           id_horas int not null PRIMARY key,
           id_cita int not null,
@@ -58,13 +61,13 @@ apellidos varchar(50) not null,
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
       COMMENT 'sp login'
       if EXISTS(SELECT u.id from usuarios as u JOIN pacientes as p on u.id=p.id_usuario WHERE u.dni=dni) THEN
-      SELECT  'Paciente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,p.edad,p.genero
+      SELECT u.id,'Paciente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,p.edad,p.genero
       from usuarios as u JOIN pacientes as p on u.id=p.id_usuario WHERE u.dni=dni;
       ELSEIF EXISTS(SELECT u.id from usuarios as u JOIN medicos as m on u.id=m.id_usuario WHERE u.dni=dni) THEN
-         SELECT  'Medico' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,m.correo
+         SELECT u.id,'Medico' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,m.correo
       from usuarios as u JOIN medicos as m on u.id=m.id_usuario WHERE u.dni=dni;
         ELSEIF EXISTS(SELECT u.id from usuarios as u JOIN asistentes as a on u.id=a.id_usuario WHERE u.dni=dni) THEN
-         SELECT  'Asistente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,a.edad,a.correo,a.genero
+         SELECT  u.id,'Asistente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,a.edad,a.correo,a.genero
       from usuarios as u JOIN asistentes as a on u.id=a.id_usuario WHERE u.dni=dni;
       ELSE
       SELECT 'Usuario no encontrado';
@@ -76,3 +79,9 @@ apellidos varchar(50) not null,
       COMMENT 'SP QUE BUSCA FECHAS Y HORAS LIBRES DE DE  UN MEDICO';
       IF EXISTS(SELECT p.id_usuario FROM pacientes AS p WHERE P.id_usuario=paciente) THEN
       SELECT fecha,hora_inicio,hora_fin from citas_paciente_medico as c where c.estado='disponible'
+
+
+
+
+create procedure  sp_listar_horas(id int)
+SELECT hora from horas_citas_paciente_medico as cpm where cpm.id_cita=id
