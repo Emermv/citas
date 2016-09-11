@@ -1,16 +1,20 @@
 
 <div class="row">
-<div class="col s12 m12 l12 card-panel blue-grey lighten-5">
+<div class="col s12 m12 l12 card-panel" id="asistente">
 <form id="form_asistente">
 <div class="row" id="content_form_asistente">
-<div class="col s12 m10 offset-m1 l5"><!--col datos -->
+<div class="col s12 m10 offset-m1 l5" id="datos_paciente"><!--col datos -->
     <div class="row">
         <div class="col s12 m12 l12">
           <div class="card">
-            <div class="card-image" id="perfil_a">
+            <div class="card-image waves-effect waves-block waves-light" id="perfil_a">
             </div>
               <div class="card-content">
-              <div class="row">
+														 <span class="card-title activator grey-text text-darken-4">Datos del asistente<i class="material-icons right">more_vert</i></span>
+              </div>
+											     <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">Datos del asistente<i class="material-icons right">close</i></span>
+                    <div class="row">
                   <div class="col s5 m4 l2"><span >Nombre</span></div>
      <div class="col s1 m1 l1 "><span >:</span></div>
     <div class="col s6 m7 l9 " id="nombre_a"></div>
@@ -37,26 +41,61 @@
         <div class="col s5 m4 l2 "><span >Correo</span></div>
      <div class="col s1 m1 l1 "><span >:</span></div>
     <div class="col s6 m7 l9 " id="correo_a"></div>
-        
-        
-           
                   </div>
               </div>
           </div>
         </div>
     </div> <!--end div row content datos del paciente-->
 </div> <!--end col datos-->
-<div class="col s12 m10 offset-m1 l7 "><!--col datepicker-->
+<div class="col s12 m10 offset-m1 l7"><!--col datepicker-->
 <div class="row">
-	<div class="col s10 offset-s1 m6 offset-m3 l6 offset-l4">
-		<div id="datepicker_a"></div>
+	<div class="col s10 offset-s1 m6 offset-m3 l8 offset-l2" id="content_picker">
+		<div id="datepicker_a" class="card-panel"></div>
 	</div>
 	</div>
 	</div><!-- end col datepicker-->
-<div class="col s12 m10 offset-m1 l7"> <!--col dinamico-->
+ </div><!-- end div row content form asistente-->
+<div class="row"> <!--row tabla dinamica-->
+	<div class="col s12 m12 l12"> <!--col dinamico-->
 	<ul class="collapsible white" data-collapsible="accordion">
+		<li >
+		<div class="collapsible-header active" id="div_content_config_reporte" ><i class="material-icons">report</i>Opciones para reportes</div>
+      <div class="collapsible-body">
+							<div class="row">
+							<div class="col s12 m6 l4 center">
+								<p>
+								<input type="checkbox" id="todo" />
+      <label for="todo" class="black-text">Todas las citas</label>
+	    	</p>
+     <p>
+						<input type="checkbox" id="faltantes" />
+      <label for="faltantes" class="black-text">Personas que no asistieron</label> 
+							</p>
+								</div>
+								<div class="col s12 m6 l4 center">
+									<p><input type="checkbox" id="asistieron" />
+      <label for="asistieron" class="black-text">Personas que asistieron</label>
+							</p>
+								<p><input type="checkbox" id="adultos" />
+      <label for="adultos" class="black-text">Adultos</label>
+		</p>
+								</div>
+								<div class="col s12 m6 l4">
+											<p><input type="checkbox" id="ninios" />
+      <label for="ninios" class="black-text">Niños</label>
+							</p>
+							<p><input type="checkbox" id="jovenes" />
+      <label for="jovenes" class="black-text">Jovenes</label>
+							</p>
+								</div>
+							</div>
+		<div class="col s12 m12 l12 center">
+<a class="waves-effect waves-light btn blue" id="btn_reportar_a"><i class="large material-icons right">report</i>Reportar</a>
+		</div>
+			   </div>
+		</li>
     <li>
-      <div class="collapsible-header active"><i class="material-icons">today</i>Hoy</div>
+      <div class="collapsible-header" id="div_content_tabla_hoy"><i class="material-icons">today</i>Citas</div>
       <div class="collapsible-body">
 							<table class="striped centered responsive-table">
         <thead>
@@ -69,6 +108,7 @@
 											   <th data-field="fecha">Fecha</th>
 										   	<th data-field="hora">Hora</th>
 											<th data-field="especialidad">Especialidad</th>
+											<th data-field="confirmado">Confirmado</th>
 											<th data-field="asistira">¿Asistir&aacute;?</th>
           </tr>
         </thead>
@@ -79,72 +119,34 @@
 					</div>
     </li>
     <li>
-      <div class="collapsible-header"><i class="material-icons">system_update_alt</i>Mañana</div>
+      <div class="collapsible-header" id="content_reportes_tabla_cita"><i class="material-icons">system_update_alt</i>Reportes</div>
       <div class="collapsible-body">
 					  				<table class="striped centered responsive-table">
         <thead>
-          <tr>
-              <th data-field="id">#</th>
-											<th data-field="paciente">Paciente</th>
-											  <th data-field="telefono_paciente">telefono del paciente</th>
-               <th data-field="medico">M&eacute;dico</th>
-											   <th data-field="telefono_medico">telefono del m&eacute;dico</th>
-											   <th data-field="fecha">Fecha</th>
-										   	<th data-field="hora">Hora</th>
-											<th data-field="especialidad">Especialidad</th>
+          <tr id="head_tabla_reportes_asistente" class="blue">
+											
           </tr>
         </thead>
-
-        <tbody>
-          <tr>
-            <td>Alvin</td>
-            <td>Eclair</td>
-            <td>$0.87</td>
-											  <td>$0.87</td>
-											<td>$0.87</td>
-											 <td>$0.87</td>
-											  <td>$0.87</td>
-											<td>$0.87</td>
-          </tr>
-          <tr>
-            <td>Alan</td>
-            <td>Jellybean</td>
-            <td>$3.76</td>
-											  <td>$0.87</td>
-											<td>$0.87</td>
-											 <td>$0.87</td>
-											  <td>$0.87</td>
-											<td>$0.87</td>
-          </tr>
-          <tr>
-            <td>Jonathan</td>
-            <td>Lollipop</td>
-            <td>$7.00</td>
-											  <td>$0.87</td>
-											<td>$0.87</td>
-											 <td>$0.87</td>
-											  <td>$0.87</td>
-											<td>$0.87</td>
-          </tr>
+        <tbody id="body_tabla_reportes_asistente">
+         
         </tbody>
       </table>
 					</div>
     </li>
   </ul>
 	</div>
- </div><!-- end div row content form asistente-->
-
- <div class="row ">
-    <div class="col s3 offset-s1 center m3 offset-m3 l2 offset-l3">
-    <input class="ui-button ui-widget ui-corner-all  black-text  red lighten-1" type="submit"  value="Guardar" id="btn_guardar_paciente">
-    </div>
-    <div class="col s3  m2  l2 center">
- <input class="ui-button ui-widget ui-corner-all  red lighten-1 black-text" type="button" value="Reportar">
-</div> 
-  <div class="col s3 m2  l2 center">
- <input class="ui-button ui-widget ui-corner-all  red lighten-1 black-text" type="button" value="Modificar">
-</div> 
-</div>
+	</div> <!--end row tabla diamica-->
   </form>  
 </div>  <!--end col principal-->
 </div> <!--end row principal-->
+<style>
+	.ui-datepicker{
+		width: 100%;
+		height: 100%;
+		font-family: cursive;
+		color:cornflowerblue;
+	}
+	#content_picker{
+		cursor: move;
+	}
+</style>

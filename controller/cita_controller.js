@@ -52,6 +52,7 @@
 							     medico.initComponents();
       }else if(usuarios.tipo==="Asistente"){
           usuario.append(file_get_contents("includes/asistente.html"));
+							jq("#asistente").addClass(Base64.decode(localStorage.getItem("cfa")));
           jq("#nombre_a").append('<span>'+usuarios.nombre+'</span>');
           jq("#apellidos_a").append('<span>'+usuarios.apellidos+'</span>');
           jq("#direccion_a").append('<span>'+usuarios.direccion+'</span>');
@@ -59,9 +60,9 @@
           jq("#correo_a").append('<span>'+usuarios.correo+'</span>');
           jq("#genero_a").append('<span>'+usuarios.genero+'</span>');
           jq("#edad_a").append('<span>'+usuarios.edad+'</span>');
-          jq("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del asistente: </span>');
-          var asistente=new Asistente();
-							asistente. initComponents();
+      jq("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
+          var asistente=new Asistente(Base64.decode(localStorage.getItem("cfa")));
+							asistente.initComponents();
       } 
       
       /********************************************************************************/

@@ -1,19 +1,20 @@
 var asistenteNewInstance;
 class Asistente{
-    constructor(){
+    constructor(color){
       
     /*************************/   
 					 jq('.collapsible').collapsible({
       accordion : false
     });
+					this.btn_reportar_a=jq("#btn_reportar_a");
+					this.color_fondo=color;
 					this.tabla_citas_hoy=jq("#tabla_citas_hoy");
-			asistenteNewInstance=this;
-this.btn_guardar_paciente=jq("#btn_guardar_paciente");
-this.btn_guardar_paciente.click(function(e){
- e.preventDefault();
- alertify.success("siiii!!");
- });   
-					
+			asistenteNewInstance=this; 
+					this.div_content_tabla_hoy=jq("#div_content_tabla_hoy");
+					this.div_content_config_reporte=jq("#div_content_config_reporte");
+					this.content_reportes_tabla_cita=jq("#content_reportes_tabla_cita");
+					this.head_tabla_reportes_asistente=jq("#head_tabla_reportes_asistente");
+					this.body_tabla_reportes_asistente=jq("#body_tabla_reportes_asistente");
 				this.datepicker_a=jq("#datepicker_a").datepicker({
 	inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
@@ -22,21 +23,27 @@ monthNames: ['Enero', 'Febrero', 'Marzo',
 'Octubre', 'Noviembre', 'Diciembre'],
 dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
 onSelect: function (date) {
-    asistenteNewInstance.listar_citas_paciente_medico();
+    asistenteNewInstance.listar_citas_paciente_medico(date);
 },
 firstDay: 1,
 dateFormat: "yy-mm-dd",
 showButtonPanel: true,
 minDate:new Date()
 });
+					this.content_picker=jq("#content_picker").draggable({refreshPositions: true});
+					this.datepicker_a.resizable();
+					this.datos_paciente=jq("#datos_paciente").draggable();
+			this.datepicker_a.addClass(this.color_fondo);
 				}
 	  initComponents(){
-			
+			this.btn_reportar_a.click(function(){
+				asistenteNewInstance.reportar_citas_paciente();
+			});
 		} 
 	/****************************************************************/
-listar_citas_paciente_medico(){
+listar_citas_paciente_medico(date){
 	var form=new FormData();
-	form.append("fecha",asistenteNewInstance.getFechaToPicker());
+	form.append("fecha",date);
 	jq.ajax({
                  async:true,
                  contentType:"application/x-www-form-urlencoded",
@@ -59,7 +66,8 @@ listar_citas_paciente_medico(){
 		asistenteNewInstance.tabla_citas_hoy.empty();
 		if(response.status==1){
 	   for(var i=0;i<response.num;i++){
-					asistenteNewInstance.setTabla_citas_hoy(i+1,response[i].pnombre+' '+response[i].papellidos,
+					asistenteNewInstance.setTabla_citas_hoy(asistenteNewInstance.tabla_citas_hoy,
+						                                      i+1,response[i].pnombre+' '+response[i].papellidos,
 																																												response[i].ptelefono,
 																																												response[i].mnombre+' '+response[i].mapellidos,
 																																												response[i].mtelefono,
@@ -68,9 +76,16 @@ listar_citas_paciente_medico(){
 																																																								response[i].num_f_horas,i),
 																																												response[i].especialidad,
 																																												asistenteNewInstance.getEstadoFromTablasCitas(
-					                                        response[i].estado,response[i].id_cita));
+					                                        response[i].estado,response[i].id_cita),
+																																													response[i].confirmado);
 				}
 			asistenteNewInstance.initDropdownHoras();
+			asistenteNewInstance.div_content_config_reporte.removeClass("active");
+			asistenteNewInstance.content_reportes_tabla_cita.removeClass("active");
+			asistenteNewInstance.div_content_tabla_hoy.addClass("active");
+				 jq('.collapsible').collapsible({
+      accordion : false
+    });
 		}else{
 			jq.notify(response.mensaje,"success");
 		}
@@ -125,8 +140,8 @@ listar_citas_paciente_medico(){
 			'<span class="lever"></span>Si</label></div>';
 	}
 	}
-	setTabla_citas_hoy(id,pac,telpac,me,telme,fecha,hora,esp,estado){
-		asistenteNewInstance.tabla_citas_hoy.append('<tr>'+
+	setTabla_citas_hoy(tabla,id,pac,telpac,me,telme,fecha,hora,esp,estado,confirmado){
+		tabla.append('<tr>'+
 					'<td>'+id+'</td>'+
 					'<td>'+pac+'</td>'+
 				'<td>'+telpac+'</td>'+
@@ -135,10 +150,10 @@ listar_citas_paciente_medico(){
 					'<td>'+fecha+'</td>'+
 				'<td>'+hora+'</td>'+
 					'<td>'+esp+'</td>'+
+					'<td>'+confirmado+'</td>'+
 	   '<td>'+estado+'</td></tr>');
 	}
-
-											
+				
 	/****************************************************************/
 	getFechaToPicker(){
 		 var date=asistenteNewInstance.datepicker_a.datepicker("getDate");
@@ -146,10 +161,84 @@ listar_citas_paciente_medico(){
     var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
 		return fecha;
 	}
+	/******************REPORTES*************************************/
+	 reportar_citas_paciente(){
+		if(asistenteNewInstance.getOpcionesFromReporte("todo")){
+			asistenteNewInstance.ajaxFromReportes_Citas("../php/reportar_todo.php",null,asistenteNewInstance.successReporteTodo);
+		}
+		}
 	/****************************************************************/
+	getOpcionesFromReporte(id){
+if(jq("#"+id).is(":checked")){
+	return true;
+}
+	return false;
+	}
 	/****************************************************************/
+			successReporteTodo(data){
+				var response=JSON.parse(data);
+				if(response.status==1){
+					asistenteNewInstance.setHeadFromTablaReportes();
+					asistenteNewInstance.body_tabla_reportes_asistente.empty();
+			for(var i=0;i<response.num;i++){
+					asistenteNewInstance.setTabla_citas_hoy(asistenteNewInstance.body_tabla_reportes_asistente,
+						                                      i+1,response[i].pnombre+' '+response[i].papellidos,
+																																												response[i].ptelefono,
+																																												response[i].mnombre+' '+response[i].mapellidos,
+																																												response[i].mtelefono,
+																																												response[i].fecha,
+																																												asistenteNewInstance.getHorasFromTablaCitas(response[i],
+																																																								response[i].num_f_horas,i),
+																																												response[i].especialidad,
+																																												asistenteNewInstance.getEstadoFromTablasCitas(
+					                                        response[i].estado,response[i].id_cita),
+																																													response[i].confirmado);
+				}
+			asistenteNewInstance.initDropdownHoras();
+			asistenteNewInstance.div_content_config_reporte.removeClass("active");
+			asistenteNewInstance.div_content_tabla_hoy.removeClass("active");
+						asistenteNewInstance.content_reportes_tabla_cita.addClass("active");
+				 jq('.collapsible').collapsible({
+      accordion : false
+    });
+				}else{
+					jq.notify(response.mensaje,"error");
+				}
+			}
 	/****************************************************************/
+	ajaxFromReportes_Citas(ruta,formdata,resp){
+		jq.ajax({
+                 async:true,
+                 contentType:"application/x-www-form-urlencoded",
+                url:ruta,
+                type: "post",
+                dataType: "html",
+                data:formdata,
+                cache: false,
+                contentType: false,
+	             processData: false,
+                success:resp,
+                timeout:5000,
+              error:function(){
+															jq.notify("Problemas en el servidor","error");
+														}
+            }); 
+	}
 	/****************************************************************/
+	setHeadFromTablaReportes(){
+	 asistenteNewInstance.head_tabla_reportes_asistente.empty();
+		asistenteNewInstance.head_tabla_reportes_asistente.append(
+		'<th data-field="id">#</th>'+
+											'<th data-field="paciente">Paciente</th>'+
+											 ' <th data-field="telefono_paciente">telefono del paciente</th>'+
+               '<th data-field="medico">M&eacute;dico</th>'+
+											   '<th data-field="telefono_medico">telefono del m&eacute;dico</th>'+
+											   '<th data-field="fecha">Fecha</th>'+
+										   	'<th data-field="hora">Hora</th>'+
+											'<th data-field="especialidad">Especialidad</th>'+
+											'<th data-field="confirmado">Confirmado</th>'+
+											'<th data-field="asistira">Estado</th>');
+	}
 	/****************************************************************/
 	/****************************************************************/
 	/****************************************************************/

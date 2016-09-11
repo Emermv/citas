@@ -140,6 +140,7 @@
 																  localStorage.setItem("cfp",Base64.encode(datos["colorFondoPaciente"]));
 																localStorage.setItem("bnc",Base64.encode(datos["barraNavegacionColor"]));
 																localStorage.setItem("tit",Base64.encode(datos["titulo"]));
+																localStorage.setItem("cfa",Base64.encode(datos["colorFondoAsistente"]));
                    });
        setTimeout(function(){
            var credenciales=JSON.parse(data);

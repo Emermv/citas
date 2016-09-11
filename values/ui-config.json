@@ -2,5 +2,6 @@
 		"colorFondo":"blue-grey lighten-5",
 	"colorFondoPaciente":"blue-grey lighten-5",
 	"titulo":"Atenci&oacute;n Cita",
-	"barraNavegacionColor":"blue"
+	"barraNavegacionColor":"blue",
+	"colorFondoAsistente":"blue-grey lighten-5"
 }

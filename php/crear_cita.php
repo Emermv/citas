@@ -15,7 +15,7 @@ $fecha=$_POST['fecha'];
 $especialidad=$_POST['especialidad'];
 $descripcion=$_POST['descripcion'];
 $estado="asistira";
-$motivo="";
+$confirmado="NO";
 $horas=array();
 $id_cita=0;
 $id_hora=0;
@@ -37,7 +37,8 @@ if($x=mysqli_fetch_array($peticion)){
   }else{
     $id_hora=1;
   }
-  $sql_cita="insert into citas_paciente_medico values(".$id_cita.",".$id_medico.",".$id_paciente.",'".$fecha."',".$especialidad.",'".$descripcion."','".$estado."','".$motivo."',".$tamHoras.")";
+  $sql_cita="call sp_crear_citas(".$id_cita.",".$id_medico.",".$id_paciente.",'"
+  .$fecha."',".$especialidad.",'".$descripcion."','".$estado."',".$tamHoras.",'".$confirmado."')";
 $save_cita=mysqli_query($con,$sql_cita);
 if($save_cita){
   $save_horas;
