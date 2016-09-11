@@ -14,7 +14,8 @@ $horasTotal=$_POST["horas_total"];
 $fecha=$_POST['fecha'];
 $especialidad=$_POST['especialidad'];
 $descripcion=$_POST['descripcion'];
-$estado="ocupado";
+$estado="asistira";
+$motivo="";
 $horas=array();
 $id_cita=0;
 $id_hora=0;
@@ -36,7 +37,7 @@ if($x=mysqli_fetch_array($peticion)){
   }else{
     $id_hora=1;
   }
-  $sql_cita="insert into citas_paciente_medico values(".$id_cita.",".$id_medico.",".$id_paciente.",'".$fecha."',".$especialidad.",'".$descripcion."','".$estado."',".$tamHoras.")";
+  $sql_cita="insert into citas_paciente_medico values(".$id_cita.",".$id_medico.",".$id_paciente.",'".$fecha."',".$especialidad.",'".$descripcion."','".$estado."','".$motivo."',".$tamHoras.")";
 $save_cita=mysqli_query($con,$sql_cita);
 if($save_cita){
   $save_horas;

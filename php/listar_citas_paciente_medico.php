@@ -24,7 +24,7 @@ while(true){
        for($i=0;$i<$data->num_f_horas;$i++){
        	if(!$entro){
 			$response[$num]=array('id_cita'=>$data->id_cita,'fecha'=>$data->fecha,'num_f_horas'=>$data->num_f_horas,
-		'especialidad'=>$data->especialidad,'pnombre'=>$data->pnombre,
+		'especialidad'=>$data->especialidad,'pnombre'=>$data->pnombre,'estado'=>$data->estado,
 		'papellidos'=>$data->papellidos,'ptelefono'=>$data->ptelefono,'mnombre'=>$data->mnombre,
 		'mapellidos'=>$data->mapellidos,'mtelefono'=>$data->mtelefono);
 			$response[$num][$i]=array('id_horas'=>$data->id_horas,'hora'=>$data->hora);
@@ -50,11 +50,11 @@ $response["num"]=$num;
 
 }else{
 $response["status"]=-1;
-$response["mensaje"]="Sin resultados para ".$fecha;
+$response["mensaje"]="La fecha ".$fecha." aun no tiene citas asignadas";
 }
 }else{
 $response["status"]=-1;
-$response["mensaje"]="Sin resultados para ".$fecha;
+$response["mensaje"]="La fecha ".$fecha." aun no tiene citas asignadas";
 }
 }else{
 $response["status"]=-1;

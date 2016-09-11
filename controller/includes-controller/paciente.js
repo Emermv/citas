@@ -152,7 +152,7 @@ minDate:new Date()
     if(json.status==1){
         var hora_aux="";
         for(var i=0;i<json.num;i++){
-              if(json[i].estado==="ocupado"){
+              if(json[i].estado==="asistira"){
                   hora_aux=json[i].hora.replace("-","_").split(":");
                   jq("#lh"+hora_aux[0]+hora_aux[1]+hora_aux[2]).remove();
 															  pacienteNewInstance.resetHorasSeleccionadas();

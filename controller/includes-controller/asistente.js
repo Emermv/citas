@@ -56,8 +56,8 @@ listar_citas_paciente_medico(){
 }
 	SuccesListadoCitas(data){
 		var response=JSON.parse(data);
+		asistenteNewInstance.tabla_citas_hoy.empty();
 		if(response.status==1){
-			asistenteNewInstance.tabla_citas_hoy.empty();
 	   for(var i=0;i<response.num;i++){
 					asistenteNewInstance.setTabla_citas_hoy(i+1,response[i].pnombre+' '+response[i].papellidos,
 																																												response[i].ptelefono,
@@ -67,11 +67,12 @@ listar_citas_paciente_medico(){
 																																												asistenteNewInstance.getHorasFromTablaCitas(response[i],
 																																																								response[i].num_f_horas,i),
 																																												response[i].especialidad,
-																																												response[i].id_cita);
+																																												asistenteNewInstance.getEstadoFromTablasCitas(
+					                                        response[i].estado,response[i].id_cita));
 				}
 			asistenteNewInstance.initDropdownHoras();
 		}else{
-			jq.notify(response.mensaje,"error");
+			jq.notify(response.mensaje,"success");
 		}
 	}
 
@@ -87,6 +88,7 @@ listar_citas_paciente_medico(){
       alignment: 'left'
     }
   );
+		
 	}
 	getHorasFromTablaCitas(object,num,id){
 		var item='<ul id="dropdown'+id+'" class="dropdown-content">';
@@ -98,7 +100,32 @@ listar_citas_paciente_medico(){
 			'<i class="material-icons">schedule</i><i class="mdi-navigation-arrow-drop-down right"></i></a>';
 		return item;
 	}
-	setTabla_citas_hoy(id,pac,telpac,me,telme,fecha,hora,esp,id_cita){
+	getEstadoFromTablasCitas(estado,id_cita){
+	if(estado==="asistira"){
+		return '<div class="switch"><label>No<input type="checkbox" id="ch'+id_cita+'" checked="checked" onclick="noAsistira(this)">'+
+			'<span class="lever"></span>Si</label></div>'+
+			'<div id="modalch'+id_cita+'" class="modal modal-fixed-footer">'+
+    '<div class="modal-content">'+
+      '<h4>Explique el motivo de su inasistencia</h4>'+
+      '<div class="input-field ">'+
+          '<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="motivoch'+id_cita+'" class="materialize-textarea"></textarea>'+
+          '<label for="motivoch'+id_cita+'">Motivo</label>'+
+        '</div></div><div class="modal-footer light-blue accent-2">'+
+			'<a href="#" class="modal-action modal-close waves-effect waves-green btn-flat"'+
+			'onclick="siAsistira(this)" id="btnch'+id_cita+'">'+
+			'<i class=" large material-icons red-text">shuffle</i></a>'+
+			'<a href="#" class=" waves-effect waves-green btn-flat ">'+
+			'<i class=" large material-icons yellow-text">save</i></a></div></div>';
+        
+	}else if(estado==="asistio"){
+				return '<i class="material-icons teal-text">spellcheck</i>';
+	}else{
+		return '<div class="switch"><label>No<input type="checkbox" id="ch'+id_cita+'" >'+
+			'<span class="lever"></span>Si</label></div>';
+	}
+	}
+	setTabla_citas_hoy(id,pac,telpac,me,telme,fecha,hora,esp,estado){
 		asistenteNewInstance.tabla_citas_hoy.append('<tr>'+
 					'<td>'+id+'</td>'+
 					'<td>'+pac+'</td>'+
@@ -108,13 +135,12 @@ listar_citas_paciente_medico(){
 					'<td>'+fecha+'</td>'+
 				'<td>'+hora+'</td>'+
 					'<td>'+esp+'</td>'+
-	   '<td><div class="switch"> <label>No<input type="checkbox" id="ch'+id_cita+'"><span class="lever"></span>Si</label></div></td></tr>');
+	   '<td>'+estado+'</td></tr>');
 	}
 
 											
 	/****************************************************************/
 	getFechaToPicker(){
-		  //  var date=jq("#datepicker_a").datepicker("getDate");
 		 var date=asistenteNewInstance.datepicker_a.datepicker("getDate");
     var fecha_arr=date.toLocaleDateString().split("/");
     var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
@@ -135,3 +161,13 @@ listar_citas_paciente_medico(){
 	/****************************************************************/
 }// end class Asistente
 /*jq('select').material_select();*/
+function noAsistira(obj){
+if(!obj.checked){
+	var id=obj.id;
+jq("#modal"+id).openModal();
+}
+}
+function siAsistira(obj){
+	var checkbox=obj.id.replace("btn","");
+	jq("#"+checkbox).prop("checked",true);
+}

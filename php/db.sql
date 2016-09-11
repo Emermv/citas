@@ -41,6 +41,7 @@ apellidos varchar(50) not null,
       especialidad int not null,
       descripcion varchar(500),
       estado varchar(20) not null,
+      motivo_inasistencia varchar(500),
       num_f_horas int not null,
       foreign key(especialidad) references especialidades(id_esp),
      FOREIGN key(id_medico) REFERENCES medicos(codigo),
@@ -82,7 +83,7 @@ apellidos varchar(50) not null,
 
 
 create procedure sp_listar_citas(fecha date)
-select cpm.id_cita,cpm.fecha,cpm.num_f_horas,
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,cpm.estado,
 hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
 u.apellidos as 'papellidos',u.telefono as 'ptelefono',
 um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
