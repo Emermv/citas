@@ -8,7 +8,7 @@
 							   try{
 											 jq("#tit_logo").append(Base64.decode(localStorage.getItem("tit")));
 							    jq("#titulo").append(Base64.decode(localStorage.getItem("tit")));
-							    jq("#navbarCita").addClass(Base64.decode(localStorage.getItem("bnc")));
+							    jq(".navbarCita").addClass(Base64.decode(localStorage.getItem("bnc")));
 										}catch(err){
 											console.error(err);
 											jq(location).attr("href","../");
@@ -29,7 +29,7 @@
           jq("#telefono").append('<span>'+usuarios.telefono+'</span>');
           jq("#edad").append('<span>'+usuarios.edad+'</span>');
           jq("#genero").append('<span>'+usuarios.genero+'</span>');
-          jq("#perfil").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del paciente : </span>');
+       jq("#perfil").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
          
           var paciente=new Paciente();
            var object_filtrar=new Filtrar();
