@@ -146,16 +146,29 @@ listar_citas_paciente_medico(date){
           '<label for="motivoch'+id_cita+'">Motivo</label>'+
         '</div></div><div class="modal-footer light-blue accent-2">'+
 			'<a href="#" class="modal-action modal-close waves-effect waves-green btn-flat"'+
-			'onclick="siAsistira(this)" id="btnch'+id_cita+'">'+
+			'onclick="CerrarModalInasistencia(this)" id="btnch'+id_cita+'">'+
 			'<i class=" large material-icons red-text">shuffle</i></a>'+
-			'<a href="#" class=" waves-effect waves-green btn-flat ">'+
+			'<a href="#" class=" waves-effect waves-green btn-flat " onclick="guardarInasistencia(this)" id="btn'+id_cita+'" >'+
 			'<i class=" large material-icons yellow-text">save</i></a></div></div>';
         
 	}else if(estado==="asistio"){
 				return '<i class="material-icons teal-text">spellcheck</i>';
 	}else{
-		return '<div class="switch"><label>No<input type="checkbox" id="ch'+id_cita+'" >'+
-			'<span class="lever"></span>Si</label></div>';
+		return '<div class="switch"><label>No<input type="checkbox" id="ch'+id_cita+'" onclick="Asistira_paciente_cita(this)">'+
+			'<span class="lever"></span>Si</label></div>'+
+			'<div id="modalch'+id_cita+'" class="modal modal-fixed-footer">'+
+    '<div class="modal-content">'+
+      '<h4>Explique el motivo de su inasistencia</h4>'+
+      '<div class="input-field ">'+
+          '<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="motivoch'+id_cita+'" class="materialize-textarea"></textarea>'+
+          '<label for="motivoch'+id_cita+'">Motivo</label>'+
+        '</div></div><div class="modal-footer light-blue accent-2">'+
+			'<a href="#" class="modal-action modal-close waves-effect waves-green btn-flat"'+
+			'onclick="siAsistira(this)" id="btnch'+id_cita+'">'+
+			'<i class=" large material-icons red-text">shuffle</i></a>'+
+			'<a href="#" class=" waves-effect waves-green btn-flat " onclick="guardarInasistencia(this)" id="btn'+id_cita+'" >'+
+			'<i class=" large material-icons yellow-text">save</i></a></div></div>';
 	}
 	}
 	setTabla_citas_hoy(tabla,id,pac,telpac,me,telme,fecha,hora,esp,estado,confirmado){
@@ -287,17 +300,78 @@ if(!obj.checked){
 jq("#modal"+id).openModal();
 }
 }
-function siAsistira(obj){
+function CerrarModalInasistencia(obj){
 	var checkbox=obj.id.replace("btn","");
 	jq("#"+checkbox).prop("checked",true);
 }
 function confirmarCita(obj){
 	var id_cita=obj.id.replace("confirmar","");
 	var formdata=new FormData();
+	var id_asistente=Base64.decode(localStorage.getItem("id"));
 	formdata.append("id_cita",id_cita);
 	formdata.append("confirmado",obj.value);
+	formdata.append("id_asistente",id_asistente);
 	asistenteNewInstance.ajaxFromReportes_Citas("../php/confirmar_cita.php",formdata,successConfirmacion_a);
 }
 function successConfirmacion_a(data){
-		alertify.success(data);
+		try{
+			var response_confirmacion=JSON.parse(data);
+			if(response_confirmacion.status==1){
+				jq.notify(response_confirmacion.mensaje,"success");
+			}else{
+				jq.notify(response_confirmacion.mensaje,"error");
+			}
+		}catch(err){
+			console.log(err);
+		}
 	}
+function guardarInasistencia(obj){
+	var id=obj.id.replace("btn","");
+	var id_asistente=Base64.decode(localStorage.getItem("id"));
+	var motivo=jq("#motivoch"+id).val();
+var formdata=new FormData();
+if(motivo!==""){
+		formdata.append("id_cita",id);
+	formdata.append("motivo",motivo);
+	formdata.append("id_asistente",id_asistente);
+		formdata.append("estado","no asistio");
+	jq.notify("Procesando...","success");
+	
+		asistenteNewInstance.ajaxFromReportes_Citas("../php/guardar_motivo_inasistencia.php",formdata,successGuardarMotivo_a);
+}else{
+	jq.notify("Descripción del motivo requerido!");
+}
+}
+function successGuardarMotivo_a(data){
+		try{
+			var response=JSON.parse(data);
+			if(response.status==1){
+				jq.notify(response.mensaje,"success");
+				if(response.estado!=="asistio"){
+					jq('#modalch'+response.id_cita).closeModal();
+				}
+			}else{
+				jq.notify(response.mensaje,"error");
+			}
+		}catch(err){
+			console.log(err);
+		}
+	}
+function Asistira_paciente_cita(obj){
+	var id=obj.id;
+	var check=jq("#"+id);
+	if(check.is(":checked")){
+		jq("#"+id).prop("checked",true);
+			var formdata=new FormData();
+	var id_asistente=Base64.decode(localStorage.getItem("id"));
+	formdata.append("id_cita",id.replace("ch",""));
+	formdata.append("motivo","");
+	formdata.append("id_asistente",id_asistente);
+		formdata.append("estado","asistira");
+		asistenteNewInstance.ajaxFromReportes_Citas("../php/guardar_motivo_inasistencia.php",formdata,successGuardarMotivo_a);
+	}else{
+		jq("#"+id).prop("checked",false);
+		jq("#modal"+id).openModal();
+	}
+	
+}
