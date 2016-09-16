@@ -84,7 +84,8 @@ apellidos varchar(50) not null,
       COMMENT 'SP QUE BUSCA FECHAS Y HORAS LIBRES DE DE  UN MEDICO';
       IF EXISTS(SELECT p.id_usuario FROM pacientes AS p WHERE P.id_usuario=paciente) THEN
       SELECT fecha,hora_inicio,hora_fin from citas_paciente_medico as c where c.estado='disponible'
-
+      /*constraints -********************  */
+alter table usuarios add CONSTRAINT uq_dni_usu UNIQUE(dni);
 
 DELIMITER //
 create procedure sp_listar_citas(fecha date,opcion int)
@@ -110,9 +111,8 @@ join citas_paciente_medico as cpm
 on hcpm.id_cita=cpm.id_cita join especialidades as e
 on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
 on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
-on m.codigo=cpm.id_medico where cpm.estado='asistio';
+on m.codigo=cpm.id_medico order by cpm.id_cita desc;
 end if;
-
 
  DELIMITER //
 create PROCEDURE sp_crear_citas(
@@ -136,3 +136,67 @@ create PROCEDURE sp_crear_citas(
         SELECT 'Error esta cita ya fue creado';
         end if;
         end//
+
+
+
+
+DELIMITER //
+create procedure sp_reportar_citas(opcion int)
+COMMENT 'sp que reporta citas'
+if(opcion=1) THEN
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,cpm.estado,
+cpm.confirmado,hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
+u.apellidos as 'papellidos',u.telefono as 'ptelefono',
+um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
+from horas_citas_paciente_medico as hcpm 
+join citas_paciente_medico as cpm 
+on hcpm.id_cita=cpm.id_cita join especialidades as e
+on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
+on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
+on m.codigo=cpm.id_medico where cpm.estado='no asistio';
+ELSEIF(opcion=2)THEN
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,cpm.estado,
+cpm.confirmado,hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
+u.apellidos as 'papellidos',u.telefono as 'ptelefono',
+um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
+from horas_citas_paciente_medico as hcpm 
+join citas_paciente_medico as cpm 
+on hcpm.id_cita=cpm.id_cita join especialidades as e
+on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
+on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
+on m.codigo=cpm.id_medico where cpm.estado='asistio';
+ELSEIF(opcion=3)THEN
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,cpm.estado,
+cpm.confirmado,hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
+u.apellidos as 'papellidos',u.telefono as 'ptelefono',
+um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
+from horas_citas_paciente_medico as hcpm 
+join citas_paciente_medico as cpm 
+on hcpm.id_cita=cpm.id_cita join especialidades as e
+on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
+on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
+on m.codigo=cpm.id_medico where p.edad>=30;
+ELSEIF(opcion=4)THEN
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,cpm.estado,
+cpm.confirmado,hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
+u.apellidos as 'papellidos',u.telefono as 'ptelefono',
+um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
+from horas_citas_paciente_medico as hcpm 
+join citas_paciente_medico as cpm 
+on hcpm.id_cita=cpm.id_cita join especialidades as e
+on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
+on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
+on m.codigo=cpm.id_medico where p.edad<18;
+ELSE
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,cpm.estado,
+cpm.confirmado,hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
+u.apellidos as 'papellidos',u.telefono as 'ptelefono',
+um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
+from horas_citas_paciente_medico as hcpm 
+join citas_paciente_medico as cpm 
+on hcpm.id_cita=cpm.id_cita join especialidades as e
+on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
+on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
+on m.codigo=cpm.id_medico where p.edad BETWEEN 18 and 29;
+end IF;
+     

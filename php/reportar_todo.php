@@ -39,11 +39,11 @@ $response["num"]=$num;
 
 }else{
 $response["status"]=-1;
-$response["mensaje"]="Aun no tiene citas asignadas";
+$response["mensaje"]="Aún no tiene citas asignadas";
 }
 }else{
 $response["status"]=-1;
-$response["mensaje"]="Aun no tiene citas asignadas";
+$response["mensaje"]="Aún no tiene citas asignadas";
 }
 }else{
 	$response["status"]=-1;

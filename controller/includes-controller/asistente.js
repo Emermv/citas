@@ -77,12 +77,15 @@ listar_citas_paciente_medico(date){
 																																												response[i].especialidad,
 																																												asistenteNewInstance.getEstadoFromTablasCitas(
 					                                        response[i].estado,response[i].id_cita),
-																																													response[i].confirmado);
+																																													asistenteNewInstance.getCofirmacionFromListado(
+						                                         response[i].confirmado,
+																																															response[i].id_cita));
 				}
 			asistenteNewInstance.initDropdownHoras();
 			asistenteNewInstance.div_content_config_reporte.removeClass("active");
 			asistenteNewInstance.content_reportes_tabla_cita.removeClass("active");
 			asistenteNewInstance.div_content_tabla_hoy.addClass("active");
+			jq('select').material_select();
 				 jq('.collapsible').collapsible({
       accordion : false
     });
@@ -91,6 +94,20 @@ listar_citas_paciente_medico(date){
 		}
 	}
 
+	/****************************************************************/
+	getCofirmacionFromListado(confirmado,id){
+		if(confirmado==="NO"){
+			return '<select id="confirmar'+id+'" onchange="confirmarCita(this)">'+
+      '<option value="NO">NO</option>'+
+      '<option value="SI">SI</option>'+
+    '</select>';
+		}else{
+				return '<select id="confirmar'+id+'" onchange="confirmarCita(this)">'+
+      '<option value="SI">SI</option>'+
+      '<option value="NO">NO</option>'+
+    '</select>';
+		}
+	}
 	/****************************************************************/
 	initDropdownHoras(){
 		 jq('.dropdown-button').dropdown({
@@ -105,6 +122,7 @@ listar_citas_paciente_medico(date){
   );
 		
 	}
+	
 	getHorasFromTablaCitas(object,num,id){
 		var item='<ul id="dropdown'+id+'" class="dropdown-content">';
 		for(var j=0;j<num;j++){
@@ -166,6 +184,16 @@ listar_citas_paciente_medico(date){
 		if(asistenteNewInstance.getOpcionesFromReporte("todo")){
 			asistenteNewInstance.ajaxFromReportes_Citas("../php/reportar_todo.php",null,asistenteNewInstance.successReporteTodo);
 		}
+		else if(asistenteNewInstance.getOpcionesFromReporte("faltantes")){	asistenteNewInstance.ajaxFromReportes_Citas("../php/reportar_inasistencias.php",null,asistenteNewInstance.successReporteTodo);	
+			}
+			else if(asistenteNewInstance.getOpcionesFromReporte("asistieron")){	asistenteNewInstance.ajaxFromReportes_Citas("../php/reportar_asistencias.php",null,asistenteNewInstance.successReporteTodo);	
+			}
+				else if(asistenteNewInstance.getOpcionesFromReporte("adultos")){	asistenteNewInstance.ajaxFromReportes_Citas("../php/reportar_adultos.php",null,asistenteNewInstance.successReporteTodo);	
+			}
+			else	if(asistenteNewInstance.getOpcionesFromReporte("ninios")){	asistenteNewInstance.ajaxFromReportes_Citas("../php/reportar_ninios.php",null,asistenteNewInstance.successReporteTodo);	
+			}	
+			else	if(asistenteNewInstance.getOpcionesFromReporte("jovenes")){	asistenteNewInstance.ajaxFromReportes_Citas("../php/reportar-jovenes.php",null,asistenteNewInstance.successReporteTodo);	
+			}
 		}
 	/****************************************************************/
 	getOpcionesFromReporte(id){
@@ -188,7 +216,7 @@ if(jq("#"+id).is(":checked")){
 																																												response[i].mtelefono,
 																																												response[i].fecha,
 																																												asistenteNewInstance.getHorasFromTablaCitas(response[i],
-																																																								response[i].num_f_horas,i),
+																																																								response[i].num_f_horas,'rep'+i),
 																																												response[i].especialidad,
 																																												asistenteNewInstance.getEstadoFromTablasCitas(
 					                                        response[i].estado,response[i].id_cita),
@@ -205,6 +233,8 @@ if(jq("#"+id).is(":checked")){
 					jq.notify(response.mensaje,"error");
 				}
 			}
+	/****************************************************************/
+
 	/****************************************************************/
 	ajaxFromReportes_Citas(ruta,formdata,resp){
 		jq.ajax({
@@ -240,6 +270,7 @@ if(jq("#"+id).is(":checked")){
 											'<th data-field="asistira">Estado</th>');
 	}
 	/****************************************************************/
+
 	/****************************************************************/
 	/****************************************************************/
 	/****************************************************************/
@@ -260,3 +291,13 @@ function siAsistira(obj){
 	var checkbox=obj.id.replace("btn","");
 	jq("#"+checkbox).prop("checked",true);
 }
+function confirmarCita(obj){
+	var id_cita=obj.id.replace("confirmar","");
+	var formdata=new FormData();
+	formdata.append("id_cita",id_cita);
+	formdata.append("confirmado",obj.value);
+	asistenteNewInstance.ajaxFromReportes_Citas("../php/confirmar_cita.php",formdata,successConfirmacion_a);
+}
+function successConfirmacion_a(data){
+		alertify.success(data);
+	}
