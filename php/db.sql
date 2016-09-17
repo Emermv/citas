@@ -14,7 +14,7 @@ apellidos varchar(50) not null,
     edad smallint not null,
     genero char(1) not null,
     foreign key (id_usuario) references usuarios(id)
-  )
+  );
   create table medicos(
     codigo int not null primary key,
     id_usuario int not null,
@@ -22,7 +22,7 @@ apellidos varchar(50) not null,
     id_esp int not null,
     foreign key (id_usuario) references usuarios(id),
     foreign key (id_esp) references especialidades(id_esp)
-  )
+  );
 
   create table asistentes(
     codigo int not null primary key,
@@ -31,7 +31,7 @@ apellidos varchar(50) not null,
     correo varchar(100) not null,
       genero char(1) not null,
       foreign key (id_usuario) references usuarios(id)
-  )
+  );
 
   create table  citas_paciente_medico(
       id_cita int not null PRIMARY key,
@@ -45,6 +45,8 @@ apellidos varchar(50) not null,
       motivo_inasistencia varchar(500),
       num_f_horas int not null,
     confirmado char(2) not null,
+    diagnostico varchar(200),
+    receta varchar(200),
       foreign key(especialidad) references especialidades(id_esp),
      FOREIGN key(id_medico) REFERENCES medicos(codigo),
     FOREIGN key(id_paciente) REFERENCES pacientes(codigo),
@@ -56,11 +58,11 @@ apellidos varchar(50) not null,
           id_cita int not null,
           hora varchar(11) not null,
           FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita)
-          )
+          );
 										create table especialidades(
 										id_esp int not null primary key,
 										especialidad varchar(100) not null 
-										)
+										);
   /*procedures*******************************************/
   DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
@@ -79,11 +81,7 @@ apellidos varchar(50) not null,
       end if;
 
 
-      DELIMITER //
-      CREATE PROCEDURE sp_buscar_disponibles(medico,paciente,fecha)
-      COMMENT 'SP QUE BUSCA FECHAS Y HORAS LIBRES DE DE  UN MEDICO';
-      IF EXISTS(SELECT p.id_usuario FROM pacientes AS p WHERE P.id_usuario=paciente) THEN
-      SELECT fecha,hora_inicio,hora_fin from citas_paciente_medico as c where c.estado='disponible'
+ 
       /*constraints -********************  */
 alter table usuarios add CONSTRAINT uq_dni_usu UNIQUE(dni);
 
@@ -200,3 +198,31 @@ on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_
 on m.codigo=cpm.id_medico where p.edad BETWEEN 18 and 29;
 end IF;
      
+
+
+DELIMITER //
+create PROCEDURE sp_listar_pacientes(fecha date,id int,esp int,opcion int)
+COMMENT 'SP que lista los pacientes que tienen cita con un medico'
+if(opcion=1) THEN
+SELECT cpm.id_cita,cpm.fecha,cpm.num_f_horas,
+p.codigo,p.edad,u.nombre,u.apellidos,u.direccion,
+u.ruta_foto,hcpm.hora,cpm.estado,cpm.descripcion
+from citas_paciente_medico as cpm
+join pacientes as p on cpm.id_paciente=p.codigo
+join usuarios as u on p.id_usuario=u.id
+join horas_citas_paciente_medico as hcpm
+on hcpm.id_cita=cpm.id_cita where cpm.fecha=fecha
+and cpm.id_medico=id and cpm.especialidad=esp
+order  by cpm.id_cita ASC;
+ELSE
+SELECT cpm.id_cita,cpm.fecha,cpm.num_f_horas,
+p.codigo,p.edad,u.nombre,u.apellidos,u.direccion,
+u.ruta_foto,hcpm.hora,cpm.estado,cpm.descripcion
+from citas_paciente_medico as cpm
+join pacientes as p on cpm.id_paciente=p.codigo
+join usuarios as u on p.id_usuario=u.id
+join horas_citas_paciente_medico as hcpm
+on hcpm.id_cita=cpm.id_cita
+where cpm.id_medico=id and cpm.fecha=fecha
+order  by cpm.id_cita ASC;
+end if;

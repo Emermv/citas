@@ -7,11 +7,15 @@
     <div class="row">
         <div class="col s12 m12 l12">
           <div class="card">
-            <div class="card-image" id="perfil_m">
+            <div class="card-image waves-effect waves-block waves-light" id="perfil_m">
               
             </div>
               <div class="card-content">
-              <div class="row">
+               <span class="card-title activator grey-text text-darken-4">Datos del m&eacute;dico<i class="material-icons right">more_vert</i></span>
+          </div>
+          <div class="card-reveal">
+          <span class="card-title grey-text text-darken-4">Datos del m&eacute;dico: <i class="material-icons right">close</i></span>
+                <div class="row">
                   <div class="col s5 m4 l2"><span >Nombre</span></div>
      <div class="col s1 m1 l1 "><span >:</span></div>
     <div class="col s6 m7 l9 " id="nombre_m"></div>
@@ -33,13 +37,13 @@
     <div class="col s6 m7 l9 " id="correo_m"></div>
                   </div>
               </div>
-          </div>
+              </div>
         </div>
      
     </div> <!--end row datos-->
 </div>
 
-<div class="col s12 m10 l4">
+<div class="col s12 m10 l5">
      <div class="row">
       <div class="input-field col s12 m12 l7 offset-l3">
     <select id="especialidades_m">
@@ -50,7 +54,7 @@
       <div class="col s12 m12 l8 offset-l2 center">
       	<h6>Seleccione d&iacute;as de atenci&oacute;n:</h6>
       </div>
-    <div class="col s12 m12 l7 offset-l3">
+    <div class="col s12 m12 l12" id="datepickerContent">
          <div id="datepicker_m" ></div>
     </div>
     </div>
@@ -75,28 +79,47 @@
     </div>
     </div>
 </div>
- 
-    <div class="col s12 m10 l1  center">
-    <div class="row">
-     <div class="col s12 m12 l12">
-        <div class="chip blue" id="hora_total_add">
-							<img src="../files/clock.png" alt="horas">
-							0.00 minutos
-     </div>
-					 <ul class="collapsible" data-collapsible="accordion">
-    <li>
-      <div class="collapsible-header"><i class="material-icons">format_line_spacing</i>Horas adicionales</div>
-      <div class="collapsible-body">
-					 <ul id="horasB_min_m"  class="collection"></ul>
-					</div>
-    </li>
-						</ul>
-						
-        
-    </div>
-    </div>
-</div>
 </div><!-- end div row content-->
+<div class="row"><!-- row  dinamics-->
+<div class="col  s12 m12 l12">
+  <ul class="collapsible" data-collapsible="accordion expandable">
+    <li>
+      <div class="collapsible-header" id="li_content_citas_medico"><i class="material-icons">filter_drama</i>Citas</div>
+      <div class="collapsible-body">
+        <table class="bordered striped highlight responsive-table centered">
+        <thead>
+          <tr class="blue">
+              <th data-field="id">#</th>
+              <th data-field="name">Nombre</th>
+              <th data-field="apellidos">Apellidos</th>
+              <th data-field="edad">Edad</th>
+              <th data-field="direccion">Direcci&oacute;n</th>
+              <th data-field="fecha">Fecha</th>
+              <th data-field="hora">Horas</th>
+              <th data-field="estado">Estado</th>
+              <th data-field="descripcion">Descripci&oacute;n</th>
+              <th data-field="foto">Foto</th>
+              <th data-field="acccion">Acci&oacute;n</th>
+          </tr>
+        </thead>
+
+        <tbody id="content_citas_medico">
+          
+        </tbody>
+      </table>
+      </div>
+    </li>
+    <li>
+      <div class="collapsible-header" id="li_content_citas_historial"><i class="material-icons">place</i>Second</div>
+      <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+    </li>
+    <li>
+      <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+      <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+    </li>
+  </ul>
+</div>
+</div><!-- end row  dinamics-->
  <div class="row center" >
     <div class="col s3 offset-s2 m3 offset-m3 l2 offset-l4 center">
     <input class="ui-button ui-widget ui-corner-all  black-text  red lighten-1" type="submit"  value="Guardar" id="btn_guardar_paciente">
@@ -108,3 +131,11 @@
   </form>  
 </div>
 </div>
+<style>
+  .ui-datepicker{
+    width: 100%;
+    height: 100%;
+    font-family: cursive;
+    color:cornflowerblue;
+  }
+</style>

@@ -44,10 +44,9 @@
           jq("#direccion_m").append('<span>'+usuarios.direccion+'</span>');
           jq("#telefono_m").append('<span>'+usuarios.telefono+'</span>');
           jq("#correo_m").append('<span>'+usuarios.correo+'</span>');
-          jq("#perfil_m").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">Datos del m&eacute;dico: </span>');
+          jq("#perfil_m").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
           var medico=new Medico();
 							     medico.initHorasA();
-						      medico.initHorasBmin();
 							      medico.initEspecialidades();
 							     medico.initComponents();
       }else if(usuarios.tipo==="Asistente"){

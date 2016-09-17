@@ -2,8 +2,11 @@
      class Medico{
 	  constructor(){
 				this.horasA_m=jq("#horasA_m");
-				this.horasB_min_m=jq("#horasB_min_m");
 				this.especialidades_m=jq("#especialidades_m");
+				this.datepickerContent=jq("#datepickerContent").draggable();
+				this.content_citas_medico=jq("#content_citas_medico");
+				this.li_content_citas_medico=jq("#li_content_citas_medico");
+				this.li_content_citas_historial=jq("#li_content_citas_historial");
 				mediconewInstance=this;
    jq('select').material_select();
 				jq('.collapsible').collapsible({
@@ -15,7 +18,7 @@
     this.horas_seleccionadas_A=0;
 				this.horas_seleccionadas_B=0;
     /*************************/
-    jq( "#datepicker_m" ).datepicker({
+    this.datepicker_m=jq( "#datepicker_m" ).datepicker({
 	inline: true,
 monthNames: ['Enero', 'Febrero', 'Marzo',
 'Abril', 'Mayo', 'Junio',
@@ -23,7 +26,7 @@ monthNames: ['Enero', 'Febrero', 'Marzo',
 'Octubre', 'Noviembre', 'Diciembre'],
 dayNamesMin: ['Dom', 'Lun','Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
 onSelect: function (date) {
-    listar_horas_disponibles_p(date);
+	mediconewInstance.listarPacientesCitas_m(date);
 },
 firstDay: 1,
 dateFormat: "yy-mm-dd",
@@ -38,11 +41,157 @@ btn_guardar_paciente.click(function(e){
 	
 	  }
 		/********************************************************************************/
+				listarPacientesCitas_m(date){
+					var form=new FormData();
+	var id_medico=Base64.decode(localStorage.getItem("id"));
+	 var id_esp=mediconewInstance.especialidades_m.val();
+	
+	if(id_esp!==null){
+		if(id_medico!==null){
+			form.append("opcion",1);
+		form.append("id_medico",id_medico);
+		form.append("fecha",date);
+		form.append("especialidad",id_esp);	mediconewInstance.ajaxFromMedico("../php/listar_pacientes_para_medico.php",form,mediconewInstance.successListadoPacientes);
+		}else{
+			jq.notify("Error!","warn");
+		}
+	}else{
+		jq.notify("Seleccione una especialidad","warn");
+	}
+				}
+		/********************************************************************************/
+						successListadoPacientes(data){
+						try{
+							var resp=JSON.parse(data);
+							if(resp.status==1){
+								  mediconewInstance.content_citas_medico.empty();
+						   for(var i=0;i<resp.num;i++){
+										mediconewInstance.setcontent_citas_medico(
+											mediconewInstance.content_citas_medico,
+											i+1,
+											resp[i].nombre,
+											resp[i].apellidos,
+											resp[i].edad,
+											resp[i].direccion,
+											resp[i].fecha,
+											mediconewInstance.getHorasFromCitas(resp[i],resp[i].num_f_horas,i),
+											resp[i].estado,
+											mediconewInstance.getDescripcionModal(resp[i].descripcion,i),
+											mediconewInstance.getChipFoto(resp[i].ruta_foto,resp[i].nombre),
+											mediconewInstance.getAccionFromCitas(resp[i].id_cita,resp[i].estado)
+										);//end  set 
+									}	
+								/*init new  elements***/
+								mediconewInstance.initDropdownHoras();
+								jq('.modal-trigger').leanModal();
+								jq('textarea').characterCounter();
+								//jq('.chips').material_chip();
+								mediconewInstance.li_content_citas_historial.removeClass("active");
+								mediconewInstance.li_content_citas_medico.addClass("active");
+								jq('.collapsible').collapsible({ accordion : false });
+							}else{
+								jq.notify(resp.mensaje,"error");
+							}
+						}catch(err){
+							console.error(err);
+						}
+						}
+		/********************************************************************************/
+						setcontent_citas_medico(tabla,id,nombre,ape,edad,direccion,fecha,hora,estado,desc,foto,det){
+							tabla.append('<tr>'+
+								           '<td>'+id+'</td>'+
+																			'<td>'+nombre+'</td>'+
+								            '<td>'+ape+'</td>'+
+								           '<td>'+edad+'</td>'+
+						            '<td>'+direccion+'</td>'+
+							            '<td>'+fecha+'</td>'+
+								          '<td>'+hora+'</td>'+
+																		'<td>'+estado+'</td>'+
+																		'<td>'+desc+'</td>'+
+								          '<td>'+foto+'</td>'+
+																			'<td>'+det+'</td>'+
+																				'</tr>');
+						}
+		/********************************************************************************/
+						getChipFoto(src,name){
+							return '<div class="chip">'+
+    '<img src="../'+src+'">'+name+'</div>';
+						}
+						getHorasFromCitas(object,num,id){
+		var item='<ul id="dropdown'+id+'" class="dropdown-content">';
+		for(var j=0;j<num;j++){
+			item+='<li><a href="#">'+object[j].hora+'</a></li>';
+		}
+		item+='</ul>'+
+  '<a class="btn-floating dropdown-button" href="#" data-activates="dropdown'+id+'">'+
+			'<i class="material-icons">schedule</i><i class="mdi-navigation-arrow-drop-down right"></i></a>';
+		return item;
+	}
+		/********************************************************************************/
+						initDropdownHoras(){
+		 jq('.dropdown-button').dropdown({
+      inDuration: 300,
+      outDuration: 225,
+      constrain_width: false,
+      hover: true, 
+      gutter: 0,
+      belowOrigin: false,
+      alignment: 'left'
+    }
+  );
+	}
+		/********************************************************************************/
+						getDescripcionModal(desc,id){
+							return '<a class="waves-effect waves-light btn modal-trigger" href="#modal'+id+'">'+
+								'<i class="material-icons">subject</i></a>'+
+      '<div id="modal'+id+'" class="modal bottom-sheet">'+
+       '<div class="modal-content">'+
+       ' <h4>Detalles de la cita</h4>'+
+      '<p>'+desc+'</p></div>'+
+    '<div class="modal-footer">'+
+      '<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">'+
+    '<i class="material-icons">close</i></a></div></div>';
+						}
+		/********************************************************************************/
+						getAccionFromCitas(id,estado){
+			   if(estado==="asistio"){
+							return '<i class="material-icons teal-text">done</i>';
+						}else{
+							return '<a class="waves-effect waves-light btn-floating blue modal-trigger" href="#atender'+id+'">'+
+				'<i class="material-icons">spellcheck</i></a>'+
+				'<div id="atender'+id+'" class="modal"><form>'+
+    '<div class="modal-content">'+
+      '<div class="row">'+
+        '<div class="input-field col s12 m12 l12">'+
+         '<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="diagnostico'+id+'" class="materialize-textarea" required="Diagnostico" length="200"></textarea>'+
+          '<label for="diagnostico'+id+'">Diagnostico</label>'+
+        '</div>'+
+				     '<div class="input-field col s12 m12 l12">'+
+         '<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="receta'+id+'" class="materialize-textarea" required="Receta " length="200"></textarea>'+
+          '<label for="receta'+id+'">Receta M&eacute;dica</label>'+
+        '</div>'+
+			   	'</div>'+
+    '</div><div class="modal-footer">'+
+					'<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat red">Cancelar</a>'+
+					'<button type="submit" class="waves-effect waves-white btn-flat blue" id="btnatencion'+id+'" onclick="mediconewInstance.guardarAtencion(this)">Guardar</button>'+
+     '</div></form></div>'+
+							'<a class="btn-floating  waves-effect waves-light red"><i class="material-icons">delete</i></a>'+
+								'<a class="btn-floating  waves-effect waves-light yellow"><i class="material-icons">create</i></a>';
+						}
+  
+						}
+		/********************************************************************************/
+						getFechaToPicker(){
+		 var date=mediconewInstance.datepicker_m.datepicker("getDate");
+    var fecha_arr=date.toLocaleDateString().split("/");
+    var fecha=fecha_arr[2]+"-"+fecha_arr[1]+"-"+fecha_arr[0];
+		return fecha;
+	}
+		/********************************************************************************/
 						initHorasA(){
 							this.horasA_m.empty().append(file_get_contents("includes/horas_item_medico.html"));
-						}
-						initHorasBmin(){
-							this.horasB_min_m.empty().append(file_get_contents("includes/horas_min_item.html"));
 						}
 		/********************************************************************************/
 						initEspecialidades(){
@@ -78,8 +227,9 @@ btn_guardar_paciente.click(function(e){
 						}
 		/********************************************************************************/
 						initComponents(){
-							mediconewInstance.setCheckboxHorasListener_B();
+						//	mediconewInstance.setCheckboxHorasListener_B();
 							mediconewInstance.setCheckboxHorasListener_A();
+							 mediconewInstance.initDialogsHorasAdicionales();
 						}
 		/********************************************************************************/
 					setCheckboxHorasListener_B(){
@@ -187,11 +337,83 @@ btn_guardar_paciente.click(function(e){
 								}
 					});
 					/* end  click checkbox*/
-					btnAdd.click(function(){
-						jq.notify("OK","success");
-					});
+					/*btnAdd.click(function(){
+						alertify.success("ok");
+					});*/
 				}
 		/********************************************************************************/
+		shwoDropdownHorasAddicionales(id){
+         
+		}
+		initDialogsHorasAdicionales(){	
+        jq('.dropdown-button').dropdown({
+      inDuration: 300,
+      outDuration: 225,
+      constrain_width: false, // Does not change width of dropdown to that of the activator
+      hover: true, // Activate on hover
+      gutter: 0, // Spacing from edge
+      belowOrigin: false, // Displays dropdown below the button
+      alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    }
+
+  );
+        jq("#a1h1630_1700").click(function() {
+    	jq(this).addClass('blue');
+    	alertify.success("ok");
+    });
+    
+		}
 		/********************************************************************************/
+						guardarAtencion(obj){
+							var id_cita=obj.id.replace("btnatencion","");
+							var diag=jq("#diagnostico"+id_cita).val();
+							var receta=jq("#receta"+id_cita).val();
+							var form=new FormData();
+							form.append("id_cita",id_cita);
+							form.append("receta",receta);
+							form.append("diagnostico",diag);
+						  mediconewInstance.ajaxFromMedico("../php/guardarAtencionCita.php",form,
+									function(data){
+								try{
+									var resp=JSON.parse(data);
+									if(resp.status==1){
+										jq.notify(resp.mensaje,"success");
+										jq("#atender"+resp.id).closeModal();
+										mediconewInstance.listarPacientesCitas_m(mediconewInstance.getFechaToPicker());
+									}else{
+										jq.notify(resp.mensaje,"error");
+									}
+								}catch(err){console.error(err);}
+								});
+						}
+		/********************************************************************************/
+									
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
+		ajaxFromMedico(ruta,form,responsefuncion){
+			jq.ajax({
+               async:true,
+                contentType:"application/x-www-form-urlencoded",
+                url:ruta,
+                type: "post",
+                dataType: "html",
+                data:form,
+                cache: false,
+                contentType: false,
+	               processData: false,
+                success:responsefuncion,
+                timeout:5000,
+                error:function(){
+                	jq.notify("Problemas en el servidor!","error");
+                }
+            });
+		}
 	  
 	 }//end  class Medico
+
+	 function HoraLibre(element){
+	 	alertify.log(element.id);
+	 }
