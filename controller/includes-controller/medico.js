@@ -439,7 +439,7 @@ btn_guardar_paciente.click(function(e){
 						mediconewInstance.	getDescripcionAlergia(response[i].id_his,response[i].descripcion_alergia,response[i].alergico),
 						response[i].fecha,
 						response[i].hora,
-					 mediconewInstance.getActionFromHistorial(response[i].id_his),
+					 mediconewInstance.getActionFromHistorial(response[i].id_his,response[i].id_paciente,response[i].id_cita),
 						response[i].id_his
 					);
 				}
@@ -464,12 +464,12 @@ btn_guardar_paciente.click(function(e){
 																'</tr>');
 			}
 		/********************************************************************************/
-					getActionFromHistorial(id){
+					getActionFromHistorial(id,cod,cita){
 						return '<a class="btn-floating waves-effect waves-light blue"><i class="material-icons">done</i></a>'+
 	'<a class="btn-floating waves-effect waves-light red" onclick="mediconewInstance.eliminarHis(this)" id="eli'+id+'">'+
 								'<i class="material-icons">delete</i></a>'+
-		'<a class="btn-floating waves-effect waves-light green darken-4" id="modi'+id+'" onclick="mediconewInstance.modificarHis(this)" >'+
-								'<i class="material-icons">create</i></a>';
+		'<a class="btn-floating waves-effect waves-light green darken-4" id="modi'+id+'" onclick="mediconewInstance.modificarHis(this)" name="cod_paciente'+cod+'" datacita="cita_modi'+cita+'">'+
+								'<i class="material-icons">create</i></a><div id="modificador'+id+'" ></div>';
 					}
 		/********************************************************************************/
 			getModalDiagnostico(id,diag){
@@ -539,7 +539,113 @@ btn_guardar_paciente.click(function(e){
 									}
 		/********************************************************************************/
 						modificarHis(obj){
-							alertify.success(obj.id);
+							var id_his=obj.id.replace("modi","");
+							var cod_paci=obj.name.replace("cod_paciente","");
+							var modal=jq("#modificador"+id_his);
+							var cita=jq("#"+obj.id).attr("datacita").replace("cita_modi","");
+							modal.empty();
+							modal.append(mediconewInstance.getModalFromModificador(id_his,cod_paci,cita));
+							jq('select').material_select();
+							jq('#modificar'+id_his).openModal();
+						}
+		/********************************************************************************/
+						getModalFromModificador(id,p,c){
+							return '<div id="modificar'+id+'" class="modal modal-fixed-footer"><form>'+
+    '<div class="modal-content">'+
+      '<div class="row">'+
+        '<div class="input-field col s12 m12 l12">'+
+         '<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="diag_mod'+id+'" class="materialize-textarea" required="Diagnóstico" length="200"></textarea>'+
+          '<label for="diag_mod'+id+'">Diagnostico</label>'+
+        '</div>'+
+				     '<div class="input-field col s12 m12 l12">'+
+         '<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="rec_mod'+id+'" class="materialize-textarea" required="Receta " length="200"></textarea>'+
+          '<label for="rec_mod'+id+'">Receta M&eacute;dica</label>'+
+        '</div>'+
+								'<div class="input-field col s10 offset-s1 m8 offset-m2 l6 offset-l3">'+
+        '<select id="selectmodi'+id+'" onchange="mediconewInstance.isAlergicoFromModificar(this)" required>'+
+      '<option value="" disabled selected>Seleccione una opción</option>'+
+      '<option value="SI">SI</option><option value="NO">NO</option>'+
+     '</select><label>¿Alérgico?</label></div>'+
+								'<div id="desc_alergia_modi'+id+'" class="input-field col s12 m12 l12"></div>'+
+			   	'</div>'+
+    '</div><div class="modal-footer teal lighten-1">'+
+					'<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat red">Cancelar</a>'+
+					'<button type="submit" class="waves-effect waves-white btn-flat blue darken-4" id="btnmodificar'+id+'" onclick="mediconewInstance.modificarHistorial(this)" name="cod_pac_modi'+p+'" idcita="idcitamodi'+c+'">Modificar</button>'+
+     '</div></form></div>';
+						}
+		/********************************************************************************/
+		isAlergicoFromModificar(select){
+			var aler=select.value;
+				var id=select.id.replace("selectmodi","");
+				var divdes=jq("#desc_alergia_modi"+id).empty();
+				 if(aler==="SI"){
+						divdes.append(
+						'<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="des_ale_modi'+id+'" class="materialize-textarea" required length="300"></textarea>'+
+          '<label for="des_ale'+id+'">Descripción de la alergia</label>');
+						jq('textarea').characterCounter();
+					}
+		}
+		/********************************************************************************/
+						modificarHistorial(obj){
+							var id=obj.id.replace("btnmodificar","");
+							var diag=jq("#diag_mod"+id).val();
+							var id_cita=jq("#"+obj.id).attr("idcita").replace("idcitamodi","");
+							var receta=jq("#rec_mod"+id).val();
+							var id_medico=Base64.decode(localStorage.getItem("id"));
+							var id_esp=mediconewInstance.especialidades_m.val();
+							var id_paciente=obj.name.replace("cod_pac_modi","");
+							var alergico=jq("#selectmodi"+id).val();
+							var desc_alergia=jq("#des_ale_modi"+id).val();
+						if(desc_alergia==undefined){
+							desc_alergia=null;
+						}
+							var form=new FormData();
+							form.append("id_his",id);
+							form.append("id_cita",id_cita);
+							form.append("receta",receta);
+							form.append("diagnostico",diag);
+							form.append("id_medico",id_medico);
+							form.append("id_paciente",id_paciente);
+							form.append("alergico",alergico);
+							form.append("desc_alergia",desc_alergia);
+							form.append("fecha",mediconewInstance.getFecha());
+							form.append("hora",mediconewInstance.getHora());
+							form.append("id_esp",id_esp);
+						if(diag!==""){
+					 if(receta!==""){
+							if(alergico==="SI" || alergico==="NO"){
+								if(id_medico!==null){
+											alertify.confirm("¿Seguro que desea continuar?",function(e){
+								if(e){
+						  mediconewInstance.ajaxFromMedico("../php/modificarHistorial.php",form,
+									function(data){
+								try{
+									var resp=JSON.parse(data);
+									if(resp.status==1){
+										jq.notify(resp.mensaje,"success");
+										jq("#modificar"+resp.id).closeModal();
+									}else{
+										jq.notify(resp.mensaje,"error");
+									}
+								}catch(err){console.error(err);}
+								});
+								}else{
+									jq.notify("Cancelado!","success");
+								}
+							});
+								}else{
+									jq.notify("Error !","warn");
+								}
+							}else{
+								jq.notify("Seleccione una opción!","warn");
+							}
+						}else{
+							jq.notify("Receta médica obligatoria!","warn");
+						}
+						}else{jq.notify("Diagnostico obligatorio!","warn");}
 						}
 		/********************************************************************************/
 		listar_all_historial(){
