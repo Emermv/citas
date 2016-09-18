@@ -231,6 +231,7 @@ join usuarios as u on p.id_usuario=u.id
 join horas_citas_paciente_medico as hcpm
 on hcpm.id_cita=cpm.id_cita where cpm.fecha=fecha
 and cpm.id_medico=id and cpm.especialidad=esp
+and cpm.estado='asistira'
 order  by cpm.id_cita ASC;
 ELSE
 SELECT cpm.id_cita,cpm.fecha,cpm.num_f_horas,
@@ -242,6 +243,7 @@ join usuarios as u on p.id_usuario=u.id
 join horas_citas_paciente_medico as hcpm
 on hcpm.id_cita=cpm.id_cita
 where cpm.id_medico=id and cpm.fecha=fecha
+and cpm.estado='asistira'
 order  by cpm.id_cita ASC;
 end if;
 
@@ -267,3 +269,40 @@ create procedure sp_insertar_historial(
    ELSE
    select 'Error';
    end if;
+
+
+   DELIMITER //
+create procedure sp_listar_historial(opcion int,paciente int,medico int,fecha date)
+COMMENT 'sp que lista el historial clinico'
+if(opcion=1)then 
+select hc.id_his,hc.id_paciente,hc.id_cita,hc.diagnostico,
+hc.receta,hc.alergico,hc.descripcion_alergia,hc.fecha,hc.hora,
+u.nombre,u.apellidos,e.especialidad
+from historial_clinico as hc join medicos as m on 
+hc.id_medico=m.codigo join usuarios as u on m.id_usuario=u.id
+join especialidades as e  on hc.id_especialidad=e.id_esp;
+ELSEIF(opcion=2)THEN
+select hc.id_his,hc.id_paciente,hc.id_cita,hc.diagnostico,
+hc.receta,hc.alergico,hc.descripcion_alergia,hc.fecha,hc.hora,
+u.nombre,u.apellidos,e.especialidad
+from historial_clinico as hc join medicos as m on 
+hc.id_medico=m.codigo join usuarios as u on m.id_usuario=u.id
+join especialidades as e  on hc.id_especialidad=e.id_esp 
+where hc.id_paciente=paciente and hc.id_medico=medico;
+ELSEIF(opcion=3)THEN
+select hc.id_his,hc.id_paciente,hc.id_cita,hc.diagnostico,
+hc.receta,hc.alergico,hc.descripcion_alergia,hc.fecha,hc.hora,
+u.nombre,u.apellidos,e.especialidad
+from historial_clinico as hc join medicos as m on 
+hc.id_medico=m.codigo join usuarios as u on m.id_usuario=u.id
+join especialidades as e  on hc.id_especialidad=e.id_esp 
+where hc.id_medico=medico;
+ELSE
+select hc.id_his,hc.id_paciente,hc.id_cita,hc.diagnostico,
+hc.receta,hc.alergico,hc.descripcion_alergia,hc.fecha,hc.hora,
+u.nombre,u.apellidos,e.especialidad
+from historial_clinico as hc join medicos as m on 
+hc.id_medico=m.codigo join usuarios as u on m.id_usuario=u.id
+join especialidades as e  on hc.id_especialidad=e.id_esp 
+where hc.fecha=fecha;
+end if;

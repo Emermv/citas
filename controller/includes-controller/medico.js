@@ -7,6 +7,10 @@
 				this.content_citas_medico=jq("#content_citas_medico");
 				this.li_content_citas_medico=jq("#li_content_citas_medico");
 				this.li_content_citas_historial=jq("#li_content_citas_historial");
+				this.content_historial_paciente=jq("#content_historial_paciente");
+				jq("#btn_listar_all_historial").click(function(){
+					mediconewInstance.listar_all_historial();
+				});
 				mediconewInstance=this;
    jq('select').material_select();
 				jq('.collapsible').collapsible({
@@ -65,8 +69,9 @@ btn_guardar_paciente.click(function(e){
 						successListadoPacientes(data){
 						try{
 							var resp=JSON.parse(data);
+							mediconewInstance.content_citas_medico.empty();
 							if(resp.status==1){
-								  mediconewInstance.content_citas_medico.empty();
+								  
 						   for(var i=0;i<resp.num;i++){
 										mediconewInstance.setcontent_citas_medico(
 											mediconewInstance.content_citas_medico,
@@ -158,13 +163,7 @@ btn_guardar_paciente.click(function(e){
 						}
 		/********************************************************************************/
 						getAccionFromCitas(id,estado,cod){
-			   if(estado==="asistio"){
-return '<a class="btn-floating waves-effect waves-light blue"><i class="material-icons">done</i></a>'+
-	'<a class="btn-floating waves-effect waves-light red" onclick="mediconewInstance.eliminarCita(this)" id="eli'+id+'">'+
-								'<i class="material-icons">delete</i></a>'+
-		'<a class="btn-floating waves-effect waves-light yellow modal-trigger" href="#atender'+id+'">'+
-								'<i class="material-icons">create</i></a>';
-						}else{
+
 							return '<a class="waves-effect waves-light btn-floating blue modal-trigger tooltipped" '+
 								'href="#atender'+id+'"  data-delay="50" data-position="top" data-tooltip="Atender">'+
 				'<i class="material-icons">spellcheck</i></a>'+
@@ -191,9 +190,10 @@ return '<a class="btn-floating waves-effect waves-light blue"><i class="material
     '</div><div class="modal-footer">'+
 					'<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat red">Cancelar</a>'+
 					'<button type="submit" class="waves-effect waves-white btn-flat blue" id="btnatencion'+id+'" onclick="mediconewInstance.guardarAtencion(this)" name="cod_pac'+cod+'">Guardar</button>'+
-     '</div></form></div>';
-						}
-  
+     '</div></form></div>'+
+								'<a class="waves-effect waves-light btn-floating teal"'+
+								' onclick="mediconewInstance.verHistorialClinico(this)" id="ver_his'+cod+'">'+
+				   '<i class="material-icons">recent_actors</i></a>';
 						}
 		/********************************************************************************/
 						getFechaToPicker(){
@@ -375,31 +375,7 @@ return '<a class="btn-floating waves-effect waves-light blue"><i class="material
 						}
 						}else{jq.notify("Diagnostico obligatorio!","warn");}
 						}
-		/********************************************************************************/
-									eliminarCita(obj){
-										alertify.confirm("¿Seguro que desea eliminar la cita?",function(e){
-											if(e){
-												var id_cita=obj.id.replace("eli","");
-												var data=new FormData();
-												data.append("id",id_cita);
-												var url="../php/eliminar_cita.php";
-							mediconewInstance.ajaxFromMedico(url,data,function(response){
-								try{
-									var resp=JSON.parse(response);
-									if(resp.status==1){
-										jq.notify(resp.mensaje,"success");
-									jq("#tritem"+id_cita).remove();
-									}else{
-										jq.notify(resp.mensaje,"error");
-									}
-								}catch(err){jq.notify(err,"error");}
-								
-							});
-											}else{
-												jq.notify("Cancelado!","success");
-											}
-										});
-									}
+		
 		/********************************************************************************/
 			getHora(){
 				var date=new Date();
@@ -423,7 +399,172 @@ return '<a class="btn-floating waves-effect waves-light blue"><i class="material
 					}
 			}
 		/********************************************************************************/
+		verHistorialClinico(obj){
+			var id_pac=obj.id.replace("ver_his","");
+			var id_med=Base64.decode(localStorage.getItem("id"));
+			var datos=new FormData();
+		if(id_med!==null){
+				datos.append("opcion",2);
+			datos.append("id_medico",id_med);
+			datos.append("id_paciente",id_pac);
+			datos.append("fecha",mediconewInstance.getFecha());
+			mediconewInstance.ajaxFromMedico("../php/listar_historial.php",datos,
+						function(data){
+				try{
+					 var res=JSON.parse(data);
+					if(res.status==1){
+						mediconewInstance.setHistorialTable(res);
+					}else{
+						jq.notify(res.mensaje,"error");
+					}
+				}catch(err){jq.notify(err,"error");}
+			});
+		}else{
+			jq.notify("Error!","error");
+		}
+			
+		}
 		/********************************************************************************/
+			setHistorialTable(response){
+				mediconewInstance.content_historial_paciente.empty();
+				for(var i=0;i<response.num;i++){
+					mediconewInstance.setcontent_historial_paciente(
+					mediconewInstance.content_historial_paciente,
+					i+1,
+					response[i].nombre+' '+response[i].apellidos,
+					response[i].especialidad,
+						mediconewInstance.getModalDiagnostico(response[i].id_his,response[i].diagnostico),
+						mediconewInstance.getModalReceta(response[i].id_his,response[i].receta),
+						response[i].alergico,
+						mediconewInstance.	getDescripcionAlergia(response[i].id_his,response[i].descripcion_alergia,response[i].alergico),
+						response[i].fecha,
+						response[i].hora,
+					 mediconewInstance.getActionFromHistorial(response[i].id_his),
+						response[i].id_his
+					);
+				}
+				jq('.modal-trigger').leanModal();
+				mediconewInstance.li_content_citas_medico.removeClass("active");
+				mediconewInstance.li_content_citas_historial.addClass("active");
+				jq('.collapsible').collapsible({ accordion : false });
+			}
+		/********************************************************************************/
+			setcontent_historial_paciente(tabla,id,medico,esp,diag,receta,alergico,des_aler,fecha,hora,action,id_his){
+				tabla.append('<tr id="tritemhis'+id_his+'">'+
+																	'<td>'+id+'</td>'+
+																	'<td>'+medico+'</td>'+
+																	'<td>'+esp+'</td>'+
+																	'<td>'+diag+'</td>'+
+																	'<td>'+receta+'</td>'+
+																	'<td>'+alergico+'</td>'+
+																	'<td>'+des_aler+'</td>'+
+																	'<td>'+fecha+'</td>'+
+																	'<td>'+hora+'</td>'+
+																	'<td>'+action+'</td>'+
+																'</tr>');
+			}
+		/********************************************************************************/
+					getActionFromHistorial(id){
+						return '<a class="btn-floating waves-effect waves-light blue"><i class="material-icons">done</i></a>'+
+	'<a class="btn-floating waves-effect waves-light red" onclick="mediconewInstance.eliminarHis(this)" id="eli'+id+'">'+
+								'<i class="material-icons">delete</i></a>'+
+		'<a class="btn-floating waves-effect waves-light green darken-4" id="modi'+id+'" onclick="mediconewInstance.modificarHis(this)" >'+
+								'<i class="material-icons">create</i></a>';
+					}
+		/********************************************************************************/
+			getModalDiagnostico(id,diag){
+				return '<a class="waves-effect waves-light btn-floating blue darken-4 modal-trigger" href="#diag'+id+'">'+
+				'<i class="material-icons">visibility</i></a>'+
+  '<div id="diag'+id+'" class="modal bottom-sheet">'+
+    '<div class="modal-content">'+
+      '<h4>Diagnóstico</h4>'+
+      '<p>'+diag+'</p> </div><div class="modal-footer">'+
+      '<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-floating red">'+
+					'<i class="material-icons black-text">close</i></a>'+
+    '</div></div>';
+			}
+					getModalReceta(id,rec){
+				return '<a class="waves-effect waves-light btn-floating green modal-trigger" href="#rec'+id+'">'+
+				'<i class="material-icons">visibility</i></a>'+
+  '<div id="rec'+id+'" class="modal bottom-sheet">'+
+    '<div class="modal-content">'+
+      '<h4>Receta médica</h4>'+
+      '<p>'+rec+'</p> </div><div class="modal-footer">'+
+      '<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-floating red">'+
+					'<i class="material-icons black-text">close</i></a>'+
+    '</div></div>';
+			}
+		/********************************************************************************/
+				getDescripcionAlergia(id,des,aler){
+				if(aler==="SI"){
+						return '<a class="waves-effect waves-light btn-floating teal accent-3 modal-trigger" href="#desaler'+id+'">'+
+				'<i class="material-icons">visibility</i></a>'+
+  '<div id="desaler'+id+'" class="modal bottom-sheet">'+
+    '<div class="modal-content">'+
+      '<h4>Alergias del paciente</h4>'+
+      '<p>'+des+'</p> </div><div class="modal-footer">'+
+      '<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-floating red">'+
+					'<i class="material-icons black-text">close</i></a>'+
+    '</div></div>';
+				}else{
+					return '<a class="waves-effect waves-light btn-floating red"  disabled="disabled">'+
+				'<i class="material-icons">visibility</i></a>';
+				}
+				}
+		
+			/********************************************************************************/
+									eliminarHis(obj){
+										alertify.confirm("¿Seguro que desea eliminar la cita?",function(e){
+											if(e){
+												var id_his=obj.id.replace("eli","");
+												var data=new FormData();
+												data.append("id",id_his);
+												var url="../php/eliminar_historial.php";
+							mediconewInstance.ajaxFromMedico(url,data,function(response){
+								try{
+									var resp=JSON.parse(response);
+									if(resp.status==1){
+										jq.notify(resp.mensaje,"success");
+									jq("#tritemhis"+id_his).remove();
+									}else{
+										jq.notify(resp.mensaje,"error");
+									}
+								}catch(err){jq.notify(err,"error");}
+								
+							});
+											}else{
+												jq.notify("Cancelado!","success");
+											}
+										});
+									}
+		/********************************************************************************/
+						modificarHis(obj){
+							alertify.success(obj.id);
+						}
+		/********************************************************************************/
+		listar_all_historial(){
+			var id_med=Base64.decode(localStorage.getItem("id"));
+			var datos=new FormData();
+			if(id_med!==null){
+				datos.append("id_medico",id_med);
+				datos.append("opcion",1);
+				datos.append("fecha",mediconewInstance.getFecha());
+				datos.append("id_paciente",0);
+				mediconewInstance.ajaxFromMedico("../php/listar_historial.php",datos,
+								function(data){
+					   	try{
+					 var res=JSON.parse(data);
+					if(res.status==1){
+						mediconewInstance.setHistorialTable(res);
+					}else{
+						jq.notify(res.mensaje,"error");
+					}
+				}catch(err){jq.notify(err,"error");}
+				});
+			}else{
+				jq.notify("Error!","error");
+			}
+		}
 		/********************************************************************************/
 		ajaxFromMedico(ruta,form,responsefuncion){
 			jq.ajax({
