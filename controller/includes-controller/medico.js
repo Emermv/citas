@@ -51,7 +51,9 @@ btn_guardar_paciente.click(function(e){
 			form.append("opcion",1);
 		form.append("id_medico",id_medico);
 		form.append("fecha",date);
-		form.append("especialidad",id_esp);	mediconewInstance.ajaxFromMedico("../php/listar_pacientes_para_medico.php",form,mediconewInstance.successListadoPacientes);
+		form.append("especialidad",id_esp);
+		var url="../php/listar_pacientes_para_medico.php";
+		mediconewInstance.ajaxFromMedico(url,form,mediconewInstance.successListadoPacientes);
 		}else{
 			jq.notify("Error!","warn");
 		}
@@ -364,6 +366,14 @@ return '<i class="material-icons teal-text">done</i>';
 										});
 									}
 		/********************************************************************************/
+			getHora(){
+				var date=new Date();
+			return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+			}
+			getFecha(){
+				var date=new Date();
+				return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+			}
 		/********************************************************************************/
 		/********************************************************************************/
 		/********************************************************************************/
@@ -391,4 +401,5 @@ return '<i class="material-icons teal-text">done</i>';
 
 	 function HoraLibre(element){
 	 	alertify.log(element.id);
+			alertify.success(mediconewInstance.getHora());
 	 }

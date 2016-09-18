@@ -14,7 +14,7 @@ $opcion=$_POST["opcion"];
 $id_medico=$_POST["id_medico"];
 $esp=$_POST["especialidad"];
 /*
-$fecha='2016-09-17';
+$fecha='2016-09-18';
 $opcion=2;
 $id_medico=1;
 $esp=2;
@@ -32,7 +32,7 @@ while(true){
 			$response[$num]=array('id_cita'=>$data->id_cita,'fecha'=>$data->fecha,'num_f_horas'=>$data->num_f_horas,
 		  'nombre'=>$data->nombre,'estado'=>$data->estado,
 		'apellidos'=>$data->apellidos,'edad'=>$data->edad,'direccion'=>$data->direccion,'descripcion'=>$data->descripcion,
-		'ruta_foto'=>$data->ruta_foto);
+		'ruta_foto'=>$data->ruta_foto,'codigo_pac'=>$data->codigo);
 			$response[$num][$i]=array('hora'=>$data->hora);
 			$entro=true;
 			}else{

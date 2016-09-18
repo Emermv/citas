@@ -45,8 +45,6 @@ apellidos varchar(50) not null,
       motivo_inasistencia varchar(500),
       num_f_horas int not null,
     confirmado char(2) not null,
-    diagnostico varchar(200),
-    receta varchar(200),
       foreign key(especialidad) references especialidades(id_esp),
      FOREIGN key(id_medico) REFERENCES medicos(codigo),
     FOREIGN key(id_paciente) REFERENCES pacientes(codigo),
@@ -59,10 +57,29 @@ apellidos varchar(50) not null,
           hora varchar(11) not null,
           FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita)
           );
-										create table especialidades(
+								create table especialidades(
 										id_esp int not null primary key,
 										especialidad varchar(100) not null 
 										);
+
+
+    create table historial_clinico(
+  id_his int not null primary key,
+ id_cita int not null,
+ id_medico int not null,
+ id_paciente int not null,
+ id_especialidad int not null,
+diagnostico varchar(200) not null,
+receta varchar(200) not null,
+alergico varchar(120) not null,
+fecha date not null,
+hora time not null,
+FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
+  FOREIGN key(id_medico) REFERENCES medicos(codigo),
+   FOREIGN key(id_paciente) REFERENCES pacientes(codigo),
+   FOREIGN key(id_especialidad) REFERENCES especialidades(id_esp)
+ );
+    
   /*procedures*******************************************/
   DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
@@ -206,7 +223,7 @@ COMMENT 'SP que lista los pacientes que tienen cita con un medico'
 if(opcion=1) THEN
 SELECT cpm.id_cita,cpm.fecha,cpm.num_f_horas,
 p.codigo,p.edad,u.nombre,u.apellidos,u.direccion,
-u.ruta_foto,hcpm.hora,cpm.estado,cpm.descripcion
+u.ruta_foto,hcpm.hora,cpm.estado,cpm.descripcion,p.codigo
 from citas_paciente_medico as cpm
 join pacientes as p on cpm.id_paciente=p.codigo
 join usuarios as u on p.id_usuario=u.id
@@ -217,7 +234,7 @@ order  by cpm.id_cita ASC;
 ELSE
 SELECT cpm.id_cita,cpm.fecha,cpm.num_f_horas,
 p.codigo,p.edad,u.nombre,u.apellidos,u.direccion,
-u.ruta_foto,hcpm.hora,cpm.estado,cpm.descripcion
+u.ruta_foto,hcpm.hora,cpm.estado,cpm.descripcion,p.codigo
 from citas_paciente_medico as cpm
 join pacientes as p on cpm.id_paciente=p.codigo
 join usuarios as u on p.id_usuario=u.id
