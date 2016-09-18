@@ -71,7 +71,8 @@ apellidos varchar(50) not null,
  id_especialidad int not null,
 diagnostico varchar(200) not null,
 receta varchar(200) not null,
-alergico varchar(120) not null,
+alergico char(2) not null,
+descripcion_alergia varchar(300),
 fecha date not null,
 hora time not null,
 FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
@@ -243,3 +244,26 @@ on hcpm.id_cita=cpm.id_cita
 where cpm.id_medico=id and cpm.fecha=fecha
 order  by cpm.id_cita ASC;
 end if;
+
+/**************************/
+DELIMITER //
+create procedure sp_insertar_historial(
+    id_h int,
+    id_c int,
+    id_m int,
+    id_p int,
+    id_es int,
+    diag varchar(200),
+    rec varchar(200),
+    aler char(2),
+    descrip varchar(300),
+    fec date,
+    hor time)
+    comment 'sp que inserta  historial'
+    if not EXISTS(SELECT id_his from historial_clinico where id_his=id_h) THEN
+    update citas_paciente_medico set estado='asistio' where id_cita=id_c;
+    insert into historial_clinico values(
+     id_h,id_c,id_m,id_p,id_es,diag,rec,aler,descrip,fec,hor);
+   ELSE
+   select 'Error';
+   end if;

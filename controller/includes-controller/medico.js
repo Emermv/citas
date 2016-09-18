@@ -80,7 +80,7 @@ btn_guardar_paciente.click(function(e){
 											resp[i].estado,
 											mediconewInstance.getDescripcionModal(resp[i].descripcion,i),
 											mediconewInstance.getChipFoto(resp[i].ruta_foto,resp[i].nombre),
-											mediconewInstance.getAccionFromCitas(resp[i].id_cita,resp[i].estado),
+											mediconewInstance.getAccionFromCitas(resp[i].id_cita,resp[i].estado,resp[i].codigo_pac),
 											resp[i].id_cita);//end  set 
 									}	
 								/*init new  elements***/
@@ -92,6 +92,7 @@ btn_guardar_paciente.click(function(e){
 								mediconewInstance.li_content_citas_medico.addClass("active");
 								jq('.collapsible').collapsible({ accordion : false });
 								jq('.tooltipped').tooltip({delay: 50});
+								jq('select').material_select();
 							}else{
 								jq.notify(resp.mensaje,"error");
 							}
@@ -156,9 +157,13 @@ btn_guardar_paciente.click(function(e){
     '<i class="material-icons">close</i></a></div></div>';
 						}
 		/********************************************************************************/
-						getAccionFromCitas(id,estado){
+						getAccionFromCitas(id,estado,cod){
 			   if(estado==="asistio"){
-return '<i class="material-icons teal-text">done</i>';
+return '<a class="btn-floating waves-effect waves-light blue"><i class="material-icons">done</i></a>'+
+	'<a class="btn-floating waves-effect waves-light red" onclick="mediconewInstance.eliminarCita(this)" id="eli'+id+'">'+
+								'<i class="material-icons">delete</i></a>'+
+		'<a class="btn-floating waves-effect waves-light yellow modal-trigger" href="#atender'+id+'">'+
+								'<i class="material-icons">create</i></a>';
 						}else{
 							return '<a class="waves-effect waves-light btn-floating blue modal-trigger tooltipped" '+
 								'href="#atender'+id+'"  data-delay="50" data-position="top" data-tooltip="Atender">'+
@@ -176,15 +181,17 @@ return '<i class="material-icons teal-text">done</i>';
           '<textarea id="receta'+id+'" class="materialize-textarea" required="Receta " length="200"></textarea>'+
           '<label for="receta'+id+'">Receta M&eacute;dica</label>'+
         '</div>'+
+								'<div class="input-field col s10 offset-s1 m8 offset-m2 l6 offset-l3">'+
+        '<select id="selectalergia'+id+'" onchange="mediconewInstance.isAlergicoPaciente(this)" required>'+
+      '<option value="" disabled selected>Seleccione una opción</option>'+
+      '<option value="SI">SI</option><option value="NO">NO</option>'+
+     '</select><label>¿Alérgico?</label></div>'+
+								'<div id="desc_alergia'+id+'" class="input-field col s12 m12 l12"></div>'+
 			   	'</div>'+
     '</div><div class="modal-footer">'+
 					'<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat red">Cancelar</a>'+
-					'<button type="submit" class="waves-effect waves-white btn-flat blue" id="btnatencion'+id+'" onclick="mediconewInstance.guardarAtencion(this)">Guardar</button>'+
-     '</div></form></div>'+
-	'<a class="btn-floating waves-effect waves-light red" onclick="mediconewInstance.eliminarCita(this)" id="eli'+id+'">'+
-								'<i class="material-icons">delete</i></a>'+
-		'<a class="btn-floating waves-effect waves-light yellow modal-trigger" href="#atender'+id+'">'+
-								'<i class="material-icons">create</i></a>';
+					'<button type="submit" class="waves-effect waves-white btn-flat blue" id="btnatencion'+id+'" onclick="mediconewInstance.guardarAtencion(this)" name="cod_pac'+cod+'">Guardar</button>'+
+     '</div></form></div>';
 						}
   
 						}
@@ -312,14 +319,33 @@ return '<i class="material-icons teal-text">done</i>';
 		/********************************************************************************/
 						guardarAtencion(obj){
 								var id_cita=obj.id.replace("btnatencion","");
+							
 							var diag=jq("#diagnostico"+id_cita).val();
 							var receta=jq("#receta"+id_cita).val();
+							var id_medico=Base64.decode(localStorage.getItem("id"));
+							var id_esp=mediconewInstance.especialidades_m.val();
+							var id_paciente=obj.name.replace("cod_pac","");
+							var alergico=jq("#selectalergia"+id_cita).val();
+							var desc_alergia=jq("#des_ale"+id_cita).val();
+						if(desc_alergia==undefined){
+							desc_alergia=null;
+						}
 							var form=new FormData();
 							form.append("id_cita",id_cita);
 							form.append("receta",receta);
 							form.append("diagnostico",diag);
-						if(diag!==null && receta!==null){
-							alertify.confirm("¿Seguro que desea continuar?",function(e){
+							form.append("id_medico",id_medico);
+							form.append("id_paciente",id_paciente);
+							form.append("alergico",alergico);
+							form.append("desc_alergia",desc_alergia);
+							form.append("fecha",mediconewInstance.getFecha());
+							form.append("hora",mediconewInstance.getHora());
+							form.append("id_esp",id_esp);
+						if(diag!==""){
+					 if(receta!==""){
+							if(alergico==="SI" || alergico==="NO"){
+								if(id_medico!==null){
+											alertify.confirm("¿Seguro que desea continuar?",function(e){
 								if(e){
 						  mediconewInstance.ajaxFromMedico("../php/guardarAtencionCita.php",form,
 									function(data){
@@ -338,7 +364,16 @@ return '<i class="material-icons teal-text">done</i>';
 									jq.notify("Cancelado!","success");
 								}
 							});
-						}else{jq.notify("Campos aobligatorios!","warn");}
+								}else{
+									jq.notify("Error !","warn");
+								}
+							}else{
+								jq.notify("Seleccione una opción!","warn");
+							}
+						}else{
+							jq.notify("Receta médica obligatoria!","warn");
+						}
+						}else{jq.notify("Diagnostico obligatorio!","warn");}
 						}
 		/********************************************************************************/
 									eliminarCita(obj){
@@ -375,6 +410,18 @@ return '<i class="material-icons teal-text">done</i>';
 				return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
 			}
 		/********************************************************************************/
+			isAlergicoPaciente(select){
+		  var aler=select.value;
+				var id=select.id.replace("selectalergia","");
+				var divdes=jq("#desc_alergia"+id).empty();
+				 if(aler==="SI"){
+						divdes.append(
+						'<i class="material-icons prefix">mode_edit</i>'+
+          '<textarea id="des_ale'+id+'" class="materialize-textarea" required length="300"></textarea>'+
+          '<label for="des_ale'+id+'">Descripción de la alergia</label>');
+						jq('textarea').characterCounter();
+					}
+			}
 		/********************************************************************************/
 		/********************************************************************************/
 		/********************************************************************************/
