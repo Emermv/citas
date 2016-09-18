@@ -78,8 +78,8 @@ btn_guardar_paciente.click(function(e){
 											resp[i].estado,
 											mediconewInstance.getDescripcionModal(resp[i].descripcion,i),
 											mediconewInstance.getChipFoto(resp[i].ruta_foto,resp[i].nombre),
-											mediconewInstance.getAccionFromCitas(resp[i].id_cita,resp[i].estado)
-										);//end  set 
+											mediconewInstance.getAccionFromCitas(resp[i].id_cita,resp[i].estado),
+											resp[i].id_cita);//end  set 
 									}	
 								/*init new  elements***/
 								mediconewInstance.initDropdownHoras();
@@ -89,6 +89,7 @@ btn_guardar_paciente.click(function(e){
 								mediconewInstance.li_content_citas_historial.removeClass("active");
 								mediconewInstance.li_content_citas_medico.addClass("active");
 								jq('.collapsible').collapsible({ accordion : false });
+								jq('.tooltipped').tooltip({delay: 50});
 							}else{
 								jq.notify(resp.mensaje,"error");
 							}
@@ -97,8 +98,8 @@ btn_guardar_paciente.click(function(e){
 						}
 						}
 		/********************************************************************************/
-						setcontent_citas_medico(tabla,id,nombre,ape,edad,direccion,fecha,hora,estado,desc,foto,det){
-							tabla.append('<tr>'+
+						setcontent_citas_medico(tabla,id,nombre,ape,edad,direccion,fecha,hora,estado,desc,foto,det,id_cita){
+							tabla.append('<tr id="tritem'+id_cita+'">'+
 								           '<td>'+id+'</td>'+
 																			'<td>'+nombre+'</td>'+
 								            '<td>'+ape+'</td>'+
@@ -155,9 +156,10 @@ btn_guardar_paciente.click(function(e){
 		/********************************************************************************/
 						getAccionFromCitas(id,estado){
 			   if(estado==="asistio"){
-							return '<i class="material-icons teal-text">done</i>';
+return '<i class="material-icons teal-text">done</i>';
 						}else{
-							return '<a class="waves-effect waves-light btn-floating blue modal-trigger" href="#atender'+id+'">'+
+							return '<a class="waves-effect waves-light btn-floating blue modal-trigger tooltipped" '+
+								'href="#atender'+id+'"  data-delay="50" data-position="top" data-tooltip="Atender">'+
 				'<i class="material-icons">spellcheck</i></a>'+
 				'<div id="atender'+id+'" class="modal"><form>'+
     '<div class="modal-content">'+
@@ -177,8 +179,10 @@ btn_guardar_paciente.click(function(e){
 					'<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat red">Cancelar</a>'+
 					'<button type="submit" class="waves-effect waves-white btn-flat blue" id="btnatencion'+id+'" onclick="mediconewInstance.guardarAtencion(this)">Guardar</button>'+
      '</div></form></div>'+
-							'<a class="btn-floating  waves-effect waves-light red"><i class="material-icons">delete</i></a>'+
-								'<a class="btn-floating  waves-effect waves-light yellow"><i class="material-icons">create</i></a>';
+	'<a class="btn-floating waves-effect waves-light red" onclick="mediconewInstance.eliminarCita(this)" id="eli'+id+'">'+
+								'<i class="material-icons">delete</i></a>'+
+		'<a class="btn-floating waves-effect waves-light yellow modal-trigger" href="#atender'+id+'">'+
+								'<i class="material-icons">create</i></a>';
 						}
   
 						}
@@ -231,35 +235,7 @@ btn_guardar_paciente.click(function(e){
 							mediconewInstance.setCheckboxHorasListener_A();
 							 mediconewInstance.initDialogsHorasAdicionales();
 						}
-		/********************************************************************************/
-					setCheckboxHorasListener_B(){
-						mediconewInstance.setOnChangeListener_B("ah0800_0815");
-						mediconewInstance.setOnChangeListener_B("ah0815_0830");
-						mediconewInstance.setOnChangeListener_B("ah0830_0900");
-						mediconewInstance.setOnChangeListener_B("ah0900_0915");
-						mediconewInstance.setOnChangeListener_B("ah0915_0930");
-						mediconewInstance.setOnChangeListener_B("ah0930_1000");
-						mediconewInstance.setOnChangeListener_B("ah1000_1015");
-						mediconewInstance.setOnChangeListener_B("ah1030_1100");
-						mediconewInstance.setOnChangeListener_B("ah1100_1115");
-						mediconewInstance.setOnChangeListener_B("ah1115_1130");
-						mediconewInstance.setOnChangeListener_B("ah1130_1200");
-						mediconewInstance.setOnChangeListener_B("ah1200_1215");
-						mediconewInstance.setOnChangeListener_B("ah1215_1230");
-						mediconewInstance.setOnChangeListener_B("ah1230_1300");
-						mediconewInstance.setOnChangeListener_B("ah1300_1315");
-						mediconewInstance.setOnChangeListener_B("ah1315_1330");
-						mediconewInstance.setOnChangeListener_B("ah1330_1400");
-						mediconewInstance.setOnChangeListener_B("ah1400_1415");
-						mediconewInstance.setOnChangeListener_B("ah1415_1430");
-						mediconewInstance.setOnChangeListener_B("ah1430_1500");
-						mediconewInstance.setOnChangeListener_B("ah1500_1515");
-						mediconewInstance.setOnChangeListener_B("ah1515_1530");
-						mediconewInstance.setOnChangeListener_B("ah1530_1600");
-						mediconewInstance.setOnChangeListener_B("ah1600_1615");
-						mediconewInstance.setOnChangeListener_B("ah1615_1630");
-						mediconewInstance.setOnChangeListener_B("ah1630_1700");
-					}
+		
 							setCheckboxHorasListener_A(){
 			  this.setOnChangeListener_A("h0800_0830");
 					this.setOnChangeListener_A("h0830_0900");
@@ -280,32 +256,7 @@ btn_guardar_paciente.click(function(e){
 					this.setOnChangeListener_A("h1600_1630");
 					this.setOnChangeListener_A("h1630_1700");
 					}
-				setOnChangeListener_B(id){
-					var listItem=jq("#l"+id);
-					var item=jq("#"+id).click(function(){
-						  if(item.is(":checked")){
-							     if(mediconewInstance.horas_seleccionadas_B<jsonData["tiempoMinutosMaximoCita"] && 
-														mediconewInstance.horas_seleccionadas_B>=0){
-													mediconewInstance.horas_seleccionadas_B+=30;
-													mediconewInstance.sethora_total(mediconewInstance.hora_total_add,mediconewInstance.horas_seleccionadas_B);
-													listItem.addClass("blue");
-												}else{
-														listItem.addClass("red");
-													alertify.alert("Lo sentimos, el tiempo  maximo de una cita es de "+jsonData["tiempoMinutosMaximoCita"]+' minutos',
-																											function(e){
-														listItem.removeClass("red");
-														item.prop("checked",false);
-													
-												});
-												}
-								}else{// no  checked
-									 listItem.removeClass("blue");
-									mediconewInstance.horas_seleccionadas_B-=30;
-										mediconewInstance.sethora_total(mediconewInstance.hora_total_add,mediconewInstance.horas_seleccionadas_B);
-												}
-					});
-					/* end  click*/
-				}
+
 		/********************************************************************************/
 				sethora_total(element,horas){
 					element.empty().append('<img src="../files/clock.png" alt="horas">'+
@@ -336,15 +287,8 @@ btn_guardar_paciente.click(function(e){
 										mediconewInstance.sethora_total(mediconewInstance.hora_total,mediconewInstance.horas_seleccionadas_A);
 								}
 					});
-					/* end  click checkbox*/
-					/*btnAdd.click(function(){
-						alertify.success("ok");
-					});*/
 				}
 		/********************************************************************************/
-		shwoDropdownHorasAddicionales(id){
-         
-		}
 		initDialogsHorasAdicionales(){	
         jq('.dropdown-button').dropdown({
       inDuration: 300,
@@ -365,13 +309,16 @@ btn_guardar_paciente.click(function(e){
 		}
 		/********************************************************************************/
 						guardarAtencion(obj){
-							var id_cita=obj.id.replace("btnatencion","");
+								var id_cita=obj.id.replace("btnatencion","");
 							var diag=jq("#diagnostico"+id_cita).val();
 							var receta=jq("#receta"+id_cita).val();
 							var form=new FormData();
 							form.append("id_cita",id_cita);
 							form.append("receta",receta);
 							form.append("diagnostico",diag);
+						if(diag!==null && receta!==null){
+							alertify.confirm("¿Seguro que desea continuar?",function(e){
+								if(e){
 						  mediconewInstance.ajaxFromMedico("../php/guardarAtencionCita.php",form,
 									function(data){
 								try{
@@ -385,9 +332,37 @@ btn_guardar_paciente.click(function(e){
 									}
 								}catch(err){console.error(err);}
 								});
+								}else{
+									jq.notify("Cancelado!","success");
+								}
+							});
+						}else{jq.notify("Campos aobligatorios!","warn");}
 						}
 		/********************************************************************************/
-									
+									eliminarCita(obj){
+										alertify.confirm("¿Seguro que desea eliminar la cita?",function(e){
+											if(e){
+												var id_cita=obj.id.replace("eli","");
+												var data=new FormData();
+												data.append("id",id_cita);
+												var url="../php/eliminar_cita.php";
+							mediconewInstance.ajaxFromMedico(url,data,function(response){
+								try{
+									var resp=JSON.parse(response);
+									if(resp.status==1){
+										jq.notify(resp.mensaje,"success");
+									jq("#tritem"+id_cita).remove();
+									}else{
+										jq.notify(resp.mensaje,"error");
+									}
+								}catch(err){jq.notify(err,"error");}
+								
+							});
+											}else{
+												jq.notify("Cancelado!","success");
+											}
+										});
+									}
 		/********************************************************************************/
 		/********************************************************************************/
 		/********************************************************************************/
