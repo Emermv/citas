@@ -62,7 +62,13 @@
       jq("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
           var asistente=new Asistente(Base64.decode(localStorage.getItem("cfa")));
 							asistente.initComponents();
-      } 
+      }else if(usuarios.tipo==="Administrador"){
+							usuario.append(file_get_contents("includes/administrador.html"));
+							jq("body").append(file_get_contents("includes/footer.html"));
+							var administrador=new Administrador();
+							administrador.initComponents();
+							
+						}
       
       /********************************************************************************/
       jq("#btnSalir").click(function(){
@@ -111,9 +117,11 @@ class Usuario{
             this.edad=Base64.decode(localStorage.getItem("edad"));
             this.correo=Base64.decode(localStorage.getItem("correo"));
             this.genero=Base64.decode(localStorage.getItem("genero"));
+        }else if(this.tipo==="Administrador"){
+            
         }else{
-            this.user=undefined;
-        }
+									this.user=undefined;
+								}
             }
         }catch(err){console.error(" Error:"+err);
 																				jq(location).attr("href","../");

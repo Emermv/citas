@@ -3,9 +3,9 @@ require_once "server.php";
 $con=conectar();
 if($con){
 mysqli_select_db($con,db);
-
 $dni=$_POST['dni'];
 $clave=$_POST['clave'];
+
 
 $credenciales=mysqli_query($con,"call sp_login('".$dni."','".$clave."')");
 $datos =array();
@@ -30,7 +30,9 @@ if($x=mysqli_fetch_array($credenciales)){
        $datos['edad']=$x['edad'];
        $datos['correo']=$x['correo'];
        $datos['genero']=$x['genero'];
-     }else{
+       }else if($x['tipo']==="Administrador"){
+
+         }else{
        $datos['code']="-1";
      }
      $datos['tipo']=$x['tipo'];

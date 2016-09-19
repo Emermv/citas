@@ -1,3 +1,4 @@
+
 create table usuarios(
 id int not null primary key,
 dni char(8) not null,
@@ -8,6 +9,13 @@ apellidos varchar(50) not null,
   telefono varchar(15) not null,
     ruta_foto varchar(100) not null
   );
+create table administrador(
+    codigo int not null primary key,
+    id_usuario int not null,
+    FOREIGN key(id_usuario) REFERENCES usuarios(id)
+    );
+INSERT INTO `usuarios` VALUES ('6', '00000000', 'admin0', 'Admin', 'Administrador', 'admin', '000000000', 'images/pic0.jpg');
+INSERT INTO `administrador` (`codigo`, `id_usuario`) VALUES ('1', '6');
   create table pacientes(
     codigo int not null primary key,
     id_usuario int not null,
@@ -82,7 +90,7 @@ FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
  );
     
   /*procedures*******************************************/
-  DELIMITER //
+ DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
       COMMENT 'sp login'
       if EXISTS(SELECT u.id from usuarios as u JOIN pacientes as p on u.id=p.id_usuario WHERE u.dni=dni) THEN
@@ -94,6 +102,11 @@ FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
         ELSEIF EXISTS(SELECT u.id from usuarios as u JOIN asistentes as a on u.id=a.id_usuario WHERE u.dni=dni) THEN
          SELECT  a.codigo,'Asistente' as 'tipo',u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto,a.edad,a.correo,a.genero
       from usuarios as u JOIN asistentes as a on u.id=a.id_usuario WHERE u.dni=dni;
+  ELSEIF EXISTS(SELECT u.id from usuarios as u join administrador as adm on 
+             u.id=adm.id_usuario where u.dni=dni)THEN
+  select 'Administrador' as 'tipo',adm.codigo, u.id,u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto
+          from usuarios as u join administrador as adm on adm.id_usuario=u.id
+          where u.dni=dni;
       ELSE
       SELECT 'Usuario no encontrado';
       end if;

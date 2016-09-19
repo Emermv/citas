@@ -166,9 +166,11 @@
                }else if(tipo==="Paciente"){
                    localStorage.setItem("edad",Base64.encode(credenciales.edad));
                    localStorage.setItem("genero",Base64.encode(credenciales.genero));
+               }else if(tipo==="Administrador"){
+                   
                }else{
-                   localStorage.setItem("tipo",Base64.encode("undefined"));
-               }
+																localStorage.setItem("tipo",Base64.encode("undefined"));
+															}
                localStorage.setItem("status",Base64.encode("1"));
                 $(location).attr("href","cita/");
            }else{
