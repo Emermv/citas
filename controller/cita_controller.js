@@ -63,8 +63,17 @@
           var asistente=new Asistente(Base64.decode(localStorage.getItem("cfa")));
 							asistente.initComponents();
       }else if(usuarios.tipo==="Administrador"){
+							
 							usuario.append(file_get_contents("includes/administrador.html"));
 							jq("body").append(file_get_contents("includes/footer.html"));
+							jq("#medico").addClass(Base64.decode(localStorage.getItem("cfp")));
+          jq("#nombre").append('<span>'+usuarios.nombre+'</span>');
+          jq("#apellidos").append('<span>'+usuarios.apellidos+'</span>');
+          jq("#direccion").append('<span>'+usuarios.direccion+'</span>');
+          jq("#telefono").append('<span>'+usuarios.telefono+'</span>');
+         
+       jq("#perfil_admin").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
+         
 							var administrador=new Administrador();
 							administrador.initComponents();
 							

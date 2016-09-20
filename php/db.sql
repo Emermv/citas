@@ -319,3 +319,85 @@ hc.id_medico=m.codigo join usuarios as u on m.id_usuario=u.id
 join especialidades as e  on hc.id_especialidad=e.id_esp 
 where hc.fecha=fecha;
 end if;
+
+/*inserts*/
+INSERT INTO `especialidades` (`id_esp`, `especialidad`) VALUES
+(1, 'Medicina General'),
+(2, 'Ginecología'),
+(3, 'Nutricionista'),
+(4, 'Odontología'),
+(5, 'Optometría'),
+(6, 'Pediatría'),
+(7, 'Psicología'),
+(8, 'Terapia Ocupacional');
+
+
+
+DELIMITER //
+create procedure sp_crear_paciente(
+    id int,
+    dni char(8),
+    passwor char(6),
+    nombre varchar(50),
+    apellidos varchar(50),
+    direccion varchar(200),
+    telefono varchar(15),
+    ruta_foto varchar(100),
+    codigo int,
+    edad int,
+    genero char(1)
+    )
+    COMMENT 'sp que crea pacientes '
+  if not EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  INSERT into usuarios values (id,dni,passwor,nombre,apellidos,direccion,telefono,ruta_foto);
+INSERT into pacientes VALUES(codigo,id,edad,genero);
+else 
+select 'Error';
+end if;
+
+
+DELIMITER //
+create procedure sp_crear_asistente(
+    id int,
+    dni char(8),
+    passwor char(6),
+    nombre varchar(50),
+    apellidos varchar(50),
+    direccion varchar(200),
+    telefono varchar(15),
+    ruta_foto varchar(100),
+    codigo int,
+    edad int,
+    correo varchar(100),
+    genero char(1)
+    )
+    COMMENT 'sp que crea pacientes '
+  if not EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  INSERT into usuarios values (id,dni,passwor,nombre,apellidos,direccion,telefono,ruta_foto);
+INSERT into asistentes VALUES(codigo,id,edad,correo,genero);
+else 
+select 'Error';
+end if;
+
+
+DELIMITER //
+create procedure sp_crear_medico(
+    id int,
+    dni char(8),
+    passwor char(6),
+    nombre varchar(50),
+    apellidos varchar(50),
+    direccion varchar(200),
+    telefono varchar(15),
+    ruta_foto varchar(100),
+    codigo int,
+    correo varchar(100),
+    id_esp int
+    )
+    COMMENT 'sp que crea medicos '
+  if not EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  INSERT into usuarios values (id,dni,passwor,nombre,apellidos,direccion,telefono,ruta_foto);
+INSERT into medicos VALUES(codigo,id,correo,id_esp);
+else 
+select 'Error';
+end if;
