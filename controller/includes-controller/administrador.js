@@ -46,6 +46,9 @@ class Administrador{
 		this.table_medicos;
 		this.table_asistentes;
 		this.table_pacientes;
+		/* vars******************/
+		this.btn_cancelar;
+		this.modificando_usuario=false;
 		adminInstance=this;
 	}
 initComponents(){
@@ -180,6 +183,9 @@ initComponents(){
 			e.preventDefault();
 			adminInstance.guardarPaciente();
 		});
+		adminInstance.btn_cancelar=jq("#btn_cancelar").click(function(){
+			adminInstance.modificando_usuario=false;
+		});
 		adminInstance.nombres_p=jq("#nombres_p");
 		adminInstance.apellidos_p=jq("#apellidos_p");
 		adminInstance.direccion_p=jq("#direccion_p");
@@ -206,6 +212,9 @@ initComponents(){
 		adminInstance.btn_guardar_asistente=jq("#btn_guardar_asistente").click(function(e){
 			e.preventDefault();
 			adminInstance.guardarAsistente();
+		});
+			adminInstance.btn_cancelar=jq("#btn_cancelar").click(function(){
+			adminInstance.modificando_usuario=false;
 		});
 		adminInstance.nombres_a=jq("#nombres_a");
 		adminInstance.apellidos_a=jq("#apellidos_a");
@@ -234,6 +243,9 @@ initComponents(){
 		adminInstance.btn_guardar_medico=jq("#btn_guardar_medico").click(function(e){
 			e.preventDefault();
 			adminInstance.guardarMedico();
+		});
+			adminInstance.btn_cancelar=jq("#btn_cancelar").click(function(){
+			adminInstance.modificando_usuario=false;
 		});
 		adminInstance.nombres_m=jq("#nombres_m");
 		adminInstance.apellidos_m=jq("#apellidos_m");
@@ -274,7 +286,31 @@ initComponents(){
 												 var aux=document.getElementById("foto_pac");
             var file=aux.files[0];
 												data.append("foto",file);
-												adminInstance.ajaxAdmin("../php/guardar_paciente.php",data,function(responsejson){
+												if(adminInstance.modificando_usuario){
+													var idp_mod=localStorage.getItem("idp_mod");
+													var idup_mod=localStorage.getItem("idup_mod");
+													data.append("id_paciente",idp_mod);
+													data.append("id_usuario",idup_mod);
+															adminInstance.ajaxAdmin("../php/modificar_paciente.php",data,function(responsejson){
+													try{
+														var resp=JSON.parse(responsejson);
+														
+														if(resp.status==1){
+															
+															adminInstance.modificando_usuario=false;
+															jq.notify(resp.mensaje,"info");
+																		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		                adminInstance.initCompoenentsConfig();
+																}else{
+															adminInstance.validarInput(adminInstance.btn_guardar_medico,resp.mensaje,'top','error');
+														}
+													}catch(err){
+													adminInstance.validarInput(adminInstance.btn_guardar_medico,err,'top','error');
+													}
+												});
+												}else{
+													
+													adminInstance.ajaxAdmin("../php/guardar_paciente.php",data,function(responsejson){
 													try{
 														var resp=JSON.parse(responsejson);
 														if(resp.status==1){
@@ -286,6 +322,8 @@ initComponents(){
 													adminInstance.validarInput(adminInstance.btn_guardar_paciente,err,'top','error');
 													}
 												});
+												}
+												/***************************/
 											}else{
 												adminInstance.validarInput(adminInstance.foto_pac,"Foto de perfil requerido",'top','warn');
 											}
@@ -341,7 +379,31 @@ initComponents(){
 												 var aux=document.getElementById("foto_asi");
             var file=aux.files[0];
 												data.append("foto",file);
-												adminInstance.ajaxAdmin("../php/guardar_asistente.php",data,function(responsejson){
+												if(adminInstance.modificando_usuario){
+														var ida_mod=localStorage.getItem("ida_mod");
+													var idua_mod=localStorage.getItem("idua_mod");
+													data.append("id_asistente",ida_mod);
+													data.append("id_usuario",idua_mod);
+															adminInstance.ajaxAdmin("../php/modificar_asistente.php",data,function(responsejson){
+													try{
+														var resp=JSON.parse(responsejson);
+														
+														if(resp.status==1){
+															
+															adminInstance.modificando_usuario=false;
+															jq.notify(resp.mensaje,"info");
+																		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		                adminInstance.initCompoenentsConfig();
+																}else{
+															adminInstance.validarInput(adminInstance.btn_guardar_medico,resp.mensaje,'top','error');
+														}
+													}catch(err){
+													adminInstance.validarInput(adminInstance.btn_guardar_medico,err,'top','error');
+													}
+												});
+													/*************************/
+												}else{
+													adminInstance.ajaxAdmin("../php/guardar_asistente.php",data,function(responsejson){
 													try{
 														var resp=JSON.parse(responsejson);
 														if(resp.status==1){
@@ -353,6 +415,9 @@ initComponents(){
 													adminInstance.validarInput(adminInstance.btn_guardar_asistente,err,'top','error');
 													}
 												});
+												}
+												/********************************/
+												
 											}else{
 												adminInstance.validarInput(adminInstance.foto_asi,"Foto de perfil requerido",'top','warn');
 											}
@@ -410,7 +475,34 @@ initComponents(){
 												 var aux=document.getElementById("foto_med");
             var file=aux.files[0];
 												data.append("foto",file);
-												adminInstance.ajaxAdmin("../php/guardar_medico.php",data,function(responsejson){
+												
+											
+												if(adminInstance.modificando_usuario){
+													  
+													var idm_mod=localStorage.getItem("idm_mod");
+													var idum_mod=localStorage.getItem("idum_mod");
+													data.append("id_medico",idm_mod);
+													data.append("id_usuario",idum_mod);
+															adminInstance.ajaxAdmin("../php/modificar_medico.php",data,function(responsejson){
+													try{
+														var resp=JSON.parse(responsejson);
+														
+														if(resp.status==1){
+															
+															adminInstance.modificando_usuario=false;
+															jq.notify(resp.mensaje,"info");
+												   	adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		             adminInstance.initCompoenentsConfig();
+														}else{
+															adminInstance.validarInput(adminInstance.btn_guardar_medico,resp.mensaje,'top','error');
+														}
+													}catch(err){
+													adminInstance.validarInput(adminInstance.btn_guardar_medico,err,'top','error');
+													}
+												});
+													
+												}else{
+														adminInstance.ajaxAdmin("../php/guardar_medico.php",data,function(responsejson){
 													try{
 														var resp=JSON.parse(responsejson);
 														if(resp.status==1){
@@ -422,6 +514,10 @@ initComponents(){
 													adminInstance.validarInput(adminInstance.btn_guardar_medico,err,'top','error');
 													}
 												});
+												}
+											
+												
+												/********************************************/
 											}else{
 												adminInstance.validarInput(adminInstance.foto_med,"Foto de perfil requerido",'top','warn');
 											}
@@ -556,7 +652,13 @@ initComponents(){
 	}
 	/*****************************************************************************/
 		modificarMedico(obj){
-		alertify.success(obj.id);
+		var id=obj.id.replace("modificarmed","");
+			var med=obj.name.replace("modificarusu","");
+			localStorage.setItem("idm_mod",id);
+			localStorage.setItem("idum_mod",med);
+			adminInstance.modificando_usuario=true;
+			adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-medico.html"));
+		adminInstance.initCompoenentsMedico();
 	}
 	/*****************************************************************************/
 	listar_asistentes(){
@@ -608,11 +710,38 @@ initComponents(){
 	}
 	/*****************************************************************************/
 	modificarAsistente(obj){
-		
+		var id=obj.id.replace("modificarasi","");
+			var asi=obj.name.replace("modificarusu_asi","");
+			localStorage.setItem("ida_mod",id);
+			localStorage.setItem("idua_mod",asi);
+			adminInstance.modificando_usuario=true;
+		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-asistente.html"));
+		adminInstance.initCompoenentsAsistente();
 	}
 	/*****************************************************************************/
 	eliminarAsistente(obj){
 		
+			var id=obj.id.replace("eliminarasi","");
+		var id_usu=obj.name.replace("eliminarusu_asi","");
+		alertify.confirm("¿Seguro que desea eliminar?",function(e){
+			if(e){
+				var form=new FormData();
+				form.append("codigo",id);
+				form.append("id_usu",id_usu);
+				adminInstance.ajaxAdmin("../php/eliminar_asistente.php",form,function(data){
+					try{
+						var response=JSON.parse(data);
+						if(response.status==1){
+							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','success');
+						}else{
+							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','error');
+						}
+					}catch(e){
+					adminInstance.validarInput(adminInstance.table_medicos,e,'top','error');	
+					}
+				});
+			}
+		});
 	}
 	/*****************************************************************************/
 	listar_pacientes(){
@@ -664,10 +793,37 @@ initComponents(){
 	/*****************************************************************************/
 	eliminarPaciente(obj){
 		
+		var id=obj.id.replace("eliminarpac","");
+		var id_usu=obj.name.replace("eliminarusu_pac","");
+		alertify.confirm("¿Seguro que desea eliminar?",function(e){
+			if(e){
+				var form=new FormData();
+				form.append("codigo",id);
+				form.append("id_usu",id_usu);
+				adminInstance.ajaxAdmin("../php/eliminar_paciente.php",form,function(data){
+					try{
+						var response=JSON.parse(data);
+						if(response.status==1){
+							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','success');
+						}else{
+							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','error');
+						}
+					}catch(e){
+					adminInstance.validarInput(adminInstance.table_medicos,e,'top','error');	
+					}
+				});
+			}
+		});
 	}
 	/*****************************************************************************/
 	modificarPaciente(obj){
-		
+				var id=obj.id.replace("modificarpac","");
+			var pac=obj.name.replace("modificarusu_pac","");
+			localStorage.setItem("idp_mod",id);
+			localStorage.setItem("idup_mod",pac);
+			adminInstance.modificando_usuario=true;
+		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-paciente.html"));
+		adminInstance.initCompoenentsPaciente();
 	}
 	/*****************************************************************************/
 	/*****************************************************************************/

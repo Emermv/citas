@@ -408,3 +408,72 @@ INSERT into medicos VALUES(codigo,id,correo,id_esp);
 else 
 select 'Error';
 end if;
+
+
+DELIMITER //
+create procedure sp_modificar_medico(
+    i int,
+    dn char(8),
+    passwo char(6),
+    nombr varchar(50),
+    apellido varchar(50),
+    direccio varchar(200),
+    telefon varchar(15),
+    ruta_fot varchar(100),
+    codig int,
+    corre varchar(100),
+    id_es int
+    )
+    COMMENT 'sp que modifica medicos '
+  if EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  update  usuarios set       dni=dn,password=passwo,nombre=nombr,apellidos=apellido,direccion=direccio,telefono=telefon,ruta_foto=ruta_fot where id =i;
+update medicos set correo=corre,id_esp=id_es where codigo=codig;
+else 
+select 'Error';
+end if;
+
+DELIMITER //
+create procedure sp_modificar_paciente(
+    i int,
+    dn char(8),
+    passwo char(6),
+    nombr varchar(50),
+    apellido varchar(50),
+    direccio varchar(200),
+    telefon varchar(15),
+    ruta_fot varchar(100),
+    codig int,
+    eda int,
+    gener char(1)
+    )
+    COMMENT 'sp que modifica pacientes '
+  if EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  update usuarios set dni=dn,password=passwo,nombre=nombr,apellidos=apellido,direccion=direccio,telefono=telefon,ruta_foto=ruta_fot where id=i;
+update pacientes set edad=eda,genero=gener where codigo=codig;
+else 
+select 'Error';
+end if;
+
+
+DELIMITER //
+create procedure sp_modificar_asistente(
+    i int,
+    dn char(8),
+    passwor char(6),
+    nombr varchar(50),
+    apellido varchar(50),
+    direccio varchar(200),
+    telefon varchar(15),
+    ruta_fot varchar(100),
+    codig int,
+    eda int,
+    corre varchar(100),
+    gener char(1)
+    )
+    COMMENT 'sp que modifica pacientes '
+  if EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  update usuarios set dni=dn,password=passwor,nombre=nombr,apellidos=apellido,direccion=direccio,telefono=telefon,ruta_foto=ruta_fot where id=i;
+update asistentes set edad=eda,correo=corre,genero=gener where codigo=codig;
+else 
+select 'Error';
+end if;
