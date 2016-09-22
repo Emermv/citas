@@ -4,8 +4,8 @@ define("host","localhost");
 define("user","emer_pc");
 define("password","teranova");
 define("db","citas");
-
 /*
+
 define("host","mysql.hostinger.es");
 define("user","u387583705_emerm");
 define("password","teranova");

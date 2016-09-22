@@ -1,4 +1,6 @@
-
+drop database if exists citas;
+create database citas;
+  use citas;
 create table usuarios(
 id int not null primary key,
 dni char(8) not null,
@@ -14,8 +16,8 @@ create table administrador(
     id_usuario int not null,
     FOREIGN key(id_usuario) REFERENCES usuarios(id)
     );
-INSERT INTO `usuarios` VALUES ('6', '00000000', 'admin0', 'Admin', 'Administrador', 'admin', '000000000', 'images/pic0.jpg');
-INSERT INTO `administrador` (`codigo`, `id_usuario`) VALUES ('1', '6');
+INSERT INTO `usuarios` VALUES ('1', '00000000', 'admin0', 'Admin', 'Administrador', 'admin', '000000000', 'images/Admin.png');
+INSERT INTO `administrador` (`codigo`, `id_usuario`) VALUES ('1', '1');
   create table pacientes(
     codigo int not null primary key,
     id_usuario int not null,
@@ -23,6 +25,11 @@ INSERT INTO `administrador` (`codigo`, `id_usuario`) VALUES ('1', '6');
     genero char(1) not null,
     foreign key (id_usuario) references usuarios(id)
   );
+  create table especialidades(
+                    id_esp int not null primary key,
+                    especialidad varchar(100) not null 
+                    );
+
   create table medicos(
     codigo int not null primary key,
     id_usuario int not null,
@@ -65,11 +72,7 @@ INSERT INTO `administrador` (`codigo`, `id_usuario`) VALUES ('1', '6');
           hora varchar(11) not null,
           FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita)
           );
-								create table especialidades(
-										id_esp int not null primary key,
-										especialidad varchar(100) not null 
-										);
-
+								
 
     create table historial_clinico(
   id_his int not null primary key,
@@ -90,6 +93,7 @@ FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
  );
     
   /*procedures*******************************************/
+  drop procedure if exists sp_login;
  DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
       COMMENT 'sp login'
@@ -115,7 +119,7 @@ FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
  
       /*constraints -********************  */
 alter table usuarios add CONSTRAINT uq_dni_usu UNIQUE(dni);
-
+drop procedure if exists sp_listar_citas;
 DELIMITER //
 create procedure sp_listar_citas(fecha date,opcion int)
 COMMENT 'sp que lista las citas por fecha o todo'
@@ -143,6 +147,7 @@ on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_
 on m.codigo=cpm.id_medico order by cpm.id_cita desc;
 end if;
 
+drop procedure if exists sp_crear_citas;
  DELIMITER //
 create PROCEDURE sp_crear_citas(
     id_c int,
@@ -168,7 +173,7 @@ create PROCEDURE sp_crear_citas(
 
 
 
-
+drop procedure if exists sp_reportar_citas;
 DELIMITER //
 create procedure sp_reportar_citas(opcion int)
 COMMENT 'sp que reporta citas'
@@ -230,7 +235,7 @@ on m.codigo=cpm.id_medico where p.edad BETWEEN 18 and 29;
 end IF;
      
 
-
+drop procedure if exists sp_listar_pacientes;
 DELIMITER //
 create PROCEDURE sp_listar_pacientes(fecha date,id int,esp int,opcion int)
 COMMENT 'SP que lista los pacientes que tienen cita con un medico'
@@ -261,6 +266,8 @@ order  by cpm.id_cita ASC;
 end if;
 
 /**************************/
+
+drop procedure if exists sp_insertar_historial;
 DELIMITER //
 create procedure sp_insertar_historial(
     id_h int,
@@ -283,7 +290,7 @@ create procedure sp_insertar_historial(
    select 'Error';
    end if;
 
-
+drop procedure if exists sp_listar_historial;
    DELIMITER //
 create procedure sp_listar_historial(opcion int,paciente int,medico int,fecha date)
 COMMENT 'sp que lista el historial clinico'
@@ -321,7 +328,7 @@ where hc.fecha=fecha;
 end if;
 
 /*inserts*/
-INSERT INTO `especialidades` (`id_esp`, `especialidad`) VALUES
+INSERT INTO especialidades (id_esp, especialidad) VALUES
 (1, 'Medicina General'),
 (2, 'Ginecología'),
 (3, 'Nutricionista'),
@@ -332,7 +339,7 @@ INSERT INTO `especialidades` (`id_esp`, `especialidad`) VALUES
 (8, 'Terapia Ocupacional');
 
 
-
+drop procedure if exists sp_crear_paciente;
 DELIMITER //
 create procedure sp_crear_paciente(
     id int,
@@ -355,7 +362,7 @@ else
 select 'Error';
 end if;
 
-
+drop procedure if exists sp_crear_asistente;
 DELIMITER //
 create procedure sp_crear_asistente(
     id int,
@@ -379,7 +386,7 @@ else
 select 'Error';
 end if;
 
-
+drop procedure if exists  sp_crear_medico;
 DELIMITER //
 create procedure sp_crear_medico(
     id int,

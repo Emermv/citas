@@ -40,11 +40,17 @@ class Administrador{
 		this.genero_med;
 		this.foto_med;
 		this.correo_m;
+		/****************************/
+		this.lista_especialidades;
+		this.btn_new_especialidad;
+		this.table_medicos;
+		this.table_asistentes;
+		this.table_pacientes;
 		adminInstance=this;
 	}
 initComponents(){
-	adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-medico.html"));
-		adminInstance.initCompoenentsMedico();
+	adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		adminInstance.initCompoenentsConfig();
 	this.btn_asistente.mouseenter(function(){
 	jq(this).notify("Asistente",{ position:"left",className: 'info' });
 	}).click(function(){
@@ -67,11 +73,108 @@ initComponents(){
 	this.btnconfig.mouseenter(function(){
 	jq(this).notify("Configuración",{ position:"left",className: 'info' });
 	}).click(function(){
-		
+		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		adminInstance.initCompoenentsConfig();
 	});
 	
 }
+	/********************************************************************************/
+	eliminarEspecialidad(obj){
+		alertify.confirm("¿Seguro que desea eliminar la especialidad?",function(si){
+			if(si){
+				var id=obj.id.replace("espe","");
+		var form=new FormData();
+		form.append("id",id);
+		adminInstance.ajaxAdmin("../php/eliminar_especialidad.php",form,function(data){
+			try{
+				var response=JSON.parse(data);
+				if(response.status==1){
+					jq("#liespe"+id).remove();
+					adminInstance.validarInput(adminInstance.lista_especialidades,response.mensaje,'top','info');
+				}else{
+					adminInstance.validarInput(adminInstance.lista_especialidades,response.mensaje,'top','error');
+				}
+			}catch(err){
+				adminInstance.validarInput(adminInstance.lista_especialidades,err,'top','error');
+			}
+		});
+			}
+		});
+	}
+	/********************************************************************************/
+	crearEspecialidad(){
+		var especialidad=jq("#txt_especialidad");
+			var form=new FormData();
+			if(especialidad.val()!==""){
+				form.append("especialidad",especialidad.val());
+		adminInstance.ajaxAdmin("../php/crear_especialidad.php",form,function(data){
+			try{
+				var response=JSON.parse(data);
+				if(response.status==1){
+					adminInstance.setEspecialidadesConfig();
+					adminInstance.validarInput(adminInstance.lista_especialidades,response.mensaje,'top','info');
+				}else{
+					adminInstance.validarInput(adminInstance.lista_especialidades,response.mensaje,'top','error');
+				}
+			}catch(err){
+				adminInstance.validarInput(adminInstance.lista_especialidades,err,'top','error');
+			}
+			});
+			}else{
+				adminInstance.validarInput(especialidad,"Ingrese una especialidad!",'bottom','error');
+			}
+	}
+	/********************************************************************************/
+	initCompoenentsConfig(){
+		adminInstance.lista_especialidades=jq("#lista_especialidades");
+		adminInstance.table_medicos=jq("#table_medicos");
+		adminInstance.table_asistentes=jq("#table_asistentes");
+		adminInstance.table_pacientes=jq("#table_pacientes");
+		adminInstance.setEspecialidadesConfig();
+			adminInstance.listar_medicos();
+					adminInstance.listar_asistentes();
+		adminInstance.listar_pacientes();
+	}
+	setEspecialidadesConfig(){
+		adminInstance.ajaxAdmin("../php/listar_especialidades.php",null,function(data){
+			try{
+				var response=JSON.parse(data);
+				if(response.status==1){
+					adminInstance.lista_especialidades.empty().append(adminInstance.getAdItemEspecialidades());
+					for(var i=0;i<response.num;i++){
+						adminInstance.lista_especialidades.append(
+						'<li class="collection-item" id="liespe'+response[i].id_esp+'"><div>'+response[i].especialidad+
+							'<a href="#" class="secondary-content" id="espe'+response[i].id_esp+
+					'" onclick="adminInstance.eliminarEspecialidad(this)"><i class="material-icons red-text">delete</i></a></div></li>');
+					}
+					adminInstance.btn_new_especialidad=jq("#btn_new_especialidad").click(function(){
+						 adminInstance.crearEspecialidad();
+           	});
+						jq('.collapsible').collapsible({
+      accordion : false 
+    });
+				}else{
+					adminInstance.validarInput(adminInstance.lista_especialidades,"Sin especialidades",'top','error');
+				}
+			}catch(err){
+				adminInstance.validarInput(adminInstance.lista_especialidades,err,'top','error');
+			}
+		});
+	}
+	/********************************************************************************/
+	getAdItemEspecialidades(){
+		return '	<li class="collection-item">'+
+									'<div class="row">'+
+									  ' <div class="input-field col s9 m9 l9">'+
+          '<input id="txt_especialidad" type="text" class="validate" >'+
+          '<label for="txt_especialidad">Especialidad</label>'+
+        '</div>	<div class="col s3 m3 l3">'+
+			'<a href="#!" class="secondary-content btn-floating blue " id="btn_new_especialidad">'+
+										'<i class="material-icons">add</i>'+
+										'</a></div></div></li>';
+	}
 	
+	/********************************************************************************/
 	initCompoenentsPaciente(){
 		adminInstance.btn_guardar_paciente=jq("#btn_guardar_paciente").click(function(e){
 			e.preventDefault();
@@ -379,9 +482,193 @@ initComponents(){
 		return edad;
 	}
 	/*****************************************************************************/
+	listar_medicos(){
+		adminInstance.ajaxAdmin("../php/listar_medicos.php",null,function(data){
+			try{
+				var res=JSON.parse(data);
+				if(res.status==1){
+					adminInstance.table_medicos.empty();
+					for(var i=0;i<res.num;i++){
+						adminInstance.setTableMedicos(i+1,res[i].dni,
+												adminInstance.getChipFoto(res[i].ruta_foto,res[i].nom_ap),
+												res[i].direccion,
+												res[i].telefono,
+												res[i].correo,
+												res[i].codigo,
+												adminInstance.getAtionTableMedicos(res[i].codigo,res[i].id));
+					}
+				}else{
+						adminInstance.validarInput(adminInstance.table_medicos,res.mensaje,'top','error');
+				}
+			}catch(err){
+				adminInstance.validarInput(adminInstance.table_medicos,err,'top','error');
+			}
+			
+		});
+	}
 	/*****************************************************************************/
+	setTableMedicos(id,dni,nom_ape,dir,tel,email,id_med,action){
+		adminInstance.table_medicos.append('<tr id="trmed'+id_med+'">'+
+						'<td>'+id+'</td>'+
+					'<td>'+dni+'</td>'+
+				 	'<td>'+nom_ape+'</td>'+
+						'<td>'+dir+'</td>'+
+						'<td>'+tel+'</td>'+
+						'<td>'+email+'</td>'+
+				  	'<td>'+action+'</td>'+
+		           '</tr>');
+	}
+	/********************************************************************************/
+	getAtionTableMedicos(id,id_usu){
+		return '<a class="btn-floating  waves-effect waves-light red" id="eliminarmed'+id+'" onclick="adminInstance.eliminarMedico(this)" name="eliminarusu'+id_usu+'">'+
+			'<i class="material-icons">delete</i></a>'+
+			'<a class="btn-floating waves-effect waves-light blue" id="modificarmed'+id+'" onclick="adminInstance.modificarMedico(this)" name="modificarusu'+id_usu+'">'+
+			'<i class="material-icons">create</i></a>';
+	}
 	/*****************************************************************************/
+	getChipFoto(ruta,nom){
+		return ' <div class="chip">'+
+    '<img src="../'+ruta+'" >'+nom+'</div>';
+	}
 	/*****************************************************************************/
+	eliminarMedico(obj){
+		var id=obj.id.replace("eliminarmed","");
+		var id_usu=obj.name.replace("eliminarusu","");
+		alertify.confirm("¿Seguro que desea eliminar?",function(e){
+			if(e){
+				var form=new FormData();
+				form.append("codigo",id);
+				form.append("id_usu",id_usu);
+				adminInstance.ajaxAdmin("../php/eliminar_medico.php",form,function(data){
+					try{
+						var response=JSON.parse(data);
+						if(response.status==1){
+							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','success');
+						}else{
+							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','error');
+						}
+					}catch(e){
+					adminInstance.validarInput(adminInstance.table_medicos,e,'top','error');	
+					}
+				});
+			}
+		});
+	}
+	/*****************************************************************************/
+		modificarMedico(obj){
+		alertify.success(obj.id);
+	}
+	/*****************************************************************************/
+	listar_asistentes(){
+		adminInstance.ajaxAdmin("../php/listar_asistentes.php",null,function(data){
+			try{
+				var res=JSON.parse(data);
+				if(res.status==1){
+					adminInstance.table_asistentes.empty();
+					for(var i=0;i<res.num;i++){
+						adminInstance.setTableAsistentes(i+1,res[i].dni,
+												adminInstance.getChipFoto(res[i].ruta_foto,res[i].nom_ap),
+												res[i].direccion,
+												res[i].telefono,
+												res[i].edad,
+												res[i].correo,
+												res[i].genero,
+											  res[i].codigo,
+												adminInstance.getAtionTableAsistentes(res[i].codigo,res[i].id));
+					}
+				}else{
+						adminInstance.validarInput(adminInstance.table_medicos,res.mensaje,'top','error');
+				}
+			}catch(err){
+				adminInstance.validarInput(adminInstance.table_medicos,err,'top','error');
+			}
+			
+		});
+	}
+	/*****************************************************************************/
+	setTableAsistentes(id,dni,nom_ape,dir,tel,edad,email,genero,id_asis,action){
+		adminInstance.table_asistentes.append('<tr id="trmed'+id_asis+'">'+
+						'<td>'+id+'</td>'+
+					'<td>'+dni+'</td>'+
+				 	'<td>'+nom_ape+'</td>'+
+						'<td>'+dir+'</td>'+
+						'<td>'+tel+'</td>'+
+					'<td>'+edad+'</td>'+
+						'<td>'+email+'</td>'+
+						'<td>'+genero+'</td>'+
+				  	'<td>'+action+'</td>'+
+		           '</tr>');
+	}
+	/*****************************************************************************/
+	getAtionTableAsistentes(id,id_usu){
+			return '<a class="btn-floating  waves-effect waves-light red" id="eliminarasi'+id+'" onclick="adminInstance.eliminarAsistente(this)" name="eliminarusu_asi'+id_usu+'">'+
+			'<i class="material-icons">delete</i></a>'+
+			'<a class="btn-floating waves-effect waves-light blue" id="modificarasi'+id+'" onclick="adminInstance.modificarAsistente(this)" name="modificarusu_asi'+id_usu+'">'+
+			'<i class="material-icons">create</i></a>';
+	}
+	/*****************************************************************************/
+	modificarAsistente(obj){
+		
+	}
+	/*****************************************************************************/
+	eliminarAsistente(obj){
+		
+	}
+	/*****************************************************************************/
+	listar_pacientes(){
+		adminInstance.ajaxAdmin("../php/listar_pacientes.php",null,function(data){
+			try{
+				var res=JSON.parse(data);
+				if(res.status==1){
+					adminInstance.table_pacientes.empty();
+					for(var i=0;i<res.num;i++){
+						adminInstance.setTablePacientes(i+1,
+													res[i].dni,
+												adminInstance.getChipFoto(res[i].ruta_foto,res[i].nom_ap),
+												res[i].direccion,
+												res[i].telefono,
+												res[i].edad,
+												res[i].genero,
+											  res[i].codigo,
+												adminInstance.getAtionTablePacientes(res[i].codigo,res[i].id));
+					}
+				}else{
+						adminInstance.validarInput(adminInstance.table_medicos,res.mensaje,'top','error');
+				}
+			}catch(err){
+				adminInstance.validarInput(adminInstance.table_medicos,err,'top','error');
+			}
+			
+		});
+	}
+	/*****************************************************************************/
+	setTablePacientes(id,dni,nom_ape,dir,tel,edad,genero,id_asis,action){
+		adminInstance.table_pacientes.append('<tr id="trmed'+id_asis+'">'+
+						'<td>'+id+'</td>'+
+					'<td>'+dni+'</td>'+
+				 	'<td>'+nom_ape+'</td>'+
+						'<td>'+dir+'</td>'+
+						'<td>'+tel+'</td>'+
+					'<td>'+edad+'</td>'+
+						'<td>'+genero+'</td>'+
+				  	'<td>'+action+'</td>'+
+		           '</tr>');
+	}
+	/*****************************************************************************/
+		getAtionTablePacientes(id,id_usu){
+			return '<a class="btn-floating  waves-effect waves-light red" id="eliminarpac'+id+'" onclick="adminInstance.eliminarPaciente(this)" name="eliminarusu_pac'+id_usu+'">'+
+			'<i class="material-icons">delete</i></a>'+
+			'<a class="btn-floating waves-effect waves-light blue" id="modificarpac'+id+'" onclick="adminInstance.modificarPaciente(this)" name="modificarusu_pac'+id_usu+'">'+
+			'<i class="material-icons">create</i></a>';
+	}
+	/*****************************************************************************/
+	eliminarPaciente(obj){
+		
+	}
+	/*****************************************************************************/
+	modificarPaciente(obj){
+		
+	}
 	/*****************************************************************************/
 	/*****************************************************************************/
 	/*****************************************************************************/

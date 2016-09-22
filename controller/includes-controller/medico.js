@@ -189,7 +189,7 @@ btn_guardar_paciente.click(function(e){
 			   	'</div>'+
     '</div><div class="modal-footer">'+
 					'<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat red">Cancelar</a>'+
-					'<button type="submit" class="waves-effect waves-white btn-flat blue" id="btnatencion'+id+'" onclick="mediconewInstance.guardarAtencion(this)" name="cod_pac'+cod+'">Guardar</button>'+
+					'<a  class="waves-effect waves-white btn-flat blue" id="btnatencion'+id+'" onclick="mediconewInstance.guardarAtencion(this)" name="cod_pac'+cod+'">Guardar</a>'+
      '</div></form></div>'+
 								'<a class="waves-effect waves-light btn-floating teal"'+
 								' onclick="mediconewInstance.verHistorialClinico(this)" id="ver_his'+cod+'">'+
@@ -318,8 +318,9 @@ btn_guardar_paciente.click(function(e){
 		}
 		/********************************************************************************/
 						guardarAtencion(obj){
-								var id_cita=obj.id.replace("btnatencion","");
 							
+								var id_cita=obj.id.replace("btnatencion","");
+							  
 							var diag=jq("#diagnostico"+id_cita).val();
 							var receta=jq("#receta"+id_cita).val();
 							var id_medico=Base64.decode(localStorage.getItem("id"));
@@ -572,7 +573,7 @@ btn_guardar_paciente.click(function(e){
 			   	'</div>'+
     '</div><div class="modal-footer teal lighten-1">'+
 					'<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat red">Cancelar</a>'+
-					'<button type="submit" class="waves-effect waves-white btn-flat blue darken-4" id="btnmodificar'+id+'" onclick="mediconewInstance.modificarHistorial(this)" name="cod_pac_modi'+p+'" idcita="idcitamodi'+c+'">Modificar</button>'+
+					'<a  class="waves-effect waves-white btn-flat blue darken-4" id="btnmodificar'+id+'" onclick="mediconewInstance.modificarHistorial(this)" name="cod_pac_modi'+p+'" idcita="idcitamodi'+c+'">Modificar</a>'+
      '</div></form></div>';
 						}
 		/********************************************************************************/
@@ -625,6 +626,7 @@ btn_guardar_paciente.click(function(e){
 								try{
 									var resp=JSON.parse(data);
 									if(resp.status==1){
+										mediconewInstance.listar_all_historial();
 										jq.notify(resp.mensaje,"success");
 										jq("#modificar"+resp.id).closeModal();
 									}else{
