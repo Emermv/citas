@@ -13,10 +13,13 @@
         var estado_clave=$("#estado_password");
         var estado_email=$("#estado_email");
         var btnRecuperarClave=$("#btnRecuperarClave");
+        var recupera_cuenta=$("#recupera_cuenta");
         var content_form_recuperacion=$("#content_form_recuperacion");
         var btnCancelar=$("#btnCancelar");
           form_login.on("submit",function(event){
              event.preventDefault();
+             validar_dni(estado_dni,dni);
+             validar_clave(estado_clave,clave);
              login(dni.val(),clave.val());
            });
         dni.on("blur",function(e){
@@ -36,6 +39,7 @@
         btnRecuperarClave.click(function(){
             form_login.hide();
             content_form_recuperacion.removeClass("hide");
+            
         });
         btnCancelar.click(function(){
            content_form_recuperacion.addClass("hide");
@@ -48,6 +52,11 @@
         email.on("focus",function(e){
            estado_email.empty(); 
         });
+        recupera_cuenta.click(function(event) {
+          event.preventDefault();
+          recuperar_cuenta(email.val());
+        });
+
     });
   function validar_dni(estado_dni,dni){
       estado_dni.empty();
@@ -167,7 +176,7 @@
                    localStorage.setItem("edad",Base64.encode(credenciales.edad));
                    localStorage.setItem("genero",Base64.encode(credenciales.genero));
                }else if(tipo==="Administrador"){
-                   
+                   localStorage.setItem("ppp",Base64.encode(credenciales.ppp));
                }else{
 																localStorage.setItem("tipo",Base64.encode("undefined"));
 															}
@@ -195,5 +204,50 @@
     function problemas(){
         mensaje_error("Problemas en el servidor");
     }
-   
+
+   function recuperar_cuenta(em){
+    if(em!==""){
+      var form=new FormData();
+    form.append('email',em);
+          
+                $.ajax({
+                async:true,
+                type:"post",
+                url:"php/recuperar_cuenta.php",
+                dataType:"html",
+                data:form,
+                cache:false,
+                contentType: false,
+               processData: false,
+                
+                success:function(data){
+                 try{
+                   var response=JSON.parse(data);
+                  if(response.status==1){
+                    mensaje_info(response.mensaje);
+                  }else{
+                    mensaje_error(response.mensaje);
+                  }
+                 }catch(err){
+                    mensaje_error(err);
+                  }
+                },
+                timeout:5000,
+              error:problemas
+            });
+      }else{
+    mensaje_error("Ingrese tu email para poder recuperar tu cuenta ");
+  }
+    
+   }
+    function mensaje_info(mensaje){
+    
+        var btn=$("#mensaje_error");
+        btn.empty();
+        btn.append('<a class="waves-effect waves-light blue-text" id="btn_error"><i class="material-icons left">done</i>'+
+        mensaje+'</a><br/>');
+        btn.click(function(){
+           btn.empty(); 
+        });
+    }
 }());

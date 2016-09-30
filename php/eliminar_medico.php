@@ -9,7 +9,7 @@ $db=mysqli_select_db($con,db);
 if($db){
 $id=$_POST["codigo"];
 $id_usu=$_POST["id_usu"];
- $peticion1=mysqli_query($con,"delete from medicos where codigo=".$id);
+ $peticion1=mysqli_query($con,"delete from medicos where id_usuario=".$id_usu);
 $peticion2=mysqli_query($con,"delete from usuarios where id=".$id_usu);
 if($peticion1 && $peticion2){
 $response["status"]=1;

@@ -169,7 +169,7 @@ create PROCEDURE sp_crear_citas(
         else 
         SELECT 'Error esta cita ya fue creado';
         end if;
-        end//
+        end
 
 
 
@@ -248,7 +248,7 @@ join pacientes as p on cpm.id_paciente=p.codigo
 join usuarios as u on p.id_usuario=u.id
 join horas_citas_paciente_medico as hcpm
 on hcpm.id_cita=cpm.id_cita where cpm.fecha=fecha
-and cpm.id_medico=id and cpm.especialidad=esp
+and cpm.especialidad=esp
 and cpm.estado='asistira'
 order  by cpm.id_cita ASC;
 ELSE
@@ -260,11 +260,10 @@ join pacientes as p on cpm.id_paciente=p.codigo
 join usuarios as u on p.id_usuario=u.id
 join horas_citas_paciente_medico as hcpm
 on hcpm.id_cita=cpm.id_cita
-where cpm.id_medico=id and cpm.fecha=fecha
+where  cpm.fecha=fecha
 and cpm.estado='asistira'
 order  by cpm.id_cita ASC;
 end if;
-
 /**************************/
 
 drop procedure if exists sp_insertar_historial;
@@ -386,7 +385,6 @@ else
 select 'Error';
 end if;
 
-drop procedure if exists  sp_crear_medico;
 DELIMITER //
 create procedure sp_crear_medico(
     id int,
@@ -396,15 +394,11 @@ create procedure sp_crear_medico(
     apellidos varchar(50),
     direccion varchar(200),
     telefono varchar(15),
-    ruta_foto varchar(100),
-    codigo int,
-    correo varchar(100),
-    id_esp int
+    ruta_foto varchar(100)
     )
     COMMENT 'sp que crea medicos '
   if not EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
   INSERT into usuarios values (id,dni,passwor,nombre,apellidos,direccion,telefono,ruta_foto);
-INSERT into medicos VALUES(codigo,id,correo,id_esp);
 else 
 select 'Error';
 end if;
@@ -419,15 +413,11 @@ create procedure sp_modificar_medico(
     apellido varchar(50),
     direccio varchar(200),
     telefon varchar(15),
-    ruta_fot varchar(100),
-    codig int,
-    corre varchar(100),
-    id_es int
+    ruta_fot varchar(100)
     )
     COMMENT 'sp que modifica medicos '
   if EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
   update  usuarios set       dni=dn,password=passwo,nombre=nombr,apellidos=apellido,direccion=direccio,telefono=telefon,ruta_foto=ruta_fot where id =i;
-update medicos set correo=corre,id_esp=id_es where codigo=codig;
 else 
 select 'Error';
 end if;
@@ -477,3 +467,24 @@ update asistentes set edad=eda,correo=corre,genero=gener where codigo=codig;
 else 
 select 'Error';
 end if;
+
+
+/*indices **********************************/
+create index ix_fec_cit on citas_paciente_medico(fecha);
+
+
+  DELIMITER //
+create procedure  sp_listar_notificar(fecha date , paciente int)
+select cpm.id_cita,cpm.fecha,cpm.num_f_horas,cpm.estado,
+cpm.confirmado,hcpm.id_horas,hcpm.hora,e.especialidad,u.nombre as 'pnombre',
+u.apellidos as 'papellidos',u.telefono as 'ptelefono',
+um.nombre as 'mnombre',um.apellidos as 'mapellidos',um.telefono as 'mtelefono'
+from horas_citas_paciente_medico as hcpm 
+join citas_paciente_medico as cpm 
+on hcpm.id_cita=cpm.id_cita join especialidades as e
+on cpm.especialidad=e.id_esp join (pacientes as p join usuarios as u on p.id_usuario=u.id) 
+on p.codigo=cpm.id_paciente join(medicos as m join usuarios as um on um.id=m.id_usuario)
+on m.codigo=cpm.id_medico  where cpm.fecha=fecha and cpm.id_paciente=paciente
+and cpm.id_cita=(select id_cita from citas_paciente_medico order by id_cita desc limit 1);
+call sp_listar_notificar('2016-09-24',1)
+drop PROCEDURE sp_listar_notificar

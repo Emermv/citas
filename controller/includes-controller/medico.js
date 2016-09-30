@@ -64,6 +64,7 @@ btn_guardar_paciente.click(function(e){
 	}else{
 		jq.notify("Seleccione una especialidad","warn");
 	}
+	
 				}
 		/********************************************************************************/
 						successListadoPacientes(data){

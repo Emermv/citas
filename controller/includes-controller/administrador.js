@@ -185,6 +185,8 @@ initComponents(){
 		});
 		adminInstance.btn_cancelar=jq("#btn_cancelar").click(function(){
 			adminInstance.modificando_usuario=false;
+			adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		adminInstance.initCompoenentsConfig();
 		});
 		adminInstance.nombres_p=jq("#nombres_p");
 		adminInstance.apellidos_p=jq("#apellidos_p");
@@ -215,6 +217,8 @@ initComponents(){
 		});
 			adminInstance.btn_cancelar=jq("#btn_cancelar").click(function(){
 			adminInstance.modificando_usuario=false;
+			adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		adminInstance.initCompoenentsConfig();
 		});
 		adminInstance.nombres_a=jq("#nombres_a");
 		adminInstance.apellidos_a=jq("#apellidos_a");
@@ -246,6 +250,8 @@ initComponents(){
 		});
 			adminInstance.btn_cancelar=jq("#btn_cancelar").click(function(){
 			adminInstance.modificando_usuario=false;
+			adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		adminInstance.initCompoenentsConfig();
 		});
 		adminInstance.nombres_m=jq("#nombres_m");
 		adminInstance.apellidos_m=jq("#apellidos_m");
@@ -450,6 +456,8 @@ initComponents(){
 		}
 	}
 	/*****************************************************************************/
+
+	/*****************************************************************************/
 	
 	guardarMedico(){
 		var data=new FormData();
@@ -471,9 +479,16 @@ initComponents(){
 												data.append("password",adminInstance.password_med.val());
 												data.append("genero",adminInstance.genero_med.val());
 													data.append("correo",adminInstance.correo_m.val());
-												data.append("id_esp",adminInstance.especialidad.val());
+												var espearr=adminInstance.especialidad.val();
+												var arr=(espearr+'').split(",");
+												var tam_esp=arr.length;
+												for(var i=0;i<tam_esp;i++){
+													data.append("id_esp"+i,arr[i]);
+												}
+											
+												data.append("tam_esp",tam_esp);
 												 var aux=document.getElementById("foto_med");
-            var file=aux.files[0];
+                                           var file=aux.files[0];
 												data.append("foto",file);
 												
 											
@@ -591,8 +606,19 @@ initComponents(){
 												res[i].telefono,
 												res[i].correo,
 												res[i].codigo,
+												adminInstance.getEspecialidadesMedico(res[i],res[i].num_f_esp,i),
 												adminInstance.getAtionTableMedicos(res[i].codigo,res[i].id));
 					}
+					 jq('.dropdown-button').dropdown({
+      inDuration: 300,
+      outDuration: 225,
+      constrain_width: false,
+      hover: true, 
+      gutter: 0,
+      belowOrigin: false,
+      alignment: 'left'
+    }
+  );
 				}else{
 						adminInstance.validarInput(adminInstance.table_medicos,res.mensaje,'top','error');
 				}
@@ -603,7 +629,18 @@ initComponents(){
 		});
 	}
 	/*****************************************************************************/
-	setTableMedicos(id,dni,nom_ape,dir,tel,email,id_med,action){
+	getEspecialidadesMedico(object,num,id){
+		var item='<ul id="dropdown'+id+'" class="dropdown-content">';
+		for(var j=0;j<num;j++){
+			item+='<li><a href="#">'+object[j].especialidad+'</a></li>';
+		}
+		item+='</ul>'+
+  '<a class="btn dropdown-button" href="#" data-activates="dropdown'+id+'">'+
+			'<i class="material-icons">school</i><i class="mdi-navigation-arrow-drop-down right"></i></a>';
+		return item;
+	}
+	/*****************************************************************************/
+	setTableMedicos(id,dni,nom_ape,dir,tel,email,id_med,especialidad,action){
 		adminInstance.table_medicos.append('<tr id="trmed'+id_med+'">'+
 						'<td>'+id+'</td>'+
 					'<td>'+dni+'</td>'+
@@ -611,6 +648,7 @@ initComponents(){
 						'<td>'+dir+'</td>'+
 						'<td>'+tel+'</td>'+
 						'<td>'+email+'</td>'+
+						'<td>'+especialidad+'</td>'+
 				  	'<td>'+action+'</td>'+
 		           '</tr>');
 	}
@@ -640,6 +678,7 @@ initComponents(){
 						var response=JSON.parse(data);
 						if(response.status==1){
 							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','success');
+							adminInstance.listar_medicos();
 						}else{
 							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','error');
 						}
@@ -659,6 +698,8 @@ initComponents(){
 			adminInstance.modificando_usuario=true;
 			adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-medico.html"));
 		adminInstance.initCompoenentsMedico();
+		
+
 	}
 	/*****************************************************************************/
 	listar_asistentes(){
@@ -689,7 +730,7 @@ initComponents(){
 	}
 	/*****************************************************************************/
 	setTableAsistentes(id,dni,nom_ape,dir,tel,edad,email,genero,id_asis,action){
-		adminInstance.table_asistentes.append('<tr id="trmed'+id_asis+'">'+
+		adminInstance.table_asistentes.append('<tr id="trasi'+id_asis+'">'+
 						'<td>'+id+'</td>'+
 					'<td>'+dni+'</td>'+
 				 	'<td>'+nom_ape+'</td>'+
@@ -732,12 +773,13 @@ initComponents(){
 					try{
 						var response=JSON.parse(data);
 						if(response.status==1){
-							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','success');
+							adminInstance.validarInput(adminInstance.table_asistentes,response.mensaje,'top','success');
+							adminInstance.listar_asistentes();
 						}else{
-							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','error');
+							adminInstance.validarInput(adminInstance.table_asistentes,response.mensaje,'top','error');
 						}
 					}catch(e){
-					adminInstance.validarInput(adminInstance.table_medicos,e,'top','error');	
+					adminInstance.validarInput(adminInstance.table_asistentes,e,'top','error');	
 					}
 				});
 			}
@@ -772,7 +814,7 @@ initComponents(){
 	}
 	/*****************************************************************************/
 	setTablePacientes(id,dni,nom_ape,dir,tel,edad,genero,id_asis,action){
-		adminInstance.table_pacientes.append('<tr id="trmed'+id_asis+'">'+
+		adminInstance.table_pacientes.append('<tr id="trpac'+id_asis+'">'+
 						'<td>'+id+'</td>'+
 					'<td>'+dni+'</td>'+
 				 	'<td>'+nom_ape+'</td>'+
@@ -804,12 +846,13 @@ initComponents(){
 					try{
 						var response=JSON.parse(data);
 						if(response.status==1){
-							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','success');
+							adminInstance.validarInput(adminInstance.table_pacientes,response.mensaje,'top','success');
+							adminInstance.listar_pacientes();
 						}else{
-							adminInstance.validarInput(adminInstance.table_medicos,response.mensaje,'top','error');
+							adminInstance.validarInput(adminInstance.table_pacientes,response.mensaje,'top','error');
 						}
 					}catch(e){
-					adminInstance.validarInput(adminInstance.table_medicos,e,'top','error');	
+					adminInstance.validarInput(adminInstance.table_pacientes,e,'top','error');	
 					}
 				});
 			}

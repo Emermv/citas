@@ -166,7 +166,7 @@ minDate:new Date()
 }
 	/*************************************************/
 	 problemas(){
-    
+   jq.notify("Problemas con la conexion","error"); 
 }
 	/*************************************************/
 	crear_cita_paciente(){
@@ -254,6 +254,8 @@ minDate:new Date()
 	var response=JSON.parse(data);
 		if(response.status===1){
 			jq.notify(response.mensaje,"success");
+			pacienteNewInstance.notificar_pciente();
+			
 		}else{
 				jq.notify(response.mensaje,"error");
 		}
@@ -264,6 +266,72 @@ minDate:new Date()
 	/*************************************************/
 	problemasCreacionCita(){
 		jq.notify("Problemas con la conexion!","error");
+	}
+	/*************************************************/
+	notificar_pciente(){
+		var paciente=Base64.decode(localStorage.getItem("id"));
+		var fecha=pacienteNewInstance.getFormatFecha();
+		var x=new FormData();
+		x.append("paciente",paciente);
+		x.append("fecha",fecha);
+		 jq.ajax({
+               async:true,
+                 contentType:"application/x-www-form-urlencoded",
+                url:"../php/notificar_paciente.php",
+                type: "post",
+                dataType: "html",
+                data:x,
+                cache: false,
+                contentType: false,
+	               processData: false,
+                success:function(data){
+																	try{
+																		var modal=	jq("#moda_notificar").empty();
+																		modal.addClass("red");
+																		var response=JSON.parse(data);
+																		if(response.status==1){
+																	modal.append(
+																				'<div id="modalnotificar" class="modal">'+
+                       '<div class="modal-content">'+
+																		  ' <ul class="collection  with-header">'+
+                     '<li class="collection-header"><h4>Detalles de la cita</h4></li>'+
+																				'<li class="collection-item">Paciente : '+response[0].pnombre+'</li>'+
+																		'<li class="collection-item">Apellidos : '+response[0].papellidos+'</li>'+
+														'<li class="collection-item">Médico : '+response[0].mnombre+'</li>'+
+												'<li class="collection-item">Apellidos : '+response[0].mapellidos+'</li>'+
+															'<li class="collection-item">Telefono del médico : '+response[0].mtelefono+'</li>'+
+															'<li class="collection-item">Especialidad : '+response[0].especialidad+'</li>'+
+															'<li class="collection-item">Fecha : '+response[0].fecha+'</li>'+
+														'<li class="collection-item">Horas : '+pacienteNewInstance.getHoras(response[0],response[0].num_f_horas)+'</li>'+
+							'<li class="collection-item active"><div>Sugerencia : Llegar 15 minutos antes de la hora'+
+													'<a href="#!" class="secondary-content">'+
+													'<i class="material-icons black-text">add_alert</i></a></div></li>'+
+                     '</ul></div><div class="modal-footer">'+
+                     '<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-floating red right">'+
+																				'<i class="material-icons">close</i></a>'+
+																				'</div></div>');
+																			jq('.modal-trigger').leanModal();
+																			jq('#modalnotificar').openModal();
+																		}else{
+																			jq.notify(response.mensaje,"error");
+																		}
+																	}catch(err){
+																		jq.notify(err,"error");
+																	}
+																},
+                timeout:5000,
+                error:function(){
+																	jq.notify("Problemas de conexion","error");
+																}
+            });
+	}
+	/*************************************************/
+	getHoras(obj,num){
+		var item='';
+		for(var i=0;i<num;i++){
+			item+=obj[i].hora+'  |  ';
+		}
+		return  item;
 	}
 	/*************************************************/
 	setEspecialidades(){
@@ -354,5 +422,5 @@ function SuccesFiltrado(data){
 }
 
 function problemas(){
-	
+	jq.notify("Problemas con la conexion");
 }

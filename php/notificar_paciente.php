@@ -8,18 +8,13 @@ $response["mensaje"]="";
 if($con){
 $db=mysqli_select_db($con,db);
 if($db){
-
 $fecha=$_POST["fecha"];
-$opcion=$_POST["opcion"];
-$id_medico=$_POST["id_medico"];
-$esp=$_POST["especialidad"];
+$paciente=$_POST["paciente"];
+
 /*
-$fecha='2016-09-18';
-$opcion=2;
-$id_medico=1;
-$esp=2;
-*/
-$peticion=mysqli_query($con,"call sp_listar_pacientes('".$fecha."',".$id_medico.",".$esp.",".$opcion.")");
+$fecha='2016-09-24';
+$paciente=1;*/
+$peticion=mysqli_query($con,"call sp_listar_notificar('".$fecha."',".$paciente.")");
 $num=0;
 
 if($peticion){
@@ -30,19 +25,17 @@ while(true){
        for($i=0;$i<$data->num_f_horas;$i++){
        	if(!$entro){
 			$response[$num]=array('id_cita'=>$data->id_cita,'fecha'=>$data->fecha,'num_f_horas'=>$data->num_f_horas,
-		  'nombre'=>$data->nombre,'estado'=>$data->estado,
-		'apellidos'=>$data->apellidos,'edad'=>$data->edad,'direccion'=>$data->direccion,'descripcion'=>$data->descripcion,
-		'ruta_foto'=>$data->ruta_foto,'codigo_pac'=>$data->codigo);
-			$response[$num][$i]=array('hora'=>$data->hora);
+		'especialidad'=>$data->especialidad,'pnombre'=>$data->pnombre,'estado'=>$data->estado,
+		'papellidos'=>$data->papellidos,'ptelefono'=>$data->ptelefono,'mnombre'=>$data->mnombre,
+		'mapellidos'=>$data->mapellidos,'mtelefono'=>$data->mtelefono,'confirmado'=>$data->confirmado);
+			$response[$num][$i]=array('id_horas'=>$data->id_horas,'hora'=>$data->hora);
 			$entro=true;
 			}else{
 		    $horas=mysqli_fetch_object($peticion);
-			$response[$num][$i]=array('hora'=>$horas->hora);
+			@$response[$num][$i]=array('id_horas'=>$horas->id_horas,'hora'=>$horas->hora);
 			}
        }
 	 
-	 
-
 	$num++;
 	$entro=false;
 }else{

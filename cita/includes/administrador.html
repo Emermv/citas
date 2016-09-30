@@ -12,24 +12,52 @@
     <div class="card-reveal">
       <span class="card-title grey-text text-darken-4">Datos:<i class="material-icons right">close</i></span>
       <div class="row">
-                  <div class="col s5 m4 l2"><span >Nombre</span></div>
+      <form enctype="multipart/form-data">
+      <div class="col s12 m12 l12">
+       <div class="file-field input-field">
+      <div class="btn">
+        <span>FOTO</span>
+        <input type="file" id="foto">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text">
+      </div>
+    </div>
+    </div>
+     
+         <br/>
+    <div class="col s5 m4 l2"><span >Nombre</span></div>
      <div class="col s1 m1 l1 "><span >:</span></div>
-    <div class="col s6 m7 l9 " id="nombre"></div>
+    <div class="col s6 m7 l9 " ><input type="text" id="nombre" ></div>
         
        <div class="col s5 m4 l2 "><span >Apellidos</span></div>
      <div class="col s1 m1 l1 "><span >:</span></div>
-    <div class="col s6 m7 l9 " id="apellidos"></div>
+    <div class="col s6 m7 l9 " ><input type="text" id="apellidos"></div>
         
            <div class="col s5 m4 l2"><span >Direcci&oacute;n</span></div>
      <div class="col s1 m1 l1 "><span >:</span></div>
-    <div class="col s6 m7 l9 " id="direccion"></div>
+    <div class="col s6 m7 l9 " ><input type="text" id="direccion"></div>
         
            <div class="col s5 m4 l2 "><span >Telefono</span></div>
      <div class="col s1 m1 l1 "><span >:</span></div>
-    <div class="col s6 m7 l9 " id="telefono"></div>
-   
+    <div class="col s6 m7 l9 " ><input type="number" id="telefono"></div>
+       
+         <div class="col s5 m4 l2 "><span >DNI</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s6 m7 l9 " ><input type="number" id="dni" length="8"></div>
+
+       <div class="col s5 m4 l2 "><span >Contraseña</span></div>
+     <div class="col s1 m1 l1 "><span >:</span></div>
+    <div class="col s4 m5 l7 " ><input type="password" id="conpas" length="6"></div>
+    <div class="col s2 m2 l2">
+     <a class="waves-effect waves-light btn-floating " id="btn_view_pass"><i class="material-icons right">visibility</i></a>
+    </div>
+
+     <div class="col s12 m12 l12 center "><a class="waves-effect waves-light btn" id="btn_modificar_admin"><i class="material-icons right">send</i>Guardar Cambios</a></div>
+      </form>
      </div>
-					
+				
+       
     </div>
   </div>
 			</div> <!--end  div col perfil-->

@@ -23,12 +23,16 @@ $apellidos=$_POST["apellidos"];
 $direccion=$_POST["direccion"];
 $id_medico=0;
 $id_usuario=0;
-$id_esp=$_POST["id_esp"];
 $telefono=$_POST["telefono"];
 $dni=$_POST["dni"];
 $genero=$_POST["genero"];
 $password=$_POST["password"];
 $correo=$_POST["correo"];
+$tam_esp=$_POST["tam_esp"];
+$id_esp=array();
+for($i=0;$i<$tam_esp;$i++){
+  $id_esp[$i]=$_POST["id_esp".$i];
+}
  $ruta="images/";
  $peticion=mysqli_query($con,"select codigo from medicos order by codigo desc limit 1");
 if($x=mysqli_fetch_array($peticion)){
@@ -49,15 +53,26 @@ $name=basename( $_FILES['foto']['name']);
   if(move_uploaded_file($_FILES['foto']['tmp_name'],"../".$ruta)){
 
    $sql1="call sp_crear_medico(".$id_usuario.",'".$dni."','".$password."','".$nombre."','".$apellidos."','".
-$direccion."','".$telefono."','".$ruta."',".$id_medico.",'".$correo."',".$id_esp.")";
+$direccion."','".$telefono."','".$ruta."')";
  $peticion1=mysqli_query($con,$sql1);
  
 if($peticion1){
-$response["status"]=1;
+  $save;
+  for($i=0;$i<$tam_esp;$i++){
+    $comand="insert into medicos values(".$id_medico.",".$id_usuario.",'".$correo."',".$id_esp[$i].")";
+   $save=mysqli_query($con,$comand);
+    $id_medico++;
+  }
+if($save){
+  $response["status"]=1;
 $response["mensaje"]="OK!"; 
 }else{
 $response["status"]=-1;
-$response["mensaje"]="Error al intentar realizar la operación";
+$response["mensaje"]="Error al intentar registrar las especialidades del médico ".$nombre;
+}
+}else{
+$response["status"]=-1;
+$response["mensaje"]="Error al intentar registrar al médico ".$nombre;
 }
   }else{
     $response["status"]=-1;

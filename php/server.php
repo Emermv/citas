@@ -4,13 +4,14 @@ define("host","localhost");
 define("user","emer_pc");
 define("password","teranova");
 define("db","citas");
-/*
 
+/*
 define("host","mysql.hostinger.es");
-define("user","u387583705_emerm");
+define("user","u387583705_emer");
 define("password","teranova");
-define("db","u387583705_movil");
+define("db","u387583705_cita");
 */
+define("email_admin", "emer.morales@allsoft.hol.es");
  function conectar(){
   try {
     $con=mysqli_connect(host,user,password);

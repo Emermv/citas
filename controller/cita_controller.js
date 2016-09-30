@@ -67,16 +67,102 @@
 							usuario.append(file_get_contents("includes/administrador.html"));
 							jq("body").append(file_get_contents("includes/footer.html"));
 							jq("#medico").addClass(Base64.decode(localStorage.getItem("cfp")));
-          jq("#nombre").append('<span>'+usuarios.nombre+'</span>');
-          jq("#apellidos").append('<span>'+usuarios.apellidos+'</span>');
-          jq("#direccion").append('<span>'+usuarios.direccion+'</span>');
-          jq("#telefono").append('<span>'+usuarios.telefono+'</span>');
-         
+          var nom=jq("#nombre").val(usuarios.nombre);
+          var ape=jq("#apellidos").val(usuarios.apellidos);
+         var dir=jq("#direccion").val(usuarios.direccion);
+          var tel=jq("#telefono").val(usuarios.telefono);
+           var dn=jq("#dni").val(usuarios.dni);
+          var ps=jq("#conpas").val(usuarios.ppp);
+          dn.characterCounter();
+          ps.characterCounter();
+
+            jq("#btn_view_pass").click(function() {
+             alertify.prompt("Ingrese tu contraseña actual",function(e,str){
+             if(e){
+               if(usuarios.ppp===str){
+                ps.removeAttr('type');
+                ps.attr('type','text');
+                setTimeout(function(){
+                     ps.removeAttr('type');
+                ps.attr('type','password');
+                },5000);
+               }else{
+                ps.removeAttr('type');
+                ps.attr('type','password');
+               }
+             }else{
+              ps.removeAttr('type');
+                ps.attr('type','password');
+             }
+             });
+            });
+        
        jq("#perfil_admin").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
          
 							var administrador=new Administrador();
 							administrador.initComponents();
-							
+							var btn= jq("#btn_modificar_admin").click(function() {
+                var aux=document.getElementById("foto");
+                  if(nom.val()!==""){
+                       if(ape.val()!==""){
+                        if(dir.val()!==""){
+                        if(tel.val()!==""){
+                          if(dn.val()!=="" && dn.val().length==8){
+                           if(ps.val()!=="" && ps.val().length==6){
+                            if(aux.value!==""){
+                               var form=new FormData();
+                            form.append('nombre',nom.val());
+                            form.append('apellidos',ape.val());
+                            form.append('direccion',dir.val());
+                            form.append('telefono',tel.val());
+                            form.append('dni',dn.val());
+                            form.append('pass',ps.val());
+                            form.append('id',Base64.decode(localStorage.getItem("id")));
+                         var file=aux.files[0];
+                        form.append("foto",file);
+
+                       administrador.ajaxAdmin("../php/modificar_admin.php",form,function(data){
+                               try{
+                                 var response=JSON.parse(data);
+                                
+                                 if(response.status==1){
+
+                                  administrador.validarInput(btn,response.mensaje,'top','info');
+                                  alertify.confirm("Debe volver ha inciar sesion, ¿desea hacerlo ahora?",function(e){
+                                    if(e){
+                                      jq(location).attr("href","../");
+                                    }
+                                  });
+                                 }else{
+                                  administrador.validarInput(btn,response.mensaje,'top','error');
+                                 }
+                               }catch(e){
+                                administrador.validarInput(btn,e,'top','error');
+                               }
+                                });
+                             }else{
+                               administrador.validarInput(btn,"Foto requerido",'top','error');
+                             }
+                           }else{
+                            administrador.validarInput(ps,"Contraseña requerido",'top','error');
+                           }
+                          }else{
+                            administrador.validarInput(dn,"DNI requerido",'top','error');
+                          }
+                        }else{
+                          administrador.validarInput(btn,"Telefono requerido",'top','error');
+                        }
+                        }else{
+                          administrador.validarInput(btn,"Dirección requerido",'top','error');
+                        }
+                       }else{
+                        administrador.validarInput(btn,"Apellidos requerido",'top','error');
+                       }
+                    
+                        }else{
+                        administrador.validarInput(btn,"Nombre requerido",'top','error');
+                  }
+                 });
 						}
       
       /********************************************************************************/
@@ -127,7 +213,7 @@ class Usuario{
             this.correo=Base64.decode(localStorage.getItem("correo"));
             this.genero=Base64.decode(localStorage.getItem("genero"));
         }else if(this.tipo==="Administrador"){
-            
+            this.ppp=Base64.decode(localStorage.getItem("ppp"));
         }else{
 									this.user=undefined;
 								}
