@@ -33,8 +33,10 @@ if($x=mysqli_fetch_array($credenciales)){
        }else if($x['tipo']==="Administrador"){
           $datos['ppp']=$x['password'];
           $datos['id']=$x['id'];
+         }else if($x["tipo"]==="Farmaceutico"){
+            $datos["correo"]=$x["correo"];
          }else{
-       $datos['code']="-1";
+      $datos['code']="-1";
      }
      $datos['tipo']=$x['tipo'];
   }else{

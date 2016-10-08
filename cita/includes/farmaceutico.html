@@ -1,0 +1,84 @@
+
+
+<div class="row">
+<div class="col s12 m12 l12 card-panel" id="farmaceutico">
+<form id="form_farma">
+<div class="row" id="content_form_farma">
+<div class="col s12 m10 offset-m1 l4" id="datos_farma"><!--col datos -->
+    <div class="row">
+        <div class="col s12 m12 l12">
+          <div class="card">
+            <div class="card-image waves-effect waves-block waves-light" id="perfil_f">
+            </div>
+              <div class="card-content">
+             <span class="card-title activator grey-text text-darken-4">Datos del farmacéutico(a)<i class="material-icons right">more_vert</i></span>
+              </div>
+                           <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">Datos del farmacéutico(a)<i class="material-icons right">close</i></span>
+                    <div class="row">
+                  <div class="col s5 m4 l2"><span class="flow-text">Nombre</span></div>
+     <div class="col s1 m1 l1 "><span class="flow-text red-text">:</span></div>
+    <div class="col s6 m7 l9 " id="nombre_f"></div>
+        
+       <div class="col s5 m4 l2 "><span class="flow-text">Apellidos</span></div>
+     <div class="col s1 m1 l1 "><span class="flow-text red-text">:</span></div>
+    <div class="col s6 m7 l9 " id="apellidos_f"></div>
+                  
+           <div class="col s5 m4 l2 "><span class="flow-text">Direcci&oacute;n</span></div>
+     <div class="col s1 m1 l1 "><span class="flow-text red-text">:</span></div>
+    <div class="col s6 m7 l9 " id="direccion_f"></div>
+                  
+           <div class="col s5 m4 l2 "><span class="flow-text" >Telefono</span></div>
+     <div class="col s1 m1 l1 "><span class="flow-text red-text">:</span></div>
+    <div class="col s6 m7 l9 " id="telefono_f"></div>
+        <div class="col s5 m4 l2 "><span class="flow-text">Correo</span></div>
+     <div class="col s1 m1 l1 "><span class="flow-text red-text">:</span></div>
+    <div class="col s6 m7 l9 " id="correo_f"></div>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div> <!--end div row content datos del paciente-->
+</div> <!--end col datos-->
+<div class="col s12 m10 offset-m1 l8"><!--col datepicker-->
+<div class="row">
+  <div class="col s10 offset-s1 m6 offset-m3 l8 offset-l2" id="content_picker">
+      <div id="datepicker_f"></div>
+  </div>
+  </div>
+  </div><!-- end col datepicker-->
+ </div><!-- end div row content form asistente-->
+<div class="row teal">
+	<div class="col s12 m12 l12">
+	 <table class="striped centered responsive-table">
+        <thead>
+          <tr  class="blue">
+              <th data-field="id">#</th>
+                      <th data-field="diagnostico">Diagnostico</th>
+                        <th data-field="receta">Receta</th>
+               <th data-field="alergico">Alergia</th>
+                         <th data-field="fecha">Fecha</th>
+                         <th data-field="hora">Hora</th>
+                        <th data-field="especialidad">Especialidad</th>
+                      <th data-field="medico">M&eacute;dico</th>
+                      <th data-field="Imprimir">Imprimir</th>
+                      
+          </tr>
+        </thead>
+
+        <tbody id="table_historial">
+        </tbody>
+      </table>
+	</div>
+	</div>
+  </form>  
+</div>  <!--end col principal-->
+</div> <!--end row principal-->
+<style>
+  .ui-datepicker{
+    width: 100%;
+    height: 100%;
+    font-family: cursive;
+    color:cornflowerblue;
+  }
+</style>

@@ -62,6 +62,17 @@
       jq("#perfil_a").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
           var asistente=new Asistente(Base64.decode(localStorage.getItem("cfa")));
 							asistente.initComponents();
+						}else if(usuarios.tipo==="Farmaceutico"){
+							usuario.append(file_get_contents("includes/farmaceutico.html"));
+							jq("#farmaceutico").addClass(Base64.decode(localStorage.getItem("cfa")));
+          jq("#nombre_f").append('<span class="flow-text">'+usuarios.nombre+'</span>');
+          jq("#apellidos_f").append('<span class="flow-text">'+usuarios.apellidos+'</span>');
+          jq("#direccion_f").append('<span class="flow-text">'+usuarios.direccion+'</span>');
+          jq("#telefono_f").append('<span class="flow-text">'+usuarios.telefono+'</span>');
+          jq("#correo_f").append('<span class="flow-text">'+usuarios.correo+'</span>');
+      jq("#perfil_f").append('<img src="../'+usuarios.ruta_foto+'"><span class="card-title">'+usuarios.nombre+'</span>');
+							var farmaceutico=new Farmaceutico();
+							farmaceutico.initComponents();
       }else if(usuarios.tipo==="Administrador"){
 							
 							usuario.append(file_get_contents("includes/administrador.html"));
@@ -214,8 +225,10 @@ class Usuario{
             this.genero=Base64.decode(localStorage.getItem("genero"));
         }else if(this.tipo==="Administrador"){
             this.ppp=Base64.decode(localStorage.getItem("ppp"));
-        }else{
-									this.user=undefined;
+        }else if(this.tipo==="Farmaceutico"){
+								  this.correo=Base64.decode(localStorage.getItem("correo"));
+								}else{
+										this.user=undefined;
 								}
             }
         }catch(err){console.error(" Error:"+err);

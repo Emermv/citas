@@ -11,6 +11,14 @@ apellidos varchar(50) not null,
   telefono varchar(15) not null,
     ruta_foto varchar(100) not null
   );
+create table farmaceutico(
+   codigo int not null primary key,
+    id_usuario int not null,
+   estado int not null,
+   correo varchar(100) not null,
+    foreign key(id_usuario) REFERENCES usuarios(id)
+    );
+
 create table administrador(
     codigo int not null primary key,
     id_usuario int not null,
@@ -93,8 +101,7 @@ FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
  );
     
   /*procedures*******************************************/
-  drop procedure if exists sp_login;
- DELIMITER //
+   DELIMITER //
   CREATE PROCEDURE sp_login( dni char(8),clave char(6))
       COMMENT 'sp login'
       if EXISTS(SELECT u.id from usuarios as u JOIN pacientes as p on u.id=p.id_usuario WHERE u.dni=dni) THEN
@@ -111,8 +118,13 @@ FOREIGN key(id_cita) REFERENCES citas_paciente_medico(id_cita),
   select 'Administrador' as 'tipo',adm.codigo, u.id,u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto
           from usuarios as u join administrador as adm on adm.id_usuario=u.id
           where u.dni=dni;
-      ELSE
-      SELECT 'Usuario no encontrado';
+      ELSEIF EXISTS(SELECT u.id from usuarios as u join farmaceutico as f on f.id_usuario=u.id)THEN
+      
+    select 'Farmaceutico' as 'tipo',f.codigo,f.correo, u.id,u.dni,u.password,u.nombre,u.apellidos,u.direccion,u.telefono,u.ruta_foto
+          from usuarios as u join farmaceutico as f on f.id_usuario=u.id
+          where u.dni=dni;
+         ELSE
+         SELECT 'error usuario no encontrado!';
       end if;
 
 
@@ -361,6 +373,52 @@ else
 select 'Error';
 end if;
 
+DELIMITER //
+create procedure sp_crear_farma(
+    id int,
+    dni char(8),
+    passwor char(6),
+    nombre varchar(50),
+    apellidos varchar(50),
+    direccion varchar(200),
+    telefono varchar(15),
+    ruta_foto varchar(100),
+    codigo int,
+    estado int,
+    correo varchar(100)
+    )
+    COMMENT 'sp que crea farma '
+  if not EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  INSERT into usuarios values (id,dni,passwor,nombre,apellidos,direccion,telefono,ruta_foto);
+INSERT into farmaceutico VALUES(codigo,id,estado,correo);
+else 
+select 'Error';
+end if;
+
+DELIMITER //
+create procedure sp_modificar_farma(
+    i int,
+    dn char(8),
+    passwor char(6),
+    nombr varchar(50),
+    apellido varchar(50),
+    direccio varchar(200),
+    telefon varchar(15),
+    ruta_fot varchar(100),
+    codig int,
+    estad int,
+    corre varchar(100)
+    )
+    COMMENT 'sp que modifica farma '
+  if EXISTS(SELECT u.id from usuarios as u where u.id=id)THEN
+  update usuarios set dni=dn,password=passwor,nombre=nombr,apellidos=apellido,direccion=direccio,
+  telefono=telefon,ruta_foto=ruta_fot where id=i;
+update farmaceutico set estado=estad,correo=corre where codigo=codig;
+else 
+select 'Error';
+end if;
+
+
 drop procedure if exists sp_crear_asistente;
 DELIMITER //
 create procedure sp_crear_asistente(
@@ -488,3 +546,4 @@ on m.codigo=cpm.id_medico  where cpm.fecha=fecha and cpm.id_paciente=paciente
 and cpm.id_cita=(select id_cita from citas_paciente_medico order by id_cita desc limit 1);
 call sp_listar_notificar('2016-09-24',1)
 drop PROCEDURE sp_listar_notificar
+

@@ -1,16 +1,14 @@
 <?php
-
+/*
 define("host","localhost");
 define("user","emer_pc");
 define("password","teranova");
 define("db","citas");
-
-/*
-define("host","mysql.hostinger.es");
-define("user","u387583705_emer");
-define("password","teranova");
-define("db","u387583705_cita");
 */
+define("host","advisorsystemnet1.fatcowmysql.com");
+define("user","citas_us");
+define("password","password_citas");
+define("db","citas_db");
 define("email_admin", "emer.morales@allsoft.hol.es");
  function conectar(){
   try {

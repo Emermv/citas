@@ -5,6 +5,7 @@ class Administrador{
 		this.btn_paciente=jq("#btn_paciente");
 		this.btn_asistente=jq("#btn_asistente");
 		this.btnconfig=jq("#btnconfig");
+		this.btn_farmaceutico=jq("#btn_farmaceutico");
 		this.form_content_admin=jq("#form_content_admin");
 		this.btn_guardar_paciente;
 		this.nombres_p;
@@ -30,7 +31,7 @@ class Administrador{
 		this.correo_a;
 		/***************medico******/
 		this.especialidad;
-				this.btn_guardar_medico;
+		this.btn_guardar_medico;
 		this.nombres_m;
 		this.apellidos_m;
 		this.direccion_m;
@@ -40,12 +41,24 @@ class Administrador{
 		this.genero_med;
 		this.foto_med;
 		this.correo_m;
+		/**************farmaceutico**********/
+				this.nombres_f;
+		this.apellidos_f;
+		this.direccion_f;
+		this.telefono_f;
+		this.dni_far;
+		this.password_far;
+		this.genero_far;
+		this.foto_far;
+		this.correo_f;
+		this.btn_guardar_farma;
 		/****************************/
 		this.lista_especialidades;
 		this.btn_new_especialidad;
 		this.table_medicos;
 		this.table_asistentes;
 		this.table_pacientes;
+		this.table_farma;
 		/* vars******************/
 		this.btn_cancelar;
 		this.modificando_usuario=false;
@@ -61,7 +74,7 @@ initComponents(){
 		adminInstance.initCompoenentsAsistente();
 	});
 	this.btn_medico.mouseenter(function(){
-	jq(this).notify("Medico",{ position:"left" ,className: 'info'});
+	jq(this).notify("Médico",{ position:"left" ,className: 'info'});
 	}).click(function(){
 		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-medico.html"));
 		adminInstance.initCompoenentsMedico();
@@ -78,6 +91,12 @@ initComponents(){
 	}).click(function(){
 		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
 		adminInstance.initCompoenentsConfig();
+	});
+	this.btn_farmaceutico.mouseenter(function(){
+		jq(this).notify("Farmaceutico(a)",{ position:"left",className: 'info' });
+	}).click(function(){
+		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-farmaceutico.html"));
+		adminInstance.initComponentsFarma();
 	});
 	
 }
@@ -128,15 +147,39 @@ initComponents(){
 			}
 	}
 	/********************************************************************************/
+	initComponentsFarma(){
+	adminInstance.btn_guardar_farma=jq("#btn_guardar_farma").click(function(e){
+			e.preventDefault();
+			adminInstance.guardarFarma();
+		});
+		adminInstance.btn_cancelar=jq("#btn_cancelar").click(function(){
+			adminInstance.modificando_usuario=false;
+			adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		adminInstance.initCompoenentsConfig();
+		});
+		adminInstance.nombres_f=jq("#nombres_f");
+		adminInstance.apellidos_f=jq("#apellidos_f");
+		adminInstance.direccion_f=jq("#direccion_f");
+		adminInstance.telefono_f=jq("#telefono_f");
+		adminInstance.dni_far=jq("#dni_far");
+		adminInstance.password_far=jq("#password_far");
+		adminInstance.foto_far=jq("#foto_far");
+			adminInstance.correo_f=jq("#correo_f");
+				adminInstance.dni_far.characterCounter();
+		adminInstance.password_far.characterCounter();	
+	}
+	/********************************************************************************/
 	initCompoenentsConfig(){
 		adminInstance.lista_especialidades=jq("#lista_especialidades");
 		adminInstance.table_medicos=jq("#table_medicos");
 		adminInstance.table_asistentes=jq("#table_asistentes");
 		adminInstance.table_pacientes=jq("#table_pacientes");
+		adminInstance.table_farma=jq("#table_farma");
 		adminInstance.setEspecialidadesConfig();
 			adminInstance.listar_medicos();
 					adminInstance.listar_asistentes();
 		adminInstance.listar_pacientes();
+		adminInstance.listar_farma();
 	}
 	setEspecialidadesConfig(){
 		adminInstance.ajaxAdmin("../php/listar_especialidades.php",null,function(data){
@@ -269,6 +312,92 @@ initComponents(){
 		adminInstance.password_med.characterCounter();
 	}
 	/*****************************************************************************/
+	guardarFarma(){
+			var data=new FormData();
+		if(adminInstance.nombres_f.val()!==""){
+			if(adminInstance.apellidos_f.val()!==""){
+				if(adminInstance.direccion_f.val()!==""){
+					if(adminInstance.telefono_f.val()!==""){
+						if(adminInstance.dni_far.val()!==""){
+							if(adminInstance.password_far.val()!==""){
+									if(adminInstance.correo_f.val()!==""){
+											if(adminInstance.foto_far.val()!==""){
+												data.append("nombre",adminInstance.nombres_f.val());
+												data.append("apellidos",adminInstance.apellidos_f.val());
+												data.append("direccion",adminInstance.direccion_f.val());
+												data.append("telefono",adminInstance.telefono_f.val());
+												data.append("dni",adminInstance.dni_far.val());
+												data.append("password",adminInstance.password_far.val());
+													data.append("correo",adminInstance.correo_f.val());
+												 var aux=document.getElementById("foto_far");
+            var file=aux.files[0];
+												data.append("foto",file);
+												if(adminInstance.modificando_usuario){
+													var idf_mod=localStorage.getItem("idf_mod");
+													var iduf_mod=localStorage.getItem("iduf_mod");
+													data.append("id_farma",idf_mod);
+													data.append("id_usuario",iduf_mod);
+															adminInstance.ajaxAdmin("../php/modificar_farma.php",data,function(responsejson){
+													try{
+														var resp=JSON.parse(responsejson);
+														
+														if(resp.status==1){
+															
+															adminInstance.modificando_usuario=false;
+															jq.notify(resp.mensaje,"info");
+																		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		                adminInstance.initCompoenentsConfig();
+																}else{
+															adminInstance.validarInput(adminInstance.btn_guardar_farma,resp.mensaje,'top','error');
+														}
+													}catch(err){
+													adminInstance.validarInput(adminInstance.btn_guardar_farma,err,'top','error');
+													}
+												});
+													/************************************/
+												}else{
+													adminInstance.ajaxAdmin("../php/guardar_farma.php",data,function(responsejson){
+													try{
+														var resp=JSON.parse(responsejson);
+														if(resp.status==1){
+															adminInstance.validarInput(adminInstance.btn_guardar_farma,resp.mensaje,'top','info');
+															adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
+		                adminInstance.initCompoenentsConfig();
+														}else{
+															adminInstance.validarInput(adminInstance.btn_guardar_farma,resp.mensaje,'top','error');
+														}
+													}catch(err){
+													adminInstance.validarInput(adminInstance.btn_guardar_farma,err,'top','error');
+													}
+												});
+												}
+												/***************************/
+											}else{
+												adminInstance.validarInput(adminInstance.foto_far,"Foto de perfil requerido",'top','warn');
+											}
+									}else{
+										adminInstance.validarInput(adminInstance.correo_f,"Email requerido",'top','warn');
+									}
+							}else{
+								adminInstance.validarInput(adminInstance.password_far,"Contraseña requerido",'top','warn');
+							}
+						}else{
+								adminInstance.validarInput(adminInstance.dni_far,"DNI requerido",'top','warn');
+						}
+					}else{
+							adminInstance.validarInput(adminInstance.telefono_f,"Telefono requerido",'top','warn');
+					}
+				}else{
+						adminInstance.validarInput(adminInstance.direccion_f,"Dirección requerido",'top','warn');
+				}
+			}else{
+					adminInstance.validarInput(adminInstance.apellidos_f,"Apellidos requerido",'top','warn');
+			}
+		}else{
+			adminInstance.validarInput(adminInstance.nombres_f,"Nombre requerido",'top','warn');
+		}
+	}
+	/*****************************************************************************/
 	guardarPaciente(){
 		var data=new FormData();
 		if(adminInstance.nombres_p.val()!==""){
@@ -308,10 +437,10 @@ initComponents(){
 																		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-config.html"));
 		                adminInstance.initCompoenentsConfig();
 																}else{
-															adminInstance.validarInput(adminInstance.btn_guardar_medico,resp.mensaje,'top','error');
+															adminInstance.validarInput(adminInstance.btn_guardar_paciente,resp.mensaje,'top','error');
 														}
 													}catch(err){
-													adminInstance.validarInput(adminInstance.btn_guardar_medico,err,'top','error');
+													adminInstance.validarInput(adminInstance.btn_guardar_paciente,err,'top','error');
 													}
 												});
 												}else{
@@ -591,6 +720,88 @@ initComponents(){
 		var year=date.split("-");
 		var edad=time.getFullYear()-year[0];
 		return edad;
+	}
+	/*****************************************************************************/
+	listar_farma(){
+		adminInstance.ajaxAdmin("../php/listar_farma.php",null,function(data){
+			try{
+				var res=JSON.parse(data);
+					adminInstance.table_farma.empty();
+				if(res.status==1){
+				
+					for(var i=0;i<res.num;i++){
+						adminInstance.setTableFarma(i+1,res[i].dni,
+												adminInstance.getChipFoto(res[i].ruta_foto,res[i].nom_ap),
+												res[i].direccion,
+												res[i].telefono,
+												res[i].correo,
+												res[i].codigo,
+												adminInstance.getAtionTableFarma(res[i].codigo,res[i].id));
+					}
+					 
+				}else{
+						adminInstance.validarInput(adminInstance.table_farma,res.mensaje,'top','error');
+				}
+			}catch(err){
+				adminInstance.validarInput(adminInstance.table_farma,err,'top','error');
+			}
+			
+		});
+	}
+	/*****************************************************************************/
+		setTableFarma(id,dni,nom_ape,dir,tel,email,id_far,action){
+		adminInstance.table_farma.append('<tr id="trfar'+id_far+'">'+
+						'<td>'+id+'</td>'+
+					'<td>'+dni+'</td>'+
+				 	'<td>'+nom_ape+'</td>'+
+						'<td>'+dir+'</td>'+
+						'<td>'+tel+'</td>'+
+						'<td>'+email+'</td>'+
+				  	'<td>'+action+'</td>'+
+		           '</tr>');
+	}
+	/*****************************************************************************/
+		getAtionTableFarma(id,id_usu){
+		return '<a class="btn-floating  waves-effect waves-light red" id="eliminarfar'+id+'" onclick="adminInstance.eliminarFarma(this)" name="eliminarusu_far'+id_usu+'">'+
+			'<i class="material-icons">delete</i></a>'+
+			'<a class="btn-floating waves-effect waves-light blue" id="modificarfar'+id+'" onclick="adminInstance.modificarFarma(this)" name="modificarusu_far'+id_usu+'">'+
+			'<i class="material-icons">create</i></a>';
+	}
+	/*****************************************************************************/
+	eliminarFarma(obj){
+		var id=obj.id.replace("eliminarfar","");
+		var id_usu=obj.name.replace("eliminarusu_far","");
+		alertify.confirm("¿Seguro que desea eliminar?",function(e){
+			if(e){
+				var form=new FormData();
+				form.append("codigo",id);
+				form.append("id_usu",id_usu);
+				adminInstance.ajaxAdmin("../php/eliminar_Farma.php",form,function(data){
+					try{
+						var response=JSON.parse(data);
+						if(response.status==1){
+							adminInstance.validarInput(adminInstance.table_farma,response.mensaje,'top','success');
+							adminInstance.listar_farma();
+						}else{
+							adminInstance.validarInput(adminInstance.table_farma,response.mensaje,'top','error');
+						}
+					}catch(e){
+					adminInstance.validarInput(adminInstance.table_farma,e,'top','error');	
+					}
+				});
+			}
+		});
+	}
+	/*****************************************************************************/
+	modificarFarma(obj){
+			var id=obj.id.replace("modificarfar","");
+			var far=obj.name.replace("modificarusu_far","");
+			localStorage.setItem("idf_mod",id);
+			localStorage.setItem("iduf_mod",far);
+			adminInstance.modificando_usuario=true;
+		adminInstance.form_content_admin.empty().append(file_get_contents("includes/form-farmaceutico.html"));
+		adminInstance.initComponentsFarma();
+		
 	}
 	/*****************************************************************************/
 	listar_medicos(){

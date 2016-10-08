@@ -177,7 +177,9 @@
                    localStorage.setItem("genero",Base64.encode(credenciales.genero));
                }else if(tipo==="Administrador"){
                    localStorage.setItem("ppp",Base64.encode(credenciales.ppp));
-               }else{
+               }else if(tipo==="Farmaceutico"){
+																localStorage.setItem("correo",Base64.encode(credenciales.correo));
+															}else{
 																localStorage.setItem("tipo",Base64.encode("undefined"));
 															}
                localStorage.setItem("status",Base64.encode("1"));
